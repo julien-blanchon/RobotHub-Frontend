@@ -8,7 +8,7 @@
 	import { toast } from "svelte-sonner";
 	import { settings } from "$lib/runes/settings.svelte";
 	import { videoManager } from "$lib/elements/video/VideoManager.svelte";
-	import type { RemoteCompute } from "$lib/elements/compute/RemoteCompute.svelte";
+	import type { RemoteCompute } from "$lib/elements/compute//RemoteCompute.svelte";
 
 	interface Props {
 		workspaceId: string;
