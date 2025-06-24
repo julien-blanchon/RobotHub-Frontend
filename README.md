@@ -3,10 +3,10 @@ title: LeRobot Arena Frontend
 emoji: 🤖
 colorFrom: blue
 colorTo: purple
-sdk: static
-app_build_command: bun install && bun run build
-app_file: build/index.html
-pinned: false
+sdk: docker
+app_port: 3000
+pinned: true
+fullWidth: true
 license: mit
 short_description: A web-based robotics control and simulation platform
 tags:
