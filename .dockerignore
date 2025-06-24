@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+
+# Build outputs (will be built in container)
+build/
+.svelte-kit/
+dist/
+
+# Development files
+.env*
+!.env.example
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+bun-debug.log*
+lerna-debug.log*
+
+# Cache directories
+.cache/
+.temp/
+.tmp/
+
+# Test files
+coverage/
+.nyc_output/
+
+# Other build artifacts
+*.tgz
+*.tar.gz
+
+# Docker files
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Documentation that's not needed in container
+README.md
+CHANGELOG.md
+*.md
+!LICENSE 

@@ -1,0 +1,6 @@
+[submodule "external/RobotHub-TransportServer"]
+	path = external/RobotHub-TransportServer
+	url = https://github.com/julien-blanchon/RobotHub-TransportServer
+[submodule "external/RobotHub-InferenceServer"]
+	path = external/RobotHub-InferenceServer
+	url = https://github.com/julien-blanchon/RobotHub-InferenceServer
