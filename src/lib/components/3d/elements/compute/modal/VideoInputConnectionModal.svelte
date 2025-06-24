@@ -1,12 +1,14 @@
 <script lang="ts">
 	import * as Dialog from "@/components/ui/dialog";
+	import { video } from '@robothub/transport-server-client';
+	import type { video as videoTypes } from '@robothub/transport-server-client';
 	import { Button } from "@/components/ui/button";
 	import * as Card from "@/components/ui/card";
 	import { Badge } from "@/components/ui/badge";
 	import { toast } from "svelte-sonner";
 	import { settings } from "$lib/runes/settings.svelte";
-	import { videoManager } from "$lib/elements/video//VideoManager.svelte";
-	import type { RemoteCompute } from "$lib/elements/compute//RemoteCompute.svelte";
+	import { videoManager } from "$lib/elements/video/VideoManager.svelte";
+	import type { RemoteCompute } from "$lib/elements/compute/RemoteCompute.svelte";
 
 	interface Props {
 		workspaceId: string;
@@ -50,8 +52,7 @@
 			}
 
 			// Create video producer and connect to the camera room
-			const { VideoProducer } = await import("@robohub/transport-server-client/video");
-			videoProducer = new VideoProducer(settings.transportServerUrl);
+			videoProducer = new video.VideoProducer(settings.transportServerUrl);
 			
 			// Connect to the EXISTING camera room (don't create new one)
 			const participantId = `frontend-camera-${selectedCameraName}-${Date.now()}`;

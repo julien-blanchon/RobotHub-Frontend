@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { useThrelte } from "@threlte/core";
-	import { videoManager } from "$lib/elements/video//VideoManager.svelte";
+	import { videoManager } from "$lib/elements/video/VideoManager.svelte";
 	import { onMount } from "svelte";
 	import VideoInputConnectionModal from "@/components/3d/elements/video/modal/VideoInputConnectionModal.svelte";
 	import VideoOutputConnectionModal from "@/components/3d/elements/video/modal/VideoOutputConnectionModal.svelte";
-	import type { VideoInstance } from "$lib/elements/video//VideoManager.svelte";
+	import type { VideoInstance } from "$lib/elements/video/VideoManager.svelte";
 	import { generateName } from "$lib/utils/generateName";
 	import VideoGridItem from "@/components/3d/elements/video/VideoGridItem.svelte";
 

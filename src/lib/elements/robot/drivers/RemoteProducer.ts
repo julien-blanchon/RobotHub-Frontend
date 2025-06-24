@@ -1,5 +1,5 @@
 import type { Producer, ConnectionStatus, RobotCommand, RemoteDriverConfig } from '../models.js';
-import { robotics } from "@robohub/transport-server-client";
+import { robotics } from "@robothub/transport-server-client";
 
 export class RemoteProducer implements Producer {
   readonly id: string;

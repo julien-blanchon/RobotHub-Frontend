@@ -2,13 +2,13 @@ import { RemoteCompute } from './RemoteCompute.svelte';
 import type { Position3D } from '$lib/types/positionable.js';
 import { generateName } from '$lib/utils/generateName.js';
 import { positionManager } from '$lib/utils/positionManager.js';
-import { type LeRobotAIServerClient, createClient } from '@robohub/inference-server-client';
+import { type LeRobotAIServerClient, createClient } from '@robothub/inference-server-client';
 import { settings } from '$lib/runes/settings.svelte';
 import type { 
   CreateSessionRequest, 
   CreateSessionResponse, 
   SessionStatusResponse 
-} from '@robohub/inference-server-client';
+} from '@robothub/inference-server-client';
 
 export interface AISessionConfig {
   sessionId: string;

@@ -6,8 +6,8 @@
 	import Model from "./GPUModel.svelte";
 	import { Shape, Path, ExtrudeGeometry, BoxGeometry } from "three";
 	import { onMount } from "svelte";
-	import type { VideoInstance } from "$lib/elements/video//VideoManager.svelte";
-	import { videoManager } from "$lib/elements/video//VideoManager.svelte";
+	import type { VideoInstance } from "$lib/elements/video/VideoManager.svelte";
+	import { videoManager } from "$lib/elements/video/VideoManager.svelte";
 
 	// Props interface
 	interface Props {

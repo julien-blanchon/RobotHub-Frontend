@@ -2,7 +2,7 @@
 	import InputVideoBoxUIKit from "./InputVideoBoxUIKit.svelte";
 	import OutputVideoBoxUIKit from "./OutputVideoBoxUIKit.svelte";
 	import VideoBoxUIKit from "./VideoBoxUIKit.svelte";
-	import type { VideoInstance } from "$lib/elements/video//VideoManager.svelte";
+	import type { VideoInstance } from "$lib/elements/video/VideoManager.svelte";
 	import { Container } from "threlte-uikit";
 	import { StatusArrow } from "$lib/components/3d/ui";
 

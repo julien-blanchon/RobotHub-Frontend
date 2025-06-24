@@ -16,7 +16,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/julien-blanchon/RoboHub.git#main:frontend/packages/feetech.js"
+		"url": "git+https://github.com/julien-blanchon/robothub.git#main:frontend/packages/feetech.js"
 	},
 	"keywords": [
 		"feetech",
@@ -32,7 +32,7 @@
 	"author": "timqian",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/julien-blanchon/RoboHub.git#main:frontend/packages/feetech.js"
+		"url": "https://github.com/julien-blanchon/robothub.git#main:frontend/packages/feetech.js"
 	},
-	"homepage": "https://github.com/julien-blanchon/RoboHub.git#main:frontend/packages/feetech.js"
+	"homepage": "https://github.com/julien-blanchon/robothub.git#main:frontend/packages/feetech.js"
 }

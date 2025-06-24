@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ICON } from "$lib/utils/icon";
-	import type { VideoInstance } from "$lib/elements/video//VideoManager.svelte";
+	import type { VideoInstance } from "$lib/elements/video/VideoManager.svelte";
 	import { 
 		BaseStatusBox, 
 		StatusHeader, 

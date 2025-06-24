@@ -3,8 +3,8 @@
  * Clean separation between input sources and output destinations
  */
 
-import { video } from '@robohub/transport-server-client';
-import type { video as videoTypes } from '@robohub/transport-server-client';
+import { video } from '@robothub/transport-server-client';
+import type { video as videoTypes } from '@robothub/transport-server-client';
 import { settings } from '$lib/runes/settings.svelte';
 
 // Input/Output state using runes

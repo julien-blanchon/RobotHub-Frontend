@@ -1,5 +1,5 @@
 import type { Consumer, ConnectionStatus, RobotCommand, RemoteDriverConfig } from '../models.js';
-import { robotics } from "@robohub/transport-server-client";
+import { robotics } from "@robothub/transport-server-client";
 
 export class RemoteConsumer implements Consumer {
   readonly id: string;

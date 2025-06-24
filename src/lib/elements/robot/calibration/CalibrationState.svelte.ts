@@ -54,7 +54,7 @@ export class CalibrationState {
     return Math.abs(calibration.maxServoValue - calibration.minServoValue);
   }
   
-  private updateInterval: number | null = null;
+  private updateInterval: Timer | null = null;
   private managerUnsubscribe: (() => void) | null = null;
 
   private setupManagerSubscription(): void {

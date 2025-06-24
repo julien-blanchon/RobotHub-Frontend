@@ -5,7 +5,7 @@
 	import { toast } from "svelte-sonner";
 	import { cn } from "$lib/utils";
 	import { generateName } from "@/utils/generateName";
-	import { videoManager } from "$lib/elements/video//VideoManager.svelte";
+	import { videoManager } from "$lib/elements/video/VideoManager.svelte";
 
 	interface Props {
 		open: boolean;

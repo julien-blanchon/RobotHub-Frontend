@@ -3,8 +3,8 @@
 	import { interactivity } from "@threlte/extras";
 	import { VideoTexture, CanvasTexture, LinearFilter, RGBAFormat, Shape, Path, ExtrudeGeometry, BoxGeometry } from "three";
 	import { onMount } from "svelte";
-	import type { VideoInstance } from "$lib/elements/video//VideoManager.svelte";
-	import { videoManager } from "$lib/elements/video//VideoManager.svelte";
+	import type { VideoInstance } from "$lib/elements/video/VideoManager.svelte";
+	import { videoManager } from "$lib/elements/video/VideoManager.svelte";
 
 	// Props interface
 	interface Props {

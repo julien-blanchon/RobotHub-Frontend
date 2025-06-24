@@ -6,8 +6,8 @@ import type { RobotUrdfConfig } from '$lib/types/urdf.js';
 import { generateName } from '$lib/utils/generateName.js';
 import { positionManager } from '$lib/utils/positionManager.js';
 import { settings } from '$lib/runes/settings.svelte';
-import { robotics } from '@robohub/transport-server-client';
-import type { robotics as roboticsTypes } from '@robohub/transport-server-client';
+import { robotics } from '@robothub/transport-server-client';
+import type { robotics as roboticsTypes } from '@robothub/transport-server-client';
 
 export class RobotManager {
   private _robots = $state<Robot[]>([]);

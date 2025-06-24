@@ -5,8 +5,8 @@
 	import * as Alert from "@/components/ui/alert";
 	import { Badge } from "@/components/ui/badge";
 	import { toast } from "svelte-sonner";
-	import { videoManager } from "$lib/elements/video//VideoManager.svelte";
-	import type { VideoInstance } from "$lib/elements/video//VideoManager.svelte";
+	import { videoManager } from "$lib/elements/video/VideoManager.svelte";
+	import type { VideoInstance } from "$lib/elements/video/VideoManager.svelte";
 
 	interface Props {
 		workspaceId: string;

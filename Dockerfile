@@ -1,48 +1,69 @@
-# Multi-stage Dockerfile for LeRobot Arena Frontend
-# Stage 1: Build the Svelte application with Bun
-FROM oven/bun:1-alpine AS builder
+# Multi-stage build for optimal image size and security
+FROM oven/bun:1.2.17-alpine AS base
 
+# Install curl for healthcheck
+RUN apk --no-cache add curl
+
+# Set working directory
 WORKDIR /app
 
-# Install git for dependencies that might need it
-RUN apk add --no-cache git
+# Create non-root user for security
+RUN addgroup -g 1001 -S svelte && \
+    adduser -S svelteuser -u 1001
 
-# Copy package files for dependency resolution (better caching)
+# ===============================
+# Dependencies stage
+# ===============================
+FROM base AS deps
+
+# Copy package files for dependency installation
 COPY package.json bun.lock* ./
 
-# Copy local packages that are linked in package.json
-COPY packages/ ./packages/
+# Copy local packages and external dependencies
+COPY packages/ packages/
+COPY external/ external/
 
-# Install dependencies
+# Install dependencies with frozen lockfile (including devDependencies)
 RUN bun install --frozen-lockfile
 
-# Copy source code
+# ===============================
+# Build stage
+# ===============================
+FROM base AS builder
+
+# Copy installed dependencies from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/packages ./packages
+COPY --from=deps /app/external ./external
+
+# Copy source code and configuration files
 COPY . .
 
-# Build the static application
+# Build the static site
 RUN bun run build
 
-# Stage 2: Serve with Bun's simple static server
-FROM oven/bun:1-alpine AS production
+# ===============================
+# Production stage
+# ===============================
+FROM base AS runner
 
-# Set up a new user named "user" with user ID 1000 (required for HF Spaces)
-RUN adduser -D -u 1000 user
+# Set environment to production
+ENV NODE_ENV=production
+ENV PORT=3000
 
-# Switch to the "user" user
-USER user
+# Copy built application and static server
+COPY --from=builder --chown=svelteuser:svelte /app/build ./build
+COPY --chown=svelteuser:svelte static-server.js ./
 
-# Set home to the user's home directory
-ENV HOME=/home/user \
-    PATH=/home/user/.local/bin:$PATH
+# Switch to non-root user
+USER svelteuser
 
-# Set the working directory to the user's home directory
-WORKDIR $HOME/app
+# Expose port
+EXPOSE 3000
 
-# Copy built application from previous stage with proper ownership
-COPY --chown=user --from=builder /app/build ./
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/ || exit 1
 
-# Expose port 7860 (HF Spaces default)
-EXPOSE 7860
-
-# Start simple static server using Bun
-CMD ["bun", "--bun", "serve", ".", "--port", "7860"] 
+# Start custom static file server
+CMD ["bun", "static-server.js"] 

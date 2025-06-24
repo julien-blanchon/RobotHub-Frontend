@@ -27,7 +27,7 @@ export class RemoteServerConsumer implements ConsumerSensorDriver {
 	// Connection management
 	private websocket: WebSocket | null = null;
 	private reconnectAttempts = 0;
-	private reconnectTimer?: number;
+	private reconnectTimer?: Timer;
 
 	// Stream management
 	private activeOutputStreams = new Map<string, SensorStream>();

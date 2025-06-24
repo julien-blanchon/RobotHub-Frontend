@@ -2,7 +2,7 @@
 	import { T } from "@threlte/core";
 	import Video from "./Video.svelte";
 	import VideoStatusBillboard from "./status/VideoStatusBillboard.svelte";
-	import type { VideoInstance, VideoStatus } from "$lib/elements/video//VideoManager.svelte";
+	import type { VideoInstance, VideoStatus } from "$lib/elements/video/VideoManager.svelte";
 	import { interactivity, type IntersectionEvent, useCursor } from "@threlte/extras";
 
 	interface Props {

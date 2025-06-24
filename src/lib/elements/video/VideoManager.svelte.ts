@@ -4,8 +4,8 @@
  * Manages multiple video instances, each with their own streaming state
  */
 
-import { video as videoClient } from '@robohub/transport-server-client';
-import type { video as videoTypes } from '@robohub/transport-server-client';
+import { video as videoClient } from '@robothub/transport-server-client';
+import type { video as videoTypes } from '@robothub/transport-server-client';
 import { generateName } from "$lib/utils/generateName";
 import type { Positionable, Position3D } from '$lib/types/positionable';
 import { positionManager } from '$lib/utils/positionManager';

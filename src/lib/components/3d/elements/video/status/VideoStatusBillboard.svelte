@@ -3,7 +3,7 @@
 	import { Billboard, interactivity } from "@threlte/extras";
 	import { Root, Container } from "threlte-uikit";
 	import VideoConnectionFlowBoxUIKit from "./VideoConnectionFlowBoxUIKit.svelte";
-	import type { VideoInstance } from "$lib/elements/video//VideoManager.svelte";
+	import type { VideoInstance } from "$lib/elements/video/VideoManager.svelte";
 
 	interface Props {
 		video: VideoInstance;
