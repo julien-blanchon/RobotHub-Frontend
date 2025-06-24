@@ -1,5 +1,6 @@
 import type { Consumer, ConnectionStatus, RobotCommand, RemoteDriverConfig } from '../models.js';
 import { robotics } from "@robothub/transport-server-client";
+import type { JointData } from "@robothub/transport-server-client/robotics";
 
 export class RemoteConsumer implements Consumer {
   readonly id: string;
@@ -44,19 +45,19 @@ export class RemoteConsumer implements Consumer {
         console.log(`[RemoteConsumer] Disconnected from room ${this.config.robotId}`);
       });
 
-      this.consumer.onError((error) => {
+      this.consumer.onError((error: string) => {
         console.error(`[RemoteConsumer] Error:`, error);
         this._status = { isConnected: false, error: `Consumer error: ${error}` };
         this.notifyStatusChange();
       });
 
       // RECEIVE joint updates and forward as normalized commands
-      this.consumer.onJointUpdate((joints) => {
+      this.consumer.onJointUpdate((joints: JointData[]) => {
         console.debug(`[RemoteConsumer] Received joint update:`, joints);
         
         const command: RobotCommand = {
           timestamp: Date.now(),
-          joints: joints.map(joint => ({
+          joints: joints.map((joint: JointData) => ({
             name: joint.name,
             value: joint.value, // Already normalized from server
           }))
@@ -65,7 +66,7 @@ export class RemoteConsumer implements Consumer {
       });
 
       // RECEIVE state sync
-      this.consumer.onStateSync((state) => {
+      this.consumer.onStateSync((state: Record<string, number>) => {
         console.debug(`[RemoteConsumer] Received state sync:`, state);
         
         const joints = Object.entries(state).map(([name, value]) => ({

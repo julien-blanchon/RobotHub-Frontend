@@ -1,5 +1,6 @@
 import type { Producer, ConnectionStatus, RobotCommand, RemoteDriverConfig } from '../models.js';
 import { robotics } from "@robothub/transport-server-client";
+import type { JointData } from "@robothub/transport-server-client/robotics";
 
 export class RemoteProducer implements Producer {
   readonly id: string;
@@ -49,7 +50,7 @@ export class RemoteProducer implements Producer {
         this.stopStateUpdates();
       });
 
-      this.producer.onError((error) => {
+      this.producer.onError((error: string) => {
         console.error(`[RemoteProducer] Error:`, error);
         this._status = { isConnected: false, error: `Producer error: ${error}` };
         this.notifyStatusChange();
