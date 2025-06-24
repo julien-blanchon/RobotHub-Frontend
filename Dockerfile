@@ -1,8 +1,8 @@
 # Multi-stage build for optimal image size and security
 FROM oven/bun:1.2.17-alpine AS base
 
-# Install curl for healthcheck
-RUN apk --no-cache add curl
+# Install curl for healthcheck and git for submodules
+RUN apk --no-cache add curl git
 
 # Set working directory
 WORKDIR /app
@@ -16,10 +16,18 @@ RUN addgroup -g 1001 -S svelte && \
 # ===============================
 FROM base AS deps
 
+# Copy git configuration and submodule files
+COPY .git .git
+COPY .gitmodules* ./
+
+# Initialize and update git submodules
+RUN git config --global --add safe.directory /app && \
+    git submodule update --init --recursive
+
 # Copy package files for dependency installation
 COPY package.json bun.lock* ./
 
-# Copy local packages and external dependencies
+# Copy local packages and external dependencies (now populated)
 COPY packages/ packages/
 COPY external/ external/
 
