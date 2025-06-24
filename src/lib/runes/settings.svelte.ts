@@ -7,6 +7,6 @@ interface Settings {
 export const settings: Settings = $state({
 	// inferenceServerUrl: 'http://localhost:8001',
 	// transportServerUrl: 'http://localhost:8000'
-	inferenceServerUrl: 'https://blanchon-robotinferenceserver.hf.space',
-	transportServerUrl: 'https://blanchon-robottransportserver.hf.space/api'
+	inferenceServerUrl: 'https://blanchon-robothub-inferenceserver.hf.space/api',
+	transportServerUrl: 'https://blanchon-robothub-transportserver.hf.space/api'
 });

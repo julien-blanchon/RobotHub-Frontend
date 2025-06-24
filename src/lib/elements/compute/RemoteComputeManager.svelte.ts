@@ -58,10 +58,14 @@ export interface AISessionStatus {
 
 export class RemoteComputeManager {
   private _computes = $state<RemoteCompute[]>([]);
-  private inferenceServerClient;
+  
+  // Make the client reactive to URL changes
+  private get inferenceServerClient() {
+    return createClient(settings.inferenceServerUrl);
+  }
 
   constructor() {
-    this.inferenceServerClient = createClient(settings.inferenceServerUrl);
+    // Remove the fixed client initialization
   }
 
   // Reactive getters
