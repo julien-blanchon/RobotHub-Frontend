@@ -5,7 +5,7 @@
       "name": "my-app",
       "dependencies": {
         "@robothub/inference-server-client": "file:./external/RobotHub-InferenceServer/client",
-        "@robothub/transport-server-client": "file:./external/RobotHub-TransportServer/client/js",
+        "@robothub/transport-server-client": "file:./external/RobotHub-InferenceServer/external/RobotHub-TransportServer/client/js",
         "@threlte/core": "^8.0.4",
         "@threlte/extras": "^9.2.1",
         "@types/three": "0.177.0",
@@ -213,7 +213,7 @@
 
     "@robothub/inference-server-client": ["@robothub/inference-server-client@file:external/RobotHub-InferenceServer/client", { "dependencies": { "@hey-api/client-fetch": "^0.2.4" }, "devDependencies": { "@hey-api/openapi-ts": "^0.53.12", "@types/bun": "latest", "typescript": "^5.8.3" }, "peerDependencies": { "typescript": "^5" } }],
 
-    "@robothub/transport-server-client": ["@robothub/transport-server-client@file:external/RobotHub-TransportServer/client/js", { "dependencies": { "eventemitter3": "^5.0.1" }, "devDependencies": { "@types/bun": "^1.2.15", "typescript": "^5.3.3" }, "peerDependencies": { "typescript": ">=5.0.0" } }],
+    "@robothub/transport-server-client": ["@robothub/transport-server-client@file:external/RobotHub-InferenceServer/external/RobotHub-TransportServer/client/js", { "dependencies": { "eventemitter3": "^5.0.1" }, "devDependencies": { "@types/bun": "^1.2.15", "typescript": "^5.3.3" }, "peerDependencies": { "typescript": ">=5.0.0" } }],
 
     "@rollup/rollup-android-arm-eabi": ["@rollup/rollup-android-arm-eabi@4.44.0", "", { "os": "android", "cpu": "arm" }, "sha512-xEiEE5oDW6tK4jXCAyliuntGR+amEMO7HLtdSshVuhFnKTYoeYMyXQK7pLouAJJj5KHdwdn87bfHAR2nSdNAUA=="],
 

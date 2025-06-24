@@ -53,7 +53,7 @@
 		"@types/three": "0.177.0",
 		"clsx": "^2.1.1",
 		"feetech.js": "file:./packages/feetech.js",
-		"@robothub/transport-server-client": "file:./external/RobotHub-TransportServer/client/js",
+		"@robothub/transport-server-client": "file:./external/RobotHub-InferenceServer/external/RobotHub-TransportServer/client/js",
 		"@robothub/inference-server-client": "file:./external/RobotHub-InferenceServer/client",
 		"tailwind-merge": "^3.3.0",
 		"three": "^0.177.0",
