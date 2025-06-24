@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { settings } from '$lib/settings.svelte.js';
 	import * as Sheet from "@/components/ui/sheet";
 	import { Separator } from "@/components/ui/separator";
 	import { Switch } from "@/components/ui/switch";
