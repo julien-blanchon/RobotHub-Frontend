@@ -84,7 +84,7 @@ jobs:
 For local development or custom hosting:
 ```bash
 docker build -t lerobot-arena-frontend .
-docker run -p 7860:7860 lerobot-arena-frontend
+docker run -p 3000:3000 lerobot-arena-frontend
 ```
 
 The Docker setup uses Bun's simple static server - much simpler than the complex server.js approach!
@@ -167,7 +167,7 @@ The Docker setup includes:
 
 - **Multi-stage build**: Optimized for production using Bun and uv
 - **Automatic startup**: Both services start together
-- **Port mapping**: Backend on 8080, Frontend on 7860 (HF Spaces compatible)
+- **Port mapping**: Backend on 8080, Frontend on 3000 (HF Spaces compatible)
 - **Static file serving**: Compiled Svelte app served efficiently
 - **User permissions**: Properly configured for Hugging Face Spaces
 - **Standalone executable**: Backend packaged with box-packager for faster startup
@@ -208,15 +208,15 @@ docker-compose up --build
 
 ### Port Conflicts
 
-If ports 8080 or 7860 are already in use:
+If ports 8080 or 3000 are already in use:
 
 ```bash
 # Check what's using the ports
 lsof -i :8080
-lsof -i :7860
+lsof -i :3000
 
 # Use different ports
-docker run -p 8081:8080 -p 7861:7860 lerobot-arena
+docker run -p 8081:8080 -p 7861:3000 lerobot-arena
 ```
 
 ### Container Issues
