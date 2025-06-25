@@ -202,14 +202,14 @@
 
 <Dialog.Root bind:open>
 	<Dialog.Content
-		class="max-h-[85vh] max-w-4xl overflow-hidden border-slate-600 bg-slate-900 text-slate-100"
+		class="max-h-[85vh] max-w-4xl overflow-hidden border-slate-300 bg-slate-100 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
 	>
 		<Dialog.Header class="pb-3">
-			<Dialog.Title class="flex items-center gap-2 text-lg font-bold text-slate-100">
-				<span class="icon-[mdi--devices] size-5 text-blue-400"></span>
+			<Dialog.Title class="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-100">
+				<span class="icon-[mdi--devices] size-5 text-blue-500 dark:text-blue-400"></span>
 				Output Connection - Robot {robot.id}
 			</Dialog.Title>
-			<Dialog.Description class="text-sm text-slate-400">
+			<Dialog.Description class="text-sm text-slate-600 dark:text-slate-400">
 				Configure where this robot sends its movements. Multiple outputs can be active simultaneously.
 			</Dialog.Description>
 		</Dialog.Header>
@@ -218,10 +218,10 @@
 			<div class="space-y-4 pb-4">
 				<!-- Error display -->
 				{#if error}
-					<Alert.Root class="border-red-500/30 bg-red-900/20">
-						<span class="icon-[mdi--alert-circle] size-4 text-red-400"></span>
-						<Alert.Title class="text-red-300">Connection Error</Alert.Title>
-						<Alert.Description class="text-red-400 text-sm">
+					<Alert.Root class="border-red-300/30 bg-red-100/20 dark:border-red-500/30 dark:bg-red-900/20">
+						<span class="icon-[mdi--alert-circle] size-4 text-red-500 dark:text-red-400"></span>
+						<Alert.Title class="text-red-700 dark:text-red-300">Connection Error</Alert.Title>
+						<Alert.Description class="text-red-600 text-sm dark:text-red-400">
 							{error}
 						</Alert.Description>
 					</Alert.Root>
@@ -229,24 +229,24 @@
 
 				<!-- USB Calibration Panel -->
 				{#if showUSBCalibration}
-					<Card.Root class="border-orange-500/30 bg-orange-900/20">
+					<Card.Root class="border-orange-300/30 bg-orange-100/20 dark:border-orange-500/30 dark:bg-orange-900/20">
 						<Card.Header>
 							<div class="flex justify-between items-center">
-								<Card.Title class="text-lg font-semibold text-orange-200">
+								<Card.Title class="text-lg font-semibold text-orange-700 dark:text-orange-200">
 									Hardware Calibration Required
 								</Card.Title>
 								<button
 									onclick={onCalibrationCancel}
-									class="text-gray-400 hover:text-white"
+									class="text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white"
 								>
 									✕
 								</button>
 							</div>
 						</Card.Header>
 						<Card.Content class="space-y-4">
-							<Alert.Root class="border-orange-500/30 bg-orange-500/10">
-								<span class="icon-[mdi--information] size-4 text-orange-400"></span>
-								<Alert.Description class="text-orange-200 text-sm">
+							<Alert.Root class="border-orange-300/30 bg-orange-100/10 dark:border-orange-500/30 dark:bg-orange-500/10">
+								<span class="icon-[mdi--information] size-4 text-orange-500 dark:text-orange-400"></span>
+								<Alert.Description class="text-orange-700 text-sm dark:text-orange-200">
 									Before connecting to the physical robot, calibration is required to map the servo positions to software values. This ensures accurate control.
 								</Alert.Description>
 							</Alert.Root>
@@ -262,14 +262,14 @@
 				{:else}
 
 				<!-- Current Status Overview -->
-				<Card.Root class="border-blue-500/30 bg-blue-900/20">
+				<Card.Root class="border-blue-300/30 bg-blue-100/20 dark:border-blue-500/30 dark:bg-blue-900/20">
 					<Card.Content class="p-4">
 						<div class="flex items-center justify-between">
 							<div class="flex items-center gap-2">
-								<span class="icon-[mdi--broadcast] size-4 text-blue-400"></span>
-								<span class="text-sm font-medium text-blue-300">Active Outputs</span>
+								<span class="icon-[mdi--broadcast] size-4 text-blue-500 dark:text-blue-400"></span>
+								<span class="text-sm font-medium text-blue-700 dark:text-blue-300">Active Outputs</span>
 							</div>
-							<Badge variant="default" class="bg-blue-600 text-xs">
+							<Badge variant="default" class="bg-blue-500 text-xs dark:bg-blue-600">
 								{outputDriverCount} Connected
 							</Badge>
 						</div>
@@ -277,13 +277,13 @@
 				</Card.Root>
 
 				<!-- Local Hardware Connection -->
-				<Card.Root class="border-green-500/30 bg-green-500/5">
+				<Card.Root class="border-green-300/30 bg-green-100/5 dark:border-green-500/30 dark:bg-green-500/5">
 					<Card.Header>
-						<Card.Title class="flex items-center gap-2 text-base text-green-200">
+						<Card.Title class="flex items-center gap-2 text-base text-green-700 dark:text-green-200">
 							<span class="icon-[mdi--usb-port] size-4"></span>
 							Local Hardware (USB)
 						</Card.Title>
-						<Card.Description class="text-xs text-green-300/70">
+						<Card.Description class="text-xs text-green-600/70 dark:text-green-300/70">
 							Send commands directly to physical robot hardware
 						</Card.Description>
 					</Card.Header>
@@ -292,7 +292,7 @@
 							variant="secondary"
 							onclick={connectUSBOutput}
 							disabled={isConnecting}
-							class="w-full bg-green-600 text-sm text-white hover:bg-green-700"
+							class="w-full bg-green-500 text-sm text-white hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
 						>
 							<span class="icon-[mdi--usb] mr-2 size-4"></span>
 							{isConnecting ? 'Connecting...' : 'Add USB Output'}
@@ -301,15 +301,15 @@
 				</Card.Root>
 
 				<!-- Remote Collaboration -->
-				<Card.Root class="border-orange-500/30 bg-orange-500/5">
+				<Card.Root class="border-orange-300/30 bg-orange-100/5 dark:border-orange-500/30 dark:bg-orange-500/5">
 					<Card.Header>
 						<div class="flex items-center justify-between">
 							<div>
-								<Card.Title class="flex items-center gap-2 text-base text-orange-200">
+								<Card.Title class="flex items-center gap-2 text-base text-orange-700 dark:text-orange-200">
 									<span class="icon-[mdi--cloud-sync] size-4"></span>
 									Remote Collaboration (Rooms)
 								</Card.Title>
-								<Card.Description class="text-xs text-orange-300/70">
+								<Card.Description class="text-xs text-orange-600/70 dark:text-orange-300/70">
 									Broadcast robot movements to remote systems and AI
 								</Card.Description>
 							</div>
@@ -318,7 +318,7 @@
 								size="sm"
 								onclick={refreshRooms}
 								disabled={robotManager.roomsLoading || isConnecting}
-								class="h-7 px-2 text-xs text-orange-300 hover:text-orange-200 hover:bg-orange-500/20"
+								class="h-7 px-2 text-xs text-orange-700 hover:text-orange-800 hover:bg-orange-200/20 dark:text-orange-300 dark:hover:text-orange-200 dark:hover:bg-orange-500/20"
 							>
 								{#if robotManager.roomsLoading}
 									<span class="icon-[mdi--loading] animate-spin size-3 mr-1"></span>
@@ -332,20 +332,20 @@
 					</Card.Header>
 					<Card.Content class="space-y-4">
 						<!-- Create New Room -->
-						<div class="rounded border-2 border-dashed border-green-500/50 bg-green-500/5 p-3">
+						<div class="rounded border-2 border-dashed border-green-400/50 bg-green-100/5 p-3 dark:border-green-500/50 dark:bg-green-500/5">
 							<div class="space-y-2">
 								<div class="flex items-center gap-2">
-									<span class="icon-[mdi--plus-circle] size-4 text-green-400"></span>
-									<p class="text-sm font-medium text-green-300">Create New Room</p>
+									<span class="icon-[mdi--plus-circle] size-4 text-green-500 dark:text-green-400"></span>
+									<p class="text-sm font-medium text-green-700 dark:text-green-300">Create New Room</p>
 								</div>
-								<p class="text-xs text-green-400/70">
+								<p class="text-xs text-green-600/70 dark:text-green-400/70">
 									Create a room to broadcast this robot's movements
 								</p>
 								<input
 									bind:value={customRoomId}
 									placeholder={`Room ID (default: ${robot.id})`}
 									disabled={isConnecting}
-									class="w-full px-2 py-1 bg-slate-700 border border-slate-600 rounded text-xs text-slate-100 disabled:opacity-50"
+									class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-xs text-slate-900 disabled:opacity-50 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100"
 								/>
 								<div class="flex gap-1">
 									<Button
@@ -353,7 +353,7 @@
 										size="sm"
 										onclick={createRoom}
 										disabled={isConnecting}
-										class="h-6 px-2 text-xs bg-green-600 hover:bg-green-700"
+										class="h-6 px-2 text-xs bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
 									>
 										Create Only
 									</Button>
@@ -362,7 +362,7 @@
 										size="sm"
 										onclick={createRoomAndJoinAsOutput}
 										disabled={isConnecting}
-										class="h-6 px-2 text-xs bg-green-600 hover:bg-green-700"
+										class="h-6 px-2 text-xs bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
 									>
 										Create & Join as Output
 									</Button>
@@ -373,26 +373,26 @@
 						<!-- Existing Rooms -->
 						<div class="space-y-2">
 							<div class="flex items-center justify-between">
-								<span class="text-xs font-medium text-orange-300">Join Existing Room:</span>
-								<span class="text-xs text-slate-400">
+								<span class="text-xs font-medium text-orange-700 dark:text-orange-300">Join Existing Room:</span>
+								<span class="text-xs text-slate-600 dark:text-slate-400">
 									{robotManager.rooms.length} room{robotManager.rooms.length !== 1 ? 's' : ''} available
 								</span>
 							</div>
 							
 							<div class="max-h-40 space-y-2 overflow-y-auto">
 								{#if robotManager.rooms.length === 0}
-									<div class="text-center py-3 text-xs text-slate-400">
+									<div class="text-center py-3 text-xs text-slate-600 dark:text-slate-400">
 										{robotManager.roomsLoading ? 'Loading rooms...' : 'No rooms available. Create one to get started.'}
 									</div>
 								{:else}
 									{#each robotManager.rooms as room}
-										<div class="rounded border border-slate-600 bg-slate-800/50 p-2">
+										<div class="rounded border border-slate-300 bg-slate-50/50 p-2 dark:border-slate-600 dark:bg-slate-800/50">
 											<div class="flex items-start justify-between gap-3">
 												<div class="flex-1 min-w-0">
-													<p class="text-xs font-medium text-slate-200 truncate">
+													<p class="text-xs font-medium text-slate-800 truncate dark:text-slate-200">
 														{room.id}
 													</p>
-													<div class="flex gap-3 text-xs text-slate-400">
+													<div class="flex gap-3 text-xs text-slate-600 dark:text-slate-400">
 														<span>{room.has_producer ? '🔴 Occupied' : '🟢 Available'}</span>
 														<span>👥 {room.participants?.total || 0} users</span>
 													</div>
@@ -406,7 +406,7 @@
 															joinRoomAsOutput();
 														}}
 														disabled={isConnecting}
-														class="h-6 px-2 text-xs bg-orange-600 hover:bg-orange-700 shrink-0"
+														class="h-6 px-2 text-xs bg-orange-500 hover:bg-orange-600 shrink-0 dark:bg-orange-600 dark:hover:bg-orange-700"
 													>
 														<span class="icon-[mdi--login] mr-1 size-3"></span>
 														Join as Output
@@ -432,9 +432,9 @@
 
 				<!-- Connected Outputs -->
 				{#if producers.length > 0}
-					<Card.Root class="border-blue-500/30 bg-blue-500/5">
+					<Card.Root class="border-blue-300/30 bg-blue-100/5 dark:border-blue-500/30 dark:bg-blue-500/5">
 						<Card.Header>
-							<Card.Title class="flex items-center gap-2 text-base text-blue-200">
+							<Card.Title class="flex items-center gap-2 text-base text-blue-700 dark:text-blue-200">
 								<span class="icon-[mdi--connection] size-4"></span>
 								Connected Outputs
 							</Card.Title>
@@ -442,12 +442,12 @@
 						<Card.Content>
 							<div class="max-h-32 space-y-2 overflow-y-auto">
 								{#each producers as producer}
-									<div class="flex items-center justify-between rounded-md bg-slate-700/50 p-2">
+									<div class="flex items-center justify-between rounded-md bg-slate-100/50 p-2 dark:bg-slate-700/50">
 										<div class="flex items-center gap-2">
 											<span 
-												class="size-2 rounded-full {producer.status.isConnected ? 'bg-green-400' : 'bg-red-400'}"
+												class="size-2 rounded-full {producer.status.isConnected ? 'bg-green-500 dark:bg-green-400' : 'bg-red-500 dark:bg-red-400'}"
 											></span>
-											<span class="text-sm text-slate-300">{producer.name}</span>
+											<span class="text-sm text-slate-700 dark:text-slate-300">{producer.name}</span>
 											<Badge variant="secondary" class="text-xs">{producer.id.slice(0, 12)}</Badge>
 										</div>
 										<Button
@@ -467,10 +467,10 @@
 				{/if}
 
 				<!-- Help Information -->
-				<Alert.Root class="border-slate-700 bg-slate-800/30">
-					<span class="icon-[mdi--help-circle] size-4 text-slate-400"></span>
-					<Alert.Title class="text-slate-300">Output Sources</Alert.Title>
-					<Alert.Description class="text-slate-400 text-xs">
+				<Alert.Root class="border-slate-300 bg-slate-100/30 dark:border-slate-700 dark:bg-slate-800/30">
+					<span class="icon-[mdi--help-circle] size-4 text-slate-600 dark:text-slate-400"></span>
+					<Alert.Title class="text-slate-700 dark:text-slate-300">Output Sources</Alert.Title>
+					<Alert.Description class="text-slate-600 text-xs dark:text-slate-400">
 						<strong>USB:</strong> Control physical hardware • <strong>Remote:</strong> Broadcast to network • Multiple outputs can be active
 					</Alert.Description>
 				</Alert.Root>

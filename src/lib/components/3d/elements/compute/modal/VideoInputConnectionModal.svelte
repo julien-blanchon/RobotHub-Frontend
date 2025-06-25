@@ -32,7 +32,7 @@
 
 	async function handleConnectLocalCamera() {
 		if (!compute.hasSession) {
-			toast.error('No AI session available. Create a session first.');
+			toast.error('No Inference Session available. Create a session first.');
 			return;
 		}
 
@@ -65,7 +65,7 @@
 			// Start streaming
 			await videoProducer.startCamera();
 
-			toast.success(`Camera connected to AI session`, {
+			toast.success(`Camera connected to Inference Session`, {
 				description: `Local camera streaming to ${selectedCameraName} input`
 			});
 
@@ -124,13 +124,13 @@
 		</Dialog.Header>
 
 		<div class="space-y-4">
-			<!-- AI Session Status -->
+			<!-- Inference Session Status -->
 			<div
 				class="flex items-center justify-between rounded-lg border border-purple-500/30 bg-purple-900/20 p-3"
 			>
 				<div class="flex items-center gap-2">
 					<span class="icon-[mdi--brain] size-4 text-purple-400"></span>
-					<span class="text-sm font-medium text-purple-300">AI Session</span>
+					<span class="text-sm font-medium text-purple-300">Inference Session</span>
 				</div>
 				{#if compute.hasSession}
 					<Badge variant="default" class="bg-purple-600 text-xs">
@@ -146,11 +146,11 @@
 					<Card.Header>
 						<Card.Title class="flex items-center gap-2 text-base text-yellow-200">
 							<span class="icon-[mdi--alert] size-4"></span>
-							AI Session Required
+							Inference Session Required
 						</Card.Title>
 					</Card.Header>
 					<Card.Content class="text-sm text-yellow-300">
-						You need to create an AI session before connecting video inputs.
+						You need to create an Inference Session before connecting video inputs.
 						The session defines which camera names are available for connection.
 					</Card.Content>
 				</Card.Root>

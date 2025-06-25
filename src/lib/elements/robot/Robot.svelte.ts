@@ -257,7 +257,7 @@ export class Robot implements Positionable {
     return this._setConsumer(config, false);
   }
 
-  // Join existing room as consumer (for AI session integration)
+  // Join existing room as consumer (for Inference Session integration)
   async joinAsConsumer(config: RemoteDriverConfig): Promise<string> {
     if (config.type !== 'remote') {
       throw new Error('joinAsConsumer only supports remote drivers');
@@ -308,7 +308,7 @@ export class Robot implements Positionable {
     return this._addProducer(config, false);
   }
 
-  // Join existing room as producer (for AI session integration)
+  // Join existing room as producer (for Inference Session integration)
   async joinAsProducer(config: RemoteDriverConfig): Promise<string> {
     if (config.type !== 'remote') {
       throw new Error('joinAsProducer only supports remote drivers');

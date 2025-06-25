@@ -76,7 +76,7 @@
 {/each}
 
 {#if selectedCompute}
-	<!-- AI Session Creation Modal -->
+	<!-- Inference Session Creation Modal -->
 	<AISessionConnectionModal bind:open={isAISessionModalOpen} compute={selectedCompute} {workspaceId} />
 	<!-- Video Input Connection Modal -->
 	<VideoInputConnectionModal bind:open={isVideoInputModalOpen} compute={selectedCompute} {workspaceId} />

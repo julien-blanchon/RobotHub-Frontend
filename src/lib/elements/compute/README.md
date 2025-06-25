@@ -26,7 +26,7 @@ import { remoteComputeManager } from '$lib/elements/compute/';
 // Create a new compute instance
 const compute = remoteComputeManager.createCompute('my-compute', 'ACT Model');
 
-// Create an AI session
+// Create an Inference Session
 await remoteComputeManager.createSession(compute.id, {
   sessionId: 'my-session',
   policyPath: './checkpoints/act_so101_beyond',
@@ -73,7 +73,7 @@ The system integrates with the AI server backend (`backend/ai-server/`) which pr
 ### Modal Dialog
 
 `AISessionConnectionModal.svelte` provides a comprehensive interface for:
-- Creating new AI sessions with configurable parameters
+- Creating new Inference Sessions with configurable parameters
 - Managing existing sessions (start, stop, delete)
 - Viewing session status and connection details
 - Real-time session monitoring
@@ -99,7 +99,7 @@ The status system shows input/output connections:
 // 1. Create a compute instance
 const compute = remoteComputeManager.createCompute();
 
-// 2. Configure and create AI session
+// 2. Configure and create Inference Session
 await remoteComputeManager.createSession(compute.id, {
   sessionId: 'robot-control-01',
   policyPath: './checkpoints/act_so101_beyond',

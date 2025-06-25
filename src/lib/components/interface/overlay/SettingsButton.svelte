@@ -19,7 +19,7 @@
 	variant="default"
 	size="sm"
 	onclick={() => (open = !open)}
-	class="group w-32 border-0 bg-orange-600 text-white transition-all duration-200 hover:bg-orange-500"
+	class="group w-32 border-0 bg-orange-500 text-white transition-all duration-200 hover:bg-orange-400 dark:bg-orange-600 dark:hover:bg-orange-500"
 >
 	<span
 		class={[

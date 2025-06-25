@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 // Simple static file server for Svelte build output
-import { resolve, join } from "path";
+import { join } from "path";
 
 const PORT = process.env.PORT || 3000;
 const BUILD_DIR = "./build";

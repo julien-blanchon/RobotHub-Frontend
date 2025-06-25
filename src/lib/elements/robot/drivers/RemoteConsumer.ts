@@ -88,7 +88,7 @@ export class RemoteConsumer implements Consumer {
       
       let roomData;
       if (joinExistingRoom) {
-        // Join existing room (for AI session integration)
+        // Join existing room (for Inference Session integration)
         roomData = { workspaceId: this.workspaceId, roomId: this.config.robotId };
         console.log(`[RemoteConsumer] Joining existing room ${this.config.robotId} in workspace ${this.workspaceId}`);
       } else {

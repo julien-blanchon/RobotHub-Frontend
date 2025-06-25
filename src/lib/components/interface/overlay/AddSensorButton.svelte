@@ -86,7 +86,7 @@
 	variant="default"
 	size="sm"
 	onclick={quickAddCamera}
-	class="group rounded-r-none border-0 bg-blue-600 text-white transition-all duration-200 hover:bg-blue-500"
+	class="group rounded-r-none border-0 bg-blue-500 text-white transition-all duration-200 hover:bg-blue-400 dark:bg-blue-600 dark:hover:bg-blue-500"
 >
 	<span
 		class={[
@@ -106,8 +106,9 @@
 				variant="default"
 				size="sm"
 				class={cn(
-					"rounded-l-none border-0 border-l border-blue-500/30 bg-blue-600 px-2 text-white transition-all duration-200 hover:bg-blue-500",
-					open && "bg-blue-700 shadow-inner"
+					"rounded-l-none border-0 border-l border-blue-400/30 bg-blue-500 px-2 text-white transition-all duration-200 hover:bg-blue-400",
+					"dark:border-blue-500/30 dark:bg-blue-600 dark:hover:bg-blue-500",
+					open && "bg-blue-600 shadow-inner dark:bg-blue-700"
 				)}
 			>
 				<span
@@ -122,12 +123,12 @@
 	</DropdownMenu.Trigger>
 
 	<DropdownMenu.Content
-		class="w-56 border-blue-500/30 bg-blue-600 backdrop-blur-sm"
+		class="w-56 border-blue-400/30 bg-blue-500 backdrop-blur-sm dark:border-blue-500/30 dark:bg-blue-600"
 		align="center"
 	>
 		<DropdownMenu.Group>
 			<DropdownMenu.GroupHeading
-				class="text-xs font-semibold tracking-wider text-blue-200 uppercase"
+				class="text-xs font-semibold tracking-wider text-blue-100 uppercase dark:text-blue-200"
 			>
 				Sensor Types
 			</DropdownMenu.GroupHeading>
@@ -135,8 +136,8 @@
 			{#each sensorConfigs as sensor}
 				<DropdownMenu.Item
 					class={[
-						"group group cursor-pointer bg-blue-600 text-white transition-all duration-200",
-						"data-highlighted:bg-blue-700"
+						"group group cursor-pointer bg-blue-500 text-white transition-all duration-200",
+						"data-highlighted:bg-blue-600 dark:bg-blue-600 dark:data-highlighted:bg-blue-700"
 					]}
 					disabled={!sensor.enabled}
 					onclick={async () => await addSensor(sensor.id)}
@@ -144,21 +145,21 @@
 					<span
 						class={[
 							sensor.icon,
-							"mr-3 size-4 text-blue-200 transition-colors duration-200"
+							"mr-3 size-4 text-blue-100 transition-colors duration-200 dark:text-blue-200"
 						]}
 					></span>
 					<div class="flex flex-1 flex-col">
 						<span class="font-medium text-white transition-colors duration-200"
 							>{sensor.label}</span
 						>
-						<span class="text-xs text-blue-200 transition-colors duration-200">
+						<span class="text-xs text-blue-100 transition-colors duration-200 dark:text-blue-200">
 							{sensor.description}
 						</span>
 					</div>
 					{#if sensor.isDefault}
 						<Badge
 							variant="secondary"
-							class="ml-2 bg-blue-700 text-xs text-blue-100 group-data-highlighted:bg-blue-400 group-data-highlighted:text-blue-900"
+							class="ml-2 bg-blue-600 text-xs text-blue-100 group-data-highlighted:bg-blue-300 group-data-highlighted:text-blue-900 dark:bg-blue-700 dark:text-blue-100 dark:group-data-highlighted:bg-blue-400 dark:group-data-highlighted:text-blue-900"
 						>
 							Default
 						</Badge>

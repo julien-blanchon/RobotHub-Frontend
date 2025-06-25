@@ -23,7 +23,7 @@
 
 <!--
 @component
-Compact video input box showing the status of camera video streams for AI sessions.
+Compact video input box showing the status of camera video streams for Inference Sessions.
 Displays video connection information when session exists or connection prompt when disconnected.
 -->
 

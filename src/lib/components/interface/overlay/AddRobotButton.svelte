@@ -55,7 +55,7 @@
 	variant="default"
 	size="sm"
 	onclick={quickAddSO100}
-	class="group rounded-r-none border-0 bg-emerald-600 text-white transition-all duration-200 hover:bg-emerald-500"
+	class="group rounded-r-none border-0 bg-emerald-500 text-white transition-all duration-200 hover:bg-emerald-400 dark:bg-emerald-600 dark:hover:bg-emerald-500"
 >
 	<span
 		class={[
@@ -75,8 +75,9 @@
 				variant="default"
 				size="sm"
 				class={cn(
-					"rounded-l-none border-0 border-l border-emerald-500/30 bg-emerald-600 px-2 text-white transition-all duration-200 hover:bg-emerald-500",
-					open && "bg-emerald-700 shadow-inner"
+					"rounded-l-none border-0 border-l border-emerald-400/30 bg-emerald-500 px-2 text-white transition-all duration-200 hover:bg-emerald-400",
+					"dark:border-emerald-500/30 dark:bg-emerald-600 dark:hover:bg-emerald-500",
+					open && "bg-emerald-600 shadow-inner dark:bg-emerald-700"
 				)}
 			>
 				<span
@@ -91,12 +92,12 @@
 	</DropdownMenu.Trigger>
 
 	<DropdownMenu.Content
-		class="w-56 border-emerald-500/30 bg-emerald-600 backdrop-blur-sm"
+		class="w-56 border-emerald-400/30 bg-emerald-500 backdrop-blur-sm dark:border-emerald-500/30 dark:bg-emerald-600"
 		align="center"
 	>
 		<DropdownMenu.Group>
 			<DropdownMenu.GroupHeading
-				class="text-xs font-semibold tracking-wider text-emerald-200 uppercase"
+				class="text-xs font-semibold tracking-wider text-emerald-100 uppercase dark:text-emerald-200"
 			>
 				Robot Types
 			</DropdownMenu.GroupHeading>
@@ -104,29 +105,29 @@
 			{#each robotTypes as robotType}
 				<DropdownMenu.Item
 					class={[
-						"group group cursor-pointer bg-emerald-600 text-white transition-all duration-200",
-						"data-highlighted:bg-emerald-700 "
+						"group group cursor-pointer bg-emerald-500 text-white transition-all duration-200",
+						"data-highlighted:bg-emerald-600 dark:bg-emerald-600 dark:data-highlighted:bg-emerald-700"
 					]}
 					onclick={async () => await addRobot(robotType)}
 				>
 					<span
 						class={[
 							robotType === "so-arm100" ? "icon-[ix--robotic-arm]" : "icon-[mdi--robot-industrial]",
-							"mr-3 size-4 text-emerald-200  transition-colors duration-200"
+							"mr-3 size-4 text-emerald-100 transition-colors duration-200 dark:text-emerald-200"
 						]}
 					></span>
 					<div class="flex flex-1 flex-col">
 						<span class="font-medium text-white transition-colors duration-200"
 							>{robotType.replace(/-/g, " ").toUpperCase()}</span
 						>
-						<span class="text-xs text-emerald-200 transition-colors duration-200">
+						<span class="text-xs text-emerald-100 transition-colors duration-200 dark:text-emerald-200">
 							{robotType === "so-arm100" ? "6-DOF Robotic Arm" : "Industrial Robot"}
 						</span>
 					</div>
 					{#if robotType === "so-arm100"}
 						<Badge
 							variant="secondary"
-							class="ml-2 bg-emerald-700 text-xs text-emerald-100 group-data-highlighted:bg-emerald-400 group-data-highlighted:text-emerald-900"
+							class="ml-2 bg-emerald-600 text-xs text-emerald-100 group-data-highlighted:bg-emerald-300 group-data-highlighted:text-emerald-900 dark:bg-emerald-700 dark:text-emerald-100 dark:group-data-highlighted:bg-emerald-400 dark:group-data-highlighted:text-emerald-900"
 						>
 							Default
 						</Badge>

@@ -23,7 +23,7 @@
 
 <!--
 @component
-Compact input box showing the status of video and robot inputs for AI sessions.
+Compact input box showing the status of video and robot inputs for Inference Sessions.
 Displays input connection information when session exists or connection prompt when disconnected.
 -->
 

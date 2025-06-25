@@ -22,7 +22,7 @@
 
 <!--
 @component
-Compact robot input box showing the status of robot joint states input for AI sessions.
+Compact robot input box showing the status of robot joint states input for Inference Sessions.
 Displays robot connection information when session exists or connection prompt when disconnected.
 -->
 

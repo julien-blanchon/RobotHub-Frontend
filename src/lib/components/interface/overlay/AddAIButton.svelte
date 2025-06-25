@@ -77,7 +77,7 @@
 	variant="default"
 	size="sm"
 	onclick={quickAddAI}
-	class="group rounded-r-none border-0 bg-purple-600 text-white transition-all duration-200 hover:bg-purple-500"
+	class="group rounded-r-none border-0 bg-purple-500 text-white transition-all duration-200 hover:bg-purple-400 dark:bg-purple-600 dark:hover:bg-purple-500"
 >
 	<span
 		class={[
@@ -97,8 +97,9 @@
 				variant="default"
 				size="sm"
 				class={cn(
-					"rounded-l-none border-0 border-l border-purple-500/30 bg-purple-600 px-2 text-white transition-all duration-200 hover:bg-purple-500",
-					open && "bg-purple-700 shadow-inner"
+					"rounded-l-none border-0 border-l border-purple-400/30 bg-purple-500 px-2 text-white transition-all duration-200 hover:bg-purple-400",
+					"dark:border-purple-500/30 dark:bg-purple-600 dark:hover:bg-purple-500",
+					open && "bg-purple-600 shadow-inner dark:bg-purple-700"
 				)}
 			>
 				<span
@@ -113,12 +114,12 @@
 	</DropdownMenu.Trigger>
 
 	<DropdownMenu.Content
-		class="w-56 border-purple-500/30 bg-purple-600 backdrop-blur-sm"
+		class="w-56 border-purple-400/30 bg-purple-500 backdrop-blur-sm dark:border-purple-500/30 dark:bg-purple-600"
 		align="center"
 	>
 		<DropdownMenu.Group>
 			<DropdownMenu.GroupHeading
-				class="text-xs font-semibold tracking-wider text-purple-200 uppercase"
+				class="text-xs font-semibold tracking-wider text-purple-100 uppercase dark:text-purple-200"
 			>
 				AI Types
 			</DropdownMenu.GroupHeading>
@@ -126,8 +127,8 @@
 			{#each aiOptions as ai}
 				<DropdownMenu.Item
 					class={[
-						"group group cursor-pointer bg-purple-600 text-white transition-all duration-200",
-						"data-highlighted:bg-purple-700"
+						"group group cursor-pointer bg-purple-500 text-white transition-all duration-200",
+						"data-highlighted:bg-purple-600 dark:bg-purple-600 dark:data-highlighted:bg-purple-700"
 					]}
 					onclick={async () => await addAI(ai.id)}
 					disabled={!ai.enabled}
@@ -135,14 +136,14 @@
 					<span
 						class={[
 							ai.icon,
-							"mr-3 size-4 text-purple-200 transition-colors duration-200"
+							"mr-3 size-4 text-purple-100 transition-colors duration-200 dark:text-purple-200"
 						]}
 					></span>
 					<div class="flex flex-1 flex-col">
 						<span class="font-medium text-white transition-colors duration-200"
 							>{formatAIType(ai.id)}</span
 						>
-						<span class="text-xs text-purple-200 transition-colors duration-200">
+						<span class="text-xs text-purple-100 transition-colors duration-200 dark:text-purple-200">
 							{getAIDescription(ai.id)}
 						</span>
 					</div>

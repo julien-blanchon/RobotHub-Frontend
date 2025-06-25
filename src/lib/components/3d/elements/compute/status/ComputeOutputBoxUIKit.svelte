@@ -28,7 +28,7 @@
 
 <!--
 @component
-Compact output box showing the status of robot outputs for AI sessions.
+Compact output box showing the status of robot outputs for Inference Sessions.
 Displays output connection information when session exists or connection prompt when disconnected.
 -->
 

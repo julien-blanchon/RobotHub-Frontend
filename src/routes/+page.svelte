@@ -4,12 +4,11 @@
 	import Videos from "@/components/3d/elements/video/Videos.svelte";
 	import { PerfMonitor } from "@threlte/extras";
 	import { T, Canvas } from "@threlte/core";
-	import Floor from '@/components/3d/Floor.svelte'
+	import Floor from "@/components/3d/Floor.svelte";
 	import { Gizmo, OrbitControls } from "@threlte/extras";
 	import { dev } from "$app/environment";
-	import { page } from "$app/stores";
-	import { goto } from "$app/navigation";
 	import { onMount } from "svelte";
+	import Overlay from "@/components/interface/overlay/Overlay.svelte";
 
 	let workspaceId = $state("");
 
@@ -27,55 +26,58 @@
 </script>
 
 {#if workspaceId}
-<Canvas>
-	<T.Scene>
-		<T.PerspectiveCamera position.x={-15} position.y={15} position.z={15} fov={20} makeDefault>
-			<OrbitControls
-				enableDamping
-				dampingFactor={0.05}
-				enableZoom
-				minDistance={15}
-				maxDistance={40}
-				minPolarAngle={Math.PI / 6}
-				maxPolarAngle={Math.PI / 2}
-				target={[0, 1, 0]}
-			>
-				<Gizmo />
-			</OrbitControls>
-		</T.PerspectiveCamera>
+	<Overlay {workspaceId} />
+	<Canvas>
+		<T.Scene>
+			<T.PerspectiveCamera position.x={-15} position.y={15} position.z={15} fov={20} makeDefault>
+				<OrbitControls
+					enableDamping
+					dampingFactor={0.05}
+					enableZoom
+					minDistance={15}
+					maxDistance={40}
+					minPolarAngle={Math.PI / 6}
+					maxPolarAngle={Math.PI / 2}
+					target={[0, 1, 0]}
+				>
+					<Gizmo />
+				</OrbitControls>
+			</T.PerspectiveCamera>
 
-		<!-- Lighting setup -->
-		<T.AmbientLight intensity={0.4} />
-		<T.DirectionalLight
-			position={[2, 20, 5]}
-			intensity={1}
-			castShadow
-			shadow.mapSize.width={1024}
-			shadow.mapSize.height={1024}
-		/>
-		<T.DirectionalLight
+			<!-- Lighting setup -->
+			<T.AmbientLight intensity={0.4} />
+			<T.DirectionalLight
+				position={[2, 20, 5]}
+				intensity={5}
+				castShadow
+				shadow.mapSize.width={1024}
+				shadow.mapSize.height={1024}
+			/>
+			<!-- <T.DirectionalLight
 			position={[-2, 20, -5]}
 			intensity={1}
 			castShadow
 			shadow.mapSize.width={1024}
 			shadow.mapSize.height={1024}
-		/>
+		/> -->
 
-		<Floor />
+			<Floor />
 
-		<!-- Robot component now gets robots from robotManager -->
-		<Robots {workspaceId} />
+			<!-- Robot component now gets robots from robotManager -->
+			<Robots {workspaceId} />
 
-		<Videos {workspaceId} />
+			<Videos {workspaceId} />
 
-		<Computes {workspaceId} />
-	</T.Scene>
-	{#if dev}
-		<PerfMonitor anchorX="right" anchorY="bottom" logsPerSecond={30} />
-	{/if}
-</Canvas>
+			<Computes {workspaceId} />
+		</T.Scene>
+		{#if dev}
+			<PerfMonitor anchorX="right" anchorY="bottom" logsPerSecond={30} />
+		{/if}
+	</Canvas>
 {:else}
-<div class="flex items-center justify-center h-screen">
-	<div class="text-white">Loading workspace...</div>
-</div>
-{/if} 
+	<div class="flex h-screen items-center justify-center">
+		<div class="text-slate-900 dark:text-white">
+			Loading
+		</div>
+	</div>
+{/if}

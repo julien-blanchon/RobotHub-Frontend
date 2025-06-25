@@ -136,7 +136,7 @@ export class RemoteComputeManager {
   }
 
   /**
-   * Create an AI session
+   * Create an Inference Session
    */
   async createSession(computeId: string, config: AISessionConfig): Promise<{ success: boolean; error?: string; data?: AISessionResponse }> {
     const compute = this.getCompute(computeId);

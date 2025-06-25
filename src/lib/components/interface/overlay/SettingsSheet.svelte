@@ -1,6 +1,7 @@
 <script lang="ts">
 	import * as Sheet from "@/components/ui/sheet";
 	import { Separator } from "@/components/ui/separator";
+	import { setMode, mode } from "mode-watcher";
 	import { Switch } from "@/components/ui/switch";
 	import { Label } from "@/components/ui/label";
 	import { Input } from "@/components/ui/input";
@@ -16,14 +17,12 @@
 	let { open = $bindable(false) }: Props = $props();
 
 	interface LocalSettings {
-		darkMode: boolean;
 		showFPS: boolean;
 		renderQuality: number;
 		animationSpeed: number;
 	}
 
 	let localSettings = $state<LocalSettings>({
-		darkMode: true,
 		showFPS: false,
 		renderQuality: 75,
 		animationSpeed: 1
@@ -89,16 +88,16 @@
 <Sheet.Root bind:open>
 	<Sheet.Content
 		side="left"
-		class="w-80 gap-0 border-r border-slate-600 bg-gradient-to-b from-slate-700 to-slate-800 p-0 text-white sm:w-96"
+		class="w-80 gap-0 border-r border-slate-300 bg-gradient-to-b from-slate-100 to-slate-200 p-0 text-slate-900 dark:border-slate-600 dark:bg-gradient-to-b dark:from-slate-700 dark:to-slate-800 dark:text-white sm:w-96"
 	>
 		<!-- Header -->
-		<Sheet.Header class="border-b border-slate-600 bg-slate-700/80 p-6 backdrop-blur-sm">
+		<Sheet.Header class="border-b border-slate-300 bg-slate-200/80 p-6 backdrop-blur-sm dark:border-slate-600 dark:bg-slate-700/80">
 			<div class="flex items-center justify-between">
 				<div class="flex items-center gap-3">
-					<span class="icon-[mdi--cog] size-6 text-orange-400"></span>
+					<span class="icon-[mdi--cog] size-6 text-orange-500 dark:text-orange-400"></span>
 					<div>
-						<Sheet.Title class="text-xl font-semibold text-slate-100">Robot Settings</Sheet.Title>
-						<p class="mt-1 text-sm text-slate-400">Configure application preferences</p>
+						<Sheet.Title class="text-xl font-semibold text-slate-900 dark:text-slate-100">Robot Settings</Sheet.Title>
+						<p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Configure application preferences</p>
 					</div>
 				</div>
 			</div>
@@ -106,21 +105,21 @@
 
 		<!-- Content -->
 		<div
-			class="scrollbar-thin scrollbar-track-slate-700 scrollbar-thumb-slate-500 flex-1 overflow-y-auto px-4"
+			class="scrollbar-thin scrollbar-track-slate-300 scrollbar-thumb-slate-400 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500 flex-1 overflow-y-auto px-4"
 		>
 			<div class="space-y-6 py-4">
 				<!-- Server Configuration -->
 				<div class="space-y-4">
 					<div class="mb-3 flex items-center gap-3">
-						<span class="icon-[mdi--server] size-5 text-blue-400"></span>
-						<h3 class="text-lg font-medium text-slate-100">Server Configuration</h3>
+						<span class="icon-[mdi--server] size-5 text-blue-500 dark:text-blue-400"></span>
+						<h3 class="text-lg font-medium text-slate-900 dark:text-slate-100">Server Configuration</h3>
 					</div>
 
 					<div class="space-y-4">
 						<div class="space-y-3">
 							<div class="space-y-1">
-								<Label class="text-sm font-medium text-slate-200">Inference Server URL</Label>
-								<p class="text-xs text-slate-400">
+								<Label class="text-sm font-medium text-slate-800 dark:text-slate-200">Inference Server URL</Label>
+								<p class="text-xs text-slate-600 dark:text-slate-400">
 									URL for the remote AI inference server that runs ACT models and manages robot sessions
 								</p>
 							</div>
@@ -128,14 +127,14 @@
 								<Input
 									bind:value={settings.inferenceServerUrl}
 									placeholder="http://localhost:8001"
-									class="flex-1 bg-slate-800 border-slate-600 text-slate-100"
+									class="flex-1 bg-slate-100 border-slate-300 text-slate-900 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100"
 								/>
 								<Button
 									variant="outline"
 									size="sm"
 									onclick={checkInferenceServerConnection}
 									disabled={isCheckingInferenceConnection}
-									class="border-slate-600 text-slate-200 hover:bg-slate-700"
+									class="border-slate-300 text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
 								>
 									{#if isCheckingInferenceConnection}
 										<span class="icon-[mdi--loading] animate-spin mr-1 size-4"></span>
@@ -148,22 +147,22 @@
 							</div>
 							<div class="flex items-center gap-2">
 								{#if inferenceConnectionStatus === 'connected'}
-									<span class="icon-[mdi--check-circle] size-4 text-green-400"></span>
-									<span class="text-xs text-green-400">Connected to inference server</span>
+									<span class="icon-[mdi--check-circle] size-4 text-green-500 dark:text-green-400"></span>
+									<span class="text-xs text-green-600 dark:text-green-400">Connected to inference server</span>
 								{:else if inferenceConnectionStatus === 'disconnected'}
-									<span class="icon-[mdi--close-circle] size-4 text-red-400"></span>
-									<span class="text-xs text-red-400">Cannot connect to inference server</span>
+									<span class="icon-[mdi--close-circle] size-4 text-red-500 dark:text-red-400"></span>
+									<span class="text-xs text-red-600 dark:text-red-400">Cannot connect to inference server</span>
 								{:else}
-									<span class="icon-[mdi--help-circle] size-4 text-slate-400"></span>
-									<span class="text-xs text-slate-400">Connection status unknown</span>
+									<span class="icon-[mdi--help-circle] size-4 text-slate-500 dark:text-slate-400"></span>
+									<span class="text-xs text-slate-600 dark:text-slate-400">Connection status unknown</span>
 								{/if}
 							</div>
 						</div>
 
 						<div class="space-y-3">
 							<div class="space-y-1">
-								<Label class="text-sm font-medium text-slate-200">Transport Server URL</Label>
-								<p class="text-xs text-slate-400">
+								<Label class="text-sm font-medium text-slate-800 dark:text-slate-200">Transport Server URL</Label>
+								<p class="text-xs text-slate-600 dark:text-slate-400">
 									URL for the transport server that manages communication rooms and routes video streams and robot data using consumer/producer system
 								</p>
 							</div>
@@ -171,14 +170,14 @@
 								<Input
 									bind:value={settings.transportServerUrl}
 									placeholder="http://localhost:8000"
-									class="flex-1 bg-slate-800 border-slate-600 text-slate-100"
+									class="flex-1 bg-slate-100 border-slate-300 text-slate-900 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100"
 								/>
 								<Button
 									variant="outline"
 									size="sm"
 									onclick={checkTransportServerConnection}
 									disabled={isCheckingTransportConnection}
-									class="border-slate-600 text-slate-200 hover:bg-slate-700"
+									class="border-slate-300 text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
 								>
 									{#if isCheckingTransportConnection}
 										<span class="icon-[mdi--loading] animate-spin mr-1 size-4"></span>
@@ -191,50 +190,53 @@
 							</div>
 							<div class="flex items-center gap-2">
 								{#if transportConnectionStatus === 'connected'}
-									<span class="icon-[mdi--check-circle] size-4 text-green-400"></span>
-									<span class="text-xs text-green-400">Connected to transport server</span>
+									<span class="icon-[mdi--check-circle] size-4 text-green-500 dark:text-green-400"></span>
+									<span class="text-xs text-green-600 dark:text-green-400">Connected to transport server</span>
 								{:else if transportConnectionStatus === 'disconnected'}
-									<span class="icon-[mdi--close-circle] size-4 text-red-400"></span>
-									<span class="text-xs text-red-400">Cannot connect to transport server</span>
+									<span class="icon-[mdi--close-circle] size-4 text-red-500 dark:text-red-400"></span>
+									<span class="text-xs text-red-600 dark:text-red-400">Cannot connect to transport server</span>
 								{:else}
-									<span class="icon-[mdi--help-circle] size-4 text-slate-400"></span>
-									<span class="text-xs text-slate-400">Connection status unknown</span>
+									<span class="icon-[mdi--help-circle] size-4 text-slate-500 dark:text-slate-400"></span>
+									<span class="text-xs text-slate-600 dark:text-slate-400">Connection status unknown</span>
 								{/if}
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<Separator class="bg-slate-600" />
+				<Separator class="bg-slate-300 dark:bg-slate-600" />
 
 				<!-- Application Settings -->
 				<div class="space-y-4">
 					<div class="mb-3 flex items-center gap-3">
-						<span class="icon-[mdi--tune] size-5 text-orange-400"></span>
-						<h3 class="text-lg font-medium text-slate-100">Application Settings</h3>
+						<span class="icon-[mdi--tune] size-5 text-orange-500 dark:text-orange-400"></span>
+						<h3 class="text-lg font-medium text-slate-900 dark:text-slate-100">Application Settings</h3>
 					</div>
 
-					<!-- <div class="space-y-4">
+					<div class="space-y-4">
 						<div class="flex items-center justify-between">
 							<div class="space-y-1">
-								<Label class="text-sm font-medium text-slate-200">Dark Mode</Label>
-								<p class="text-xs text-slate-400">Use dark theme for the interface</p>
+								<Label class="text-sm font-medium text-slate-800 dark:text-slate-200">Dark Mode</Label>
+								<p class="text-xs text-slate-600 dark:text-slate-400">Use dark theme for the interface</p>
 							</div>
-							<Switch bind:checked={localSettings.darkMode} />
+							<Switch 
+								checked={mode.current === 'dark'} 
+								onCheckedChange={(checked) => setMode(checked ? 'dark' : 'light')}
+							/>
 						</div>
 
-						<div class="flex items-center justify-between">
+						<!-- <div class="flex items-center justify-between">
 							<div class="space-y-1">
-								<Label class="text-sm font-medium text-slate-200">Show FPS</Label>
-								<p class="text-xs text-slate-400">Display frame rate counter</p>
+								<Label class="text-sm font-medium text-slate-800 dark:text-slate-200">Show FPS</Label>
+								<p class="text-xs text-slate-600 dark:text-slate-400">Display frame rate counter</p>
 							</div>
 							<Switch bind:checked={localSettings.showFPS} />
 						</div>
 
 						<div class="space-y-3">
 							<div class="space-y-1">
-								<Label class="text-sm font-medium text-slate-200">Render Quality</Label>
-								<p class="text-xs text-slate-400">
+								<Label class="text-sm font-medium text-slate-800 dark:text-slate-200">Render Quality</Label>
+								<p class="text-xs text-slate-600 dark:text-slate-400">
 									Adjust 3D rendering quality ({localSettings.renderQuality}%)
 								</p>
 							</div>
@@ -244,7 +246,7 @@
 								max="100"
 								step="5"
 								bind:value={localSettings.renderQuality}
-								class="slider h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-600"
+								class="slider h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-300 dark:bg-slate-600"
 							/>
 							<div class="flex justify-between text-xs text-slate-500">
 								<span>25%</span>
@@ -252,11 +254,10 @@
 							</div>
 						</div>
 
-
 						<div class="space-y-3">
 							<div class="space-y-1">
-								<Label class="text-sm font-medium text-slate-200">Animation Speed</Label>
-								<p class="text-xs text-slate-400">
+								<Label class="text-sm font-medium text-slate-800 dark:text-slate-200">Animation Speed</Label>
+								<p class="text-xs text-slate-600 dark:text-slate-400">
 									Robot movement animation speed ({localSettings.animationSpeed}x)
 								</p>
 							</div>
@@ -266,29 +267,29 @@
 								max="3"
 								step="0.1"
 								bind:value={localSettings.animationSpeed}
-								class="slider h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-600"
+								class="slider h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-300 dark:bg-slate-600"
 							/>
 							<div class="flex justify-between text-xs text-slate-500">
 								<span>0.1x</span>
 								<span>3x</span>
 							</div>
-						</div>
-					</div> -->
+						</div> -->
+					</div>
 				</div>
 
-				<Separator class="bg-slate-600" />
+				<Separator class="bg-slate-300 dark:bg-slate-600" />
 
 				<!-- About Section -->
 				<div class="space-y-4">
 					<div class="mb-3 flex items-center gap-3">
-						<span class="icon-[mdi--information-outline] size-5 text-blue-400"></span>
-						<h3 class="text-lg font-medium text-slate-100">About</h3>
+						<span class="icon-[mdi--information-outline] size-5 text-blue-500 dark:text-blue-400"></span>
+						<h3 class="text-lg font-medium text-slate-900 dark:text-slate-100">About</h3>
 					</div>
 
 					<div class="space-y-4">
 						<div class="space-y-2">
-							<h4 class="text-sm font-medium text-slate-200">Acknowledgements</h4>
-							<p class="text-xs leading-relaxed text-slate-400">
+							<h4 class="text-sm font-medium text-slate-800 dark:text-slate-200">Acknowledgements</h4>
+							<p class="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
 								This application is built with amazing open-source technologies and communities.
 							</p>
 						</div>
@@ -299,12 +300,12 @@
 								href="https://github.com/huggingface/lerobot"
 								target="_blank"
 								rel="noopener noreferrer"
-								class="flex items-center gap-3 rounded-lg border border-slate-600 bg-slate-800/50 p-3 transition-colors duration-200 hover:bg-slate-700/50"
+								class="flex items-center gap-3 rounded-lg border border-slate-300 bg-slate-100/50 p-3 transition-colors duration-200 hover:bg-slate-200/50 dark:border-slate-600 dark:bg-slate-800/50 dark:hover:bg-slate-700/50"
 							>
-								<span class="icon-[mdi--robot] size-5 text-yellow-400"></span>
+								<span class="icon-[mdi--robot] size-5 text-yellow-500 dark:text-yellow-400"></span>
 								<div class="flex-1">
-									<div class="text-sm font-medium text-slate-200">Hugging Face LeRobot</div>
-									<p class="text-xs text-slate-400">Robotics AI framework and models</p>
+									<div class="text-sm font-medium text-slate-800 dark:text-slate-200">Hugging Face LeRobot</div>
+									<p class="text-xs text-slate-600 dark:text-slate-400">Robotics AI framework and models</p>
 								</div>
 							</a>
 
@@ -313,12 +314,12 @@
 								href="https://threlte.xyz"
 								target="_blank"
 								rel="noopener noreferrer"
-								class="flex items-center gap-3 rounded-lg border border-slate-600 bg-slate-800/50 p-3 transition-colors duration-200 hover:bg-slate-700/50"
+								class="flex items-center gap-3 rounded-lg border border-slate-300 bg-slate-100/50 p-3 transition-colors duration-200 hover:bg-slate-200/50 dark:border-slate-600 dark:bg-slate-800/50 dark:hover:bg-slate-700/50"
 							>
-								<span class="icon-[mdi--cube-outline] size-5 text-orange-400"></span>
+								<span class="icon-[mdi--cube-outline] size-5 text-orange-500 dark:text-orange-400"></span>
 								<div class="flex-1">
-									<div class="text-sm font-medium text-slate-200">Threlte</div>
-									<p class="text-xs text-slate-400">3D graphics library for Svelte</p>
+									<div class="text-sm font-medium text-slate-800 dark:text-slate-200">Threlte</div>
+									<p class="text-xs text-slate-600 dark:text-slate-400">3D graphics library for Svelte</p>
 								</div>
 							</a>
 
@@ -327,12 +328,16 @@
 								href="https://bambot.org"
 								target="_blank"
 								rel="noopener noreferrer"
-								class="flex items-center gap-3 rounded-lg border border-slate-600 bg-slate-800/50 p-3 transition-colors duration-200 hover:bg-slate-700/50"
+								class="flex items-center gap-3 rounded-lg border border-slate-300 bg-slate-100/50 p-3 transition-colors duration-200 hover:bg-slate-200/50 dark:border-slate-600 dark:bg-slate-800/50 dark:hover:bg-slate-700/50"
 							>
-								<span class="icon-[mdi--memory] size-5 text-green-400"></span>
+								<span class="icon-[mdi--memory] size-5 text-green-500 dark:text-green-400"></span>
 								<div class="flex-1">
-									<div class="text-sm font-medium text-slate-200">bambot.org feetech.js</div>
-									<p class="text-xs text-slate-400">Servo motor control library</p>
+									<div class="text-sm font-medium text-slate-800 dark:text-slate-200">bambot.org feetech.js</div>
+									<p class="text-xs text-slate-600 dark:text-slate-400">
+										Amazing project by Tim Qian (https://x.com/tim_qian).
+										Most of the USB control part (feetech.js) comes from this project.
+										Thanks to Tim for sharing his work!
+									</p>
 								</div>
 							</a>
 
@@ -341,12 +346,12 @@
 								href="https://github.com/brean/urdf-viewer"
 								target="_blank"
 								rel="noopener noreferrer"
-								class="flex items-center gap-3 rounded-lg border border-slate-600 bg-slate-800/50 p-3 transition-colors duration-200 hover:bg-slate-700/50"
+								class="flex items-center gap-3 rounded-lg border border-slate-300 bg-slate-100/50 p-3 transition-colors duration-200 hover:bg-slate-200/50 dark:border-slate-600 dark:bg-slate-800/50 dark:hover:bg-slate-700/50"
 							>
-								<span class="icon-[mdi--cube-outline] size-5 text-orange-400"></span>
+								<span class="icon-[mdi--cube-outline] size-5 text-orange-500 dark:text-orange-400"></span>
 								<div class="flex-1">
-									<div class="text-sm font-medium text-slate-200">URDF Viewer</div>
-									<p class="text-xs text-slate-400">
+									<div class="text-sm font-medium text-slate-800 dark:text-slate-200">URDF Viewer</div>
+									<p class="text-xs text-slate-600 dark:text-slate-400">
 										Nice component for viewing URDF models with Threlte
 									</p>
 								</div>
