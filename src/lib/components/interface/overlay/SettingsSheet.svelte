@@ -126,7 +126,6 @@
 							<div class="flex gap-2">
 								<Input
 									bind:value={settings.inferenceServerUrl}
-									placeholder="http://localhost:8001"
 									class="flex-1 bg-slate-100 border-slate-300 text-slate-900 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100"
 								/>
 								<Button
@@ -169,7 +168,6 @@
 							<div class="flex gap-2">
 								<Input
 									bind:value={settings.transportServerUrl}
-									placeholder="http://localhost:8000"
 									class="flex-1 bg-slate-100 border-slate-300 text-slate-900 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100"
 								/>
 								<Button
