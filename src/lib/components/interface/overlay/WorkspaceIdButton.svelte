@@ -118,7 +118,7 @@
 					<div class="space-y-2">
 						<div class="rounded-lg border border-slate-300 bg-slate-50 p-2 dark:border-slate-600 dark:bg-slate-800">
 							<div class="break-all font-mono text-sm text-slate-800 dark:text-slate-200">
-								http://blanchon-lerobot-arena.hf.space/<span class="bg-blue-100 text-blue-800 px-1 rounded dark:bg-blue-900 dark:text-blue-200">{workspaceId}</span>
+								https://blanchon-robothub-frontend.hf.space<span class="bg-blue-100 text-blue-800 px-1 rounded dark:bg-blue-900 dark:text-blue-200">{workspaceId}</span>
 							</div>
 						</div>
 						<Button

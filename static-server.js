@@ -3,7 +3,7 @@
 // Simple static file server for Svelte build output
 import { join } from "path";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 const BUILD_DIR = "./build";
 
 // MIME types for common web assets
