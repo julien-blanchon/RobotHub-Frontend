@@ -8,8 +8,8 @@ RUN apk --no-cache add curl
 WORKDIR /app
 
 # Create non-root user for security
-RUN addgroup -g 1001 -S svelte && \
-    adduser -S svelteuser -u 1001
+RUN addgroup -g 1001 -S user && \
+    adduser -S user -u 1001
 
 # ===============================
 # Dependencies stage
@@ -52,14 +52,23 @@ ENV NODE_ENV=production
 ENV PORT=3000
 
 # Copy built application and static server
-COPY --from=builder --chown=svelteuser:svelte /app/build ./build
-COPY --chown=svelteuser:svelte static-server.js ./
+COPY --from=builder --chown=user:user /app/build ./build
+COPY --chown=user:user static-server.js ./
 
 # Switch to non-root user
-USER svelteuser
+USER user
+
+ARG PUBLIC_TRANSPORT_SERVER_URL=https://blanchon-robothub-transportserver.hf.space/api
+ENV PUBLIC_TRANSPORT_SERVER_URL=${PUBLIC_TRANSPORT_SERVER_URL}
+
+ARG PUBLIC_INFERENCE_SERVER_URL=https://blanchon-robothub-inference-server.hf.space/api
+ENV PUBLIC_INFERENCE_SERVER_URL=${PUBLIC_INFERENCE_SERVER_URL}
+
+ARG PORT=8000
+ENV PORT=${PORT}
 
 # Expose port
-EXPOSE 3000
+EXPOSE ${PORT}
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

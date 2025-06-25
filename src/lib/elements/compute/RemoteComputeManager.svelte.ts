@@ -2,7 +2,15 @@ import { RemoteCompute } from './RemoteCompute.svelte';
 import type { Position3D } from '$lib/types/positionable.js';
 import { generateName } from '$lib/utils/generateName.js';
 import { positionManager } from '$lib/utils/positionManager.js';
-import { type LeRobotAIServerClient, createClient } from '@robothub/inference-server-client';
+import { 
+  rootGet,
+  healthCheckHealthGet,
+  listSessionsSessionsGet,
+  createSessionSessionsPost,
+  startInferenceSessionsSessionIdStartPost,
+  stopInferenceSessionsSessionIdStopPost,
+  deleteSessionSessionsSessionIdDelete
+} from '@robothub/inference-server-client';
 import { settings } from '$lib/runes/settings.svelte';
 import type { 
   CreateSessionRequest, 
@@ -58,14 +66,9 @@ export interface AISessionStatus {
 
 export class RemoteComputeManager {
   private _computes = $state<RemoteCompute[]>([]);
-  
-  // Make the client reactive to URL changes
-  private get inferenceServerClient() {
-    return createClient(settings.inferenceServerUrl);
-  }
 
   constructor() {
-    // Remove the fixed client initialization
+    // No client initialization needed anymore
   }
 
   // Reactive getters
@@ -146,11 +149,20 @@ export class RemoteComputeManager {
         session_id: config.sessionId,
         policy_path: config.policyPath,
         camera_names: config.cameraNames,
-        arena_server_url: config.transportServerUrl,
+        transport_server_url: config.transportServerUrl,
         workspace_id: config.workspaceId || undefined,
       };
 
-      const data: CreateSessionResponse = await this.inferenceServerClient.createSession(request);
+      const response = await createSessionSessionsPost({
+        body: request,
+        baseUrl: settings.inferenceServerUrl
+      });
+
+      if (!response.data) {
+        throw new Error('Failed to create session - no data returned');
+      }
+
+      const data: CreateSessionResponse = response.data;
       
       // Update compute with session info
       compute.sessionId = config.sessionId;
@@ -183,7 +195,10 @@ export class RemoteComputeManager {
     }
 
     try {
-      await this.inferenceServerClient.startInference(compute.sessionId);
+      await startInferenceSessionsSessionIdStartPost({
+        path: { session_id: compute.sessionId },
+        baseUrl: settings.inferenceServerUrl
+      });
       compute.status = 'running';
       return { success: true };
     } catch (error) {
@@ -205,7 +220,10 @@ export class RemoteComputeManager {
     }
 
     try {
-      await this.inferenceServerClient.stopInference(compute.sessionId);
+      await stopInferenceSessionsSessionIdStopPost({
+        path: { session_id: compute.sessionId },
+        baseUrl: settings.inferenceServerUrl
+      });
       compute.status = 'stopped';
       return { success: true };
     } catch (error) {
@@ -227,7 +245,10 @@ export class RemoteComputeManager {
     }
 
     try {
-      await this.inferenceServerClient.deleteSession(compute.sessionId);
+      await deleteSessionSessionsSessionIdDelete({
+        path: { session_id: compute.sessionId },
+        baseUrl: settings.inferenceServerUrl
+      });
 
       // Reset compute session info
       compute.sessionId = null;
@@ -255,22 +276,34 @@ export class RemoteComputeManager {
     }
 
     try {
-      const data: SessionStatusResponse = await this.inferenceServerClient.getSessionStatus(compute.sessionId);
+      // Get all sessions and find the one we want
+      const response = await listSessionsSessionsGet({
+        baseUrl: settings.inferenceServerUrl
+      });
+
+      if (!response.data) {
+        throw new Error('Failed to get sessions list');
+      }
+
+      const session = response.data.find(s => s.session_id === compute.sessionId);
+      if (!session) {
+        throw new Error(`Session ${compute.sessionId} not found`);
+      }
       
       // Update compute status
-      compute.status = data.status as 'initializing' | 'ready' | 'running' | 'stopped';
+      compute.status = session.status as 'initializing' | 'ready' | 'running' | 'stopped';
       
       // Convert to AISessionStatus format
       const sessionStatus: AISessionStatus = {
-        session_id: data.session_id,
-        status: data.status as 'initializing' | 'ready' | 'running' | 'stopped',
-        policy_path: data.policy_path,
-        camera_names: data.camera_names,
-        workspace_id: data.workspace_id,
-        rooms: data.rooms as any,
-        stats: data.stats as any,
-        inference_stats: data.inference_stats as any,
-        error_message: data.error_message || undefined
+        session_id: session.session_id,
+        status: session.status as 'initializing' | 'ready' | 'running' | 'stopped',
+        policy_path: session.policy_path,
+        camera_names: session.camera_names,
+        workspace_id: session.workspace_id,
+        rooms: session.rooms as any,
+        stats: session.stats as any,
+        inference_stats: session.inference_stats as any,
+        error_message: session.error_message || undefined
       };
       
       return { success: true, data: sessionStatus };
@@ -288,13 +321,20 @@ export class RemoteComputeManager {
    */
   async checkServerHealth(): Promise<{ success: boolean; data?: any; error?: string }> {
     try {
-      const isHealthy = await this.inferenceServerClient.isHealthy();
-      if (!isHealthy) {
+      const healthResponse = await rootGet({
+        baseUrl: settings.inferenceServerUrl
+      });
+      
+      if (!healthResponse.data) {
         return { success: false, error: 'Server is not healthy' };
       }
       
-      const data = await this.inferenceServerClient.getHealth();
-      return { success: true, data };
+      // Get detailed health info
+      const detailedHealthResponse = await healthCheckHealthGet({
+        baseUrl: settings.inferenceServerUrl
+      });
+      
+      return { success: true, data: detailedHealthResponse.data };
     } catch (error) {
       console.error('Failed to check AI server health:', error);
       return { 
