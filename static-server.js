@@ -35,7 +35,7 @@ function getMimeType(filename) {
 
 const server = Bun.serve({
   port: PORT,
-  hostname: "localhost",
+  hostname: "0.0.0.0",
   
   async fetch(req) {
     const url = new URL(req.url);
