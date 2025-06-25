@@ -1,13 +1,9 @@
 <script lang="ts">
-	import { useCursor } from '@threlte/extras'
 	import { T } from "@threlte/core";
-	import { HTML, type IntersectionEvent } from "@threlte/extras";
-	import { GLTF, useGltf } from "@threlte/extras";
+	import { useGltf } from "@threlte/extras";
 	import Model from "./GPUModel.svelte";
 	import { Shape, Path, ExtrudeGeometry, BoxGeometry } from "three";
 	import { onMount } from "svelte";
-	import type { VideoInstance } from "$lib/elements/video/VideoManager.svelte";
-	import { videoManager } from "$lib/elements/video/VideoManager.svelte";
 
 	// Props interface
 	interface Props {
@@ -114,25 +110,9 @@
 	{rotation}
 	{scale}
 >
-	<!-- TV Frame -->
-	<!-- <T.Mesh geometry={frameGeometry}>
-		<T.MeshStandardMaterial
-			color={"#374151"}
-			metalness={0.05}
-			roughness={0.4}
-			envMapIntensity={0.3}
-		/>
-	</T.Mesh> -->
 	<T.Group
 		scale={[1, 1, 1]}
 	>
 		<Model fan_rotation={fan_rotation} />
 	</T.Group>
-	<!-- <GLTF castShadow receiveShadow gltf={$gltf} position={{ y: 1 }} scale={3} /> -->
-
-	<!-- <T.Group scale={[1,1,1]}>
-		{#if $gltf}
-			<T is={$gltf.nodes['Sketchfab_model']} />
-		{/if}
-	</T.Group> -->
 </T.Group>

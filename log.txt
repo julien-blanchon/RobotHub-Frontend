@@ -1,1 +1,0 @@
-.venv/bin/python: can't open file '/Users/julienblanchon/Git/lerobot-arena/lerobot-arena/src-python-video/src/main.py': [Errno 2] No such file or directory

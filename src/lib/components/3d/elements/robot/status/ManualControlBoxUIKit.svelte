@@ -18,11 +18,10 @@
 		}
 	}
 
-	// Manual control theme color (purple)
 	const manualColor = "rgb(147, 51, 234)";
 </script>
 
-<BaseStatusBox 
+<BaseStatusBox
 	color={manualColor}
 	borderOpacity={isDisabled ? 0.3 : robot.isManualControlEnabled ? 0.8 : 0.5}
 	backgroundOpacity={isDisabled ? 0.1 : robot.isManualControlEnabled ? 0.3 : 0.2}
@@ -31,29 +30,29 @@
 >
 	{#if isDisabled}
 		<!-- Disabled State -->
-		<StatusHeader 
-			icon={ICON["icon-[material-symbols--lock]"].svg} 
-			text="DISABLED" 
+		<StatusHeader
+			icon={ICON["icon-[material-symbols--lock]"].svg}
+			text="DISABLED"
 			color={manualColor}
 			opacity={0.7}
 		/>
 
-		<StatusContent 
-							title="Control managed by"
-				subtitle={robot.consumer?.name.slice(0, 20) ?? 'No Input'}
-				color="rgb(196, 181, 253)"
+		<StatusContent
+			title="Control managed by"
+			subtitle={robot.consumer?.name.slice(0, 20) ?? "No Input"}
+			color="rgb(196, 181, 253)"
 			variant="secondary"
 		/>
 	{:else if robot.isManualControlEnabled}
 		<!-- Enabled State -->
-		<StatusHeader 
-			icon={ICON["icon-[solar--volume-knob-bold]"].svg} 
-			text="ACTIVE" 
+		<StatusHeader
+			icon={ICON["icon-[solar--volume-knob-bold]"].svg}
+			text="ACTIVE"
 			color={manualColor}
 			opacity={0.9}
 		/>
 
-		<StatusContent 
+		<StatusContent
 			title={`${robot.jointArray.length} Joints Active`}
 			subtitle="Manual Control Enabled"
 			color="rgb(233, 213, 255)"
@@ -61,20 +60,16 @@
 		/>
 	{:else}
 		<!-- Default State (Manual Off) -->
-		<StatusHeader 
-			icon={ICON["icon-[solar--volume-knob-bold]"].svg} 
-			text="MANUAL" 
+		<StatusHeader
+			icon={ICON["icon-[solar--volume-knob-bold]"].svg}
+			text="MANUAL"
 			color={manualColor}
 			opacity={0.8}
 		/>
 
-		<StatusContent 
-			title="Click to Enable"
-			color={manualColor}
-			variant="secondary"
-		/>
+		<StatusContent title="Click to Enable" color={manualColor} variant="secondary" />
 
-		<StatusButton 
+		<StatusButton
 			icon={ICON["icon-[mingcute--settings-2-fill]"].svg}
 			text="Configure"
 			color={manualColor}

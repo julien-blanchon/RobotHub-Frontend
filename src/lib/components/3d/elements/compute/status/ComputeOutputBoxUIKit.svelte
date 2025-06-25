@@ -1,14 +1,13 @@
 <script lang="ts">
 	import type { RemoteCompute } from "$lib/elements/compute//RemoteCompute.svelte";
 	import { ICON } from "$lib/utils/icon";
-	import { 
-		BaseStatusBox, 
-		StatusHeader, 
-		StatusContent, 
+	import {
+		BaseStatusBox,
+		StatusHeader,
+		StatusContent,
 		StatusIndicator,
 		StatusButton
 	} from "$lib/components/3d/ui";
-	import { Container, SVG, Text } from "threlte-uikit";
 
 	interface Props {
 		compute: RemoteCompute;
@@ -19,18 +18,7 @@
 
 	// Output theme color (blue)
 	const outputColor = "rgb(59, 130, 246)";
-	
-	// Icons
-	// const exportIcon = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNMTkgMTJsLTcgN3YtNEg1di02aDd2LTR6Ii8+PC9zdmc+";
-	// const robotIcon = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNMTIgMTJjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6TTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThDNy4zIDIwIDMuOCAxNi42IDMuOCAxMlM3LjMgNCA5IDRzNS4yIDMuNCA1LjIgOC02IDgtNSA4eiIvPjwvc3ZnPg==";
-	// const plusIcon = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNMTkgMTNoLTZ2NmgtMnYtNkg1di0yaDZWNWgydjZoNnoiLz48L3N2Zz4=";
 </script>
-
-<!--
-@component
-Compact output box showing the status of robot outputs for Inference Sessions.
-Displays output connection information when session exists or connection prompt when disconnected.
--->
 
 <BaseStatusBox
 	minWidth={110}
@@ -59,8 +47,8 @@ Displays output connection information when session exists or connection prompt 
 		/>
 
 		<!-- Status indicator based on running state -->
-		<StatusIndicator 
-			color={compute.isRunning ? outputColor : "rgb(245, 158, 11)"} 
+		<StatusIndicator
+			color={compute.isRunning ? outputColor : "rgb(245, 158, 11)"}
 			type={compute.isRunning ? "pulse" : "dot"}
 		/>
 	{:else}
@@ -75,7 +63,7 @@ Displays output connection information when session exists or connection prompt 
 		/>
 
 		<StatusContent
-			title={!compute.hasSession ? 'Need Session' : 'Configure'}
+			title={!compute.hasSession ? "Need Session" : "Configure"}
 			color="rgb(147, 197, 253)"
 			variant="secondary"
 		/>
@@ -88,4 +76,4 @@ Displays output connection information when session exists or connection prompt 
 			textOpacity={0.7}
 		/>
 	{/if}
-</BaseStatusBox> 
+</BaseStatusBox>

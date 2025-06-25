@@ -8,11 +8,11 @@
 	import { createUrdfRobot } from "$lib/elements/robot/createRobot.svelte";
 	import { interactivity, type IntersectionEvent, useCursor } from "@threlte/extras";
 	import type { RobotUrdfConfig } from "$lib/types/urdf";
-	import { onMount } from 'svelte';
-	import type IUrdfRobot from '@/components/3d/elements/robot/URDF/interfaces/IUrdfRobot.js';
-	import { ROBOT_CONFIG } from '$lib/elements/robot/config.js';
+	import { onMount } from "svelte";
+	import type IUrdfRobot from "@/components/3d/elements/robot/URDF/interfaces/IUrdfRobot.js";
+	import { ROBOT_CONFIG } from "$lib/elements/robot/config.js";
 
-	interface Props {	
+	interface Props {
 		robot: Robot;
 		onCameraMove: (ref: any) => void;
 		onInputBoxClick: (robot: Robot) => void;
@@ -22,7 +22,13 @@
 
 	let ref = $state<Group | undefined>(undefined);
 
-	let { robot = $bindable(), onCameraMove, onInputBoxClick, onRobotBoxClick, onOutputBoxClick }: Props = $props();
+	let {
+		robot = $bindable(),
+		onCameraMove,
+		onInputBoxClick,
+		onRobotBoxClick,
+		onOutputBoxClick
+	}: Props = $props();
 
 	let urdfRobotState = $state<IUrdfRobot | null>(null);
 	let lastJointValues = $state<Record<string, number>>({});
@@ -31,12 +37,12 @@
 		const urdfConfig: RobotUrdfConfig = {
 			urdfUrl: "/robots/so-100/so_arm100.urdf"
 		};
-		
+
 		try {
 			const UrdfRobotState = await createUrdfRobot(urdfConfig);
 			urdfRobotState = UrdfRobotState.urdfRobot;
 		} catch (error) {
-			console.error('Failed to load URDF robot:', error);
+			console.error("Failed to load URDF robot:", error);
 		}
 	});
 
@@ -47,17 +53,19 @@
 
 		// Check if this is the initial sync (no previous values recorded)
 		const isInitialSync = Object.keys(lastJointValues).length === 0;
-		
+
 		// Check if any joint values have actually changed (using config threshold)
 		const threshold = isInitialSync ? 0 : ROBOT_CONFIG.performance.uiUpdateThreshold;
-		const hasSignificantChanges = isInitialSync || robot.jointArray.some(joint => 
-			Math.abs((lastJointValues[joint.name] || 0) - joint.value) > threshold
-		);
+		const hasSignificantChanges =
+			isInitialSync ||
+			robot.jointArray.some(
+				(joint) => Math.abs((lastJointValues[joint.name] || 0) - joint.value) > threshold
+			);
 		if (!hasSignificantChanges) return;
 
 		// Batch update all joints that have changed (or all joints on initial sync)
 		let updatedCount = 0;
-		robot.jointArray.forEach(joint => {
+		robot.jointArray.forEach((joint) => {
 			if (isInitialSync || Math.abs((lastJointValues[joint.name] || 0) - joint.value) > threshold) {
 				lastJointValues[joint.name] = joint.value;
 				const urdfJoint = findUrdfJoint(urdfRobotState, joint.name);
@@ -66,11 +74,11 @@
 					if (!urdfJoint.rotation) {
 						urdfJoint.rotation = [0, 0, 0];
 					}
-					
+
 					// Use the Robot's conversion method for proper coordinate mapping
 					const radians = robot.convertNormalizedToUrdfRadians(joint.name, joint.value);
 					const axis = urdfJoint.axis_xyz || [0, 0, 1];
-					
+
 					// Reset rotation and apply to the appropriate axis
 					urdfJoint.rotation = [0, 0, 0];
 					for (let i = 0; i < 3; i++) {
@@ -105,7 +113,6 @@
 		event.stopPropagation();
 		isToggled = !isToggled;
 	}
-
 </script>
 
 <T.Group
@@ -116,11 +123,7 @@
 	scale={[10, 10, 10]}
 	rotation={[-Math.PI / 2, 0, 0]}
 >
-	<T.Group
-		onpointerenter={onPointerEnter}
-		onpointerleave={onPointerLeave}
-		onclick={handleClick}
-	>
+	<T.Group onpointerenter={onPointerEnter} onpointerleave={onPointerLeave} onclick={handleClick}>
 		{#if urdfRobotState}
 			{#each getRootLinks(urdfRobotState) as link}
 				<UrdfLink
@@ -148,7 +151,7 @@
 			<!-- Fallback simple representation while URDF loads -->
 			<T.Mesh>
 				<T.BoxGeometry args={[0.1, 0.1, 0.1]} />
-				<T.MeshStandardMaterial 
+				<T.MeshStandardMaterial
 					color={robot.connectionStatus.isConnected ? "#10b981" : "#6b7280"}
 					opacity={$hovering ? 0.8 : 1.0}
 					transparent
@@ -157,13 +160,11 @@
 		{/if}
 	</T.Group>
 
-
-	<RobotStatusBillboard 
-		{robot} 
-		onInputBoxClick={onInputBoxClick} 
-		onRobotBoxClick={onRobotBoxClick} 
-		onOutputBoxClick={onOutputBoxClick} 
-		visible={isToggled} 
+	<RobotStatusBillboard
+		{robot}
+		{onInputBoxClick}
+		{onRobotBoxClick}
+		{onOutputBoxClick}
+		visible={isToggled}
 	/>
-
 </T.Group>

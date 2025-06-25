@@ -5,9 +5,6 @@
 	import { T } from "@threlte/core";
 	import { getRootLinks } from "../utils/UrdfParser";
 	import UrdfLink from "./UrdfLink.svelte";
-	import { scale } from "svelte/transition";
-	import type IUrdfLink from "../interfaces/IUrdfLink";
-	import type IUrdfJoint from "../interfaces/IUrdfJoint";
 	import type IUrdfRobot from "../interfaces/IUrdfRobot";
 
 	interface Props {
@@ -42,15 +39,8 @@
 		jointColor = "#000000",
 		jointIndicatorColor = "#000000",
 		nameHeight = 0.1,
-		textScale = 1,
+		textScale = 1
 	}: Props = $props();
-
-	// Three.js object management
-	$effect(() => {
-		if (ref) {
-			// Handle three.js object updates
-		}
-	});
 </script>
 
 <T.Group {position} {quaternion} scale={[10, 10, 10]} rotation={[-Math.PI / 2, 0, 0]}>

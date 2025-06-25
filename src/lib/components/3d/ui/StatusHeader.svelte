@@ -24,20 +24,8 @@
 	}: Props = $props();
 </script>
 
-<!--
-@component
-Status header component with icon and text.
-Used for consistent headers across all status boxes.
--->
-
 <Container flexDirection="row" alignItems="center" gap={6} {marginBottom}>
-	<SVG
-		width={iconSize}
-		height={iconSize}
-		{color}
-		{opacity}
-		src={icon}
-	/>
+	<SVG width={iconSize} height={iconSize} {color} {opacity} src={icon} />
 	<Text
 		{text}
 		{fontSize}
@@ -47,4 +35,4 @@ Used for consistent headers across all status boxes.
 		textTransform="uppercase"
 		{letterSpacing}
 	/>
-</Container> 
+</Container>

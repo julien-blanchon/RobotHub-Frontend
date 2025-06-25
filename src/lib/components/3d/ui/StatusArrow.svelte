@@ -21,12 +21,6 @@
 	}: Props = $props();
 </script>
 
-<!--
-@component
-Reusable arrow component for showing connection flows.
-Supports different directions and styling.
--->
-
 <Container
 	flexDirection="row"
 	alignItems="center"

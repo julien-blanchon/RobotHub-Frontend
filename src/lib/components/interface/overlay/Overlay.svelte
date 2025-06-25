@@ -23,19 +23,22 @@
 		settingsOpen = $bindable(false),
 		workspaceIdMenuOpen = $bindable(false)
 	}: Props = $props();
-
-
 </script>
 
 <div class="select-none">
 	<!-- Button Bar Container -->
 	<div class="fixed top-4 left-4 z-50 flex gap-2 select-none">
 		<!-- Add Robot Button Group -->
-		<div class="flex items-center justify-center gap-2 overflow-hidden rounded-lg ">
+		<div class="flex items-center justify-center gap-2 overflow-hidden rounded-lg">
 			<!-- Logo/Favicon -->
-			<div class="flex items-center justify-center ">
+			<div class="flex items-center justify-center">
 				<!-- From /favicon_1024.png -->
-				<img src="/favicon_1024.png" alt="Logo" draggable="false" class="h-10 w-10 filter dark:invert invert-0" />
+				<img
+					src="/favicon_1024.png"
+					alt="Logo"
+					draggable="false"
+					class="h-10 w-10 invert-0 filter dark:invert"
+				/>
 			</div>
 			<!-- Add robot button and dropdown menu (Top Left) -->
 			<div class="flex items-center justify-center">
@@ -44,7 +47,7 @@
 		</div>
 
 		<!-- Add Sensor Button Group -->
-		<div class="flex items-center justify-center overflow-hidden rounded-lg ">
+		<div class="flex items-center justify-center overflow-hidden rounded-lg">
 			<!-- Add sensor button and dropdown menu -->
 			<div class="flex items-center justify-center">
 				<AddSensorButton bind:open={addSensorDropdownMenuOpen} />
@@ -52,7 +55,7 @@
 		</div>
 
 		<!-- Add AI Button Group -->
-		<div class="flex items-center justify-center overflow-hidden rounded-lg ">
+		<div class="flex items-center justify-center overflow-hidden rounded-lg">
 			<!-- Add AI button and dropdown menu -->
 			<div class="flex items-center justify-center">
 				<AddAIButton bind:open={addAIDropdownMenuOpen} />

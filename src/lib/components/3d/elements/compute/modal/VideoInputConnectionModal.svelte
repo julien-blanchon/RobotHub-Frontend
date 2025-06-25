@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Dialog from "@/components/ui/dialog";
-	import { video } from '@robothub/transport-server-client';
-	import type { video as videoTypes } from '@robothub/transport-server-client';
+	import { video } from "@robothub/transport-server-client";
+	import type { video as videoTypes } from "@robothub/transport-server-client";
 	import { Button } from "@/components/ui/button";
 	import * as Card from "@/components/ui/card";
 	import { Badge } from "@/components/ui/badge";
@@ -19,7 +19,7 @@
 	let { open = $bindable(), compute, workspaceId }: Props = $props();
 
 	let isConnecting = $state(false);
-	let selectedCameraName = $state('front');
+	let selectedCameraName = $state("front");
 	let localStream: MediaStream | null = $state(null);
 	let videoProducer: any = null;
 
@@ -32,7 +32,7 @@
 
 	async function handleConnectLocalCamera() {
 		if (!compute.hasSession) {
-			toast.error('No Inference Session available. Create a session first.');
+			toast.error("No Inference Session available. Create a session first.");
 			return;
 		}
 
@@ -53,13 +53,13 @@
 
 			// Create video producer and connect to the camera room
 			videoProducer = new video.VideoProducer(settings.transportServerUrl);
-			
+
 			// Connect to the EXISTING camera room (don't create new one)
 			const participantId = `frontend-camera-${selectedCameraName}-${Date.now()}`;
 			const success = await videoProducer.connect(workspaceId, cameraRoomId, participantId);
-			
+
 			if (!success) {
-				throw new Error('Failed to connect to camera room');
+				throw new Error("Failed to connect to camera room");
 			}
 
 			// Start streaming
@@ -68,11 +68,10 @@
 			toast.success(`Camera connected to Inference Session`, {
 				description: `Local camera streaming to ${selectedCameraName} input`
 			});
-
 		} catch (error) {
-			console.error('Camera connection error:', error);
-			toast.error('Failed to connect camera', {
-				description: error instanceof Error ? error.message : 'Unknown error'
+			console.error("Camera connection error:", error);
+			toast.error("Failed to connect camera", {
+				description: error instanceof Error ? error.message : "Unknown error"
 			});
 		} finally {
 			isConnecting = false;
@@ -88,25 +87,25 @@
 			}
 
 			if (localStream) {
-				localStream.getTracks().forEach(track => track.stop());
+				localStream.getTracks().forEach((track) => track.stop());
 				localStream = null;
 			}
 
-			toast.success('Camera disconnected');
+			toast.success("Camera disconnected");
 		} catch (error) {
-			console.error('Disconnect error:', error);
-			toast.error('Error disconnecting camera');
+			console.error("Disconnect error:", error);
+			toast.error("Error disconnecting camera");
 		}
 	}
 
 	// Cleanup on modal close
 	$effect(() => {
 		return () => {
-            if (!open) {
-                handleDisconnectCamera();
-            }
-        };
-    });
+			if (!open) {
+				handleDisconnectCamera();
+			}
+		};
+	});
 </script>
 
 <Dialog.Root bind:open>
@@ -116,7 +115,7 @@
 		<Dialog.Header class="pb-3">
 			<Dialog.Title class="flex items-center gap-2 text-lg font-bold text-slate-100">
 				<span class="icon-[mdi--video-input-component] size-5 text-green-400"></span>
-				Video Input - {compute.name || 'No Compute Selected'}
+				Video Input - {compute.name || "No Compute Selected"}
 			</Dialog.Title>
 			<Dialog.Description class="text-sm text-slate-400">
 				Connect camera streams to provide visual input for AI inference
@@ -150,8 +149,8 @@
 						</Card.Title>
 					</Card.Header>
 					<Card.Content class="text-sm text-yellow-300">
-						You need to create an Inference Session before connecting video inputs.
-						The session defines which camera names are available for connection.
+						You need to create an Inference Session before connecting video inputs. The session
+						defines which camera names are available for connection.
 					</Card.Content>
 				</Card.Root>
 			{:else}
@@ -170,9 +169,9 @@
 							<div class="grid grid-cols-2 gap-2">
 								{#each compute.sessionConfig?.cameraNames || [] as cameraName}
 									<button
-										onclick={() => selectedCameraName = cameraName}
-										class="p-2 rounded border text-left {selectedCameraName === cameraName 
-											? 'border-green-500 bg-green-500/20' 
+										onclick={() => (selectedCameraName = cameraName)}
+										class="rounded border p-2 text-left {selectedCameraName === cameraName
+											? 'border-green-500 bg-green-500/20'
 											: 'border-slate-600 bg-slate-800/50 hover:bg-slate-700/50'}"
 									>
 										<div class="text-sm font-medium">{cameraName}</div>
@@ -192,7 +191,7 @@
 										Selected Camera: {selectedCameraName}
 									</p>
 									<p class="text-xs text-green-400/70">
-										{localStream ? 'Connected' : 'Not Connected'}
+										{localStream ? "Connected" : "Not Connected"}
 									</p>
 								</div>
 								{#if !localStream}
@@ -201,10 +200,10 @@
 										size="sm"
 										onclick={handleConnectLocalCamera}
 										disabled={isConnecting}
-										class="bg-green-600 hover:bg-green-700 text-xs disabled:opacity-50"
+										class="bg-green-600 text-xs hover:bg-green-700 disabled:opacity-50"
 									>
 										{#if isConnecting}
-											<span class="icon-[mdi--loading] animate-spin mr-1 size-3"></span>
+											<span class="icon-[mdi--loading] mr-1 size-3 animate-spin"></span>
 											Connecting...
 										{:else}
 											<span class="icon-[mdi--camera] mr-1 size-3"></span>
@@ -229,12 +228,14 @@
 						{#if localStream}
 							<div class="space-y-2">
 								<div class="text-sm font-medium text-green-300">Live Preview:</div>
-								<div class="rounded border border-green-500/30 bg-black/50 aspect-video overflow-hidden">
+								<div
+									class="aspect-video overflow-hidden rounded border border-green-500/30 bg-black/50"
+								>
 									<video
 										autoplay
 										muted
 										playsinline
-										class="w-full h-full object-cover"
+										class="h-full w-full object-cover"
 										onloadedmetadata={(e) => {
 											const video = e.target as HTMLVideoElement;
 											video.srcObject = localStream;
@@ -257,9 +258,9 @@
 					<Card.Content>
 						<div class="space-y-2 text-xs">
 							{#each Object.entries(compute.sessionData?.camera_room_ids || {}) as [camera, roomId]}
-								<div class="flex justify-between items-center p-2 rounded bg-slate-800/50">
-									<span class="text-blue-300 font-medium">{camera}</span>
-									<span class="text-blue-200 font-mono">{roomId}</span>
+								<div class="flex items-center justify-between rounded bg-slate-800/50 p-2">
+									<span class="font-medium text-blue-300">{camera}</span>
+									<span class="font-mono text-blue-200">{roomId}</span>
 								</div>
 							{/each}
 						</div>
@@ -270,8 +271,9 @@
 			<!-- Quick Info -->
 			<div class="rounded border border-slate-700 bg-slate-800/30 p-2 text-xs text-slate-500">
 				<span class="icon-[mdi--information] mr-1 size-3"></span>
-				Video inputs stream camera data to the AI model for visual processing. Each camera connects to a dedicated room in the session.
+				Video inputs stream camera data to the AI model for visual processing. Each camera connects to
+				a dedicated room in the session.
 			</div>
 		</div>
 	</Dialog.Content>
-</Dialog.Root> 
+</Dialog.Root>

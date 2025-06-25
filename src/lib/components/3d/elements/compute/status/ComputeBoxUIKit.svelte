@@ -1,13 +1,11 @@
 <script lang="ts">
 	import type { RemoteCompute } from "$lib/elements/compute//RemoteCompute.svelte";
 	import { ICON } from "$lib/utils/icon";
-	import { 
-		BaseStatusBox, 
-		StatusHeader, 
-		StatusContent, 
-		StatusIndicator
+	import {
+		BaseStatusBox,
+		StatusHeader,
+		StatusContent
 	} from "$lib/components/3d/ui";
-	import { Text } from "threlte-uikit";
 
 	interface Props {
 		compute: RemoteCompute;
@@ -19,7 +17,6 @@
 	const computeColor = "rgb(139, 69, 219)";
 </script>
 
-
 <BaseStatusBox
 	minWidth={110}
 	minHeight={135}
@@ -28,21 +25,20 @@
 	backgroundOpacity={0.2}
 	clickable={false}
 >
-		<!-- Header -->
-		<StatusHeader
-			icon={ICON["icon-[mdi--brain]"].svg}
-			text="AI COMPUTE"
-			color={computeColor}
-			opacity={0.9}
-			fontSize={12}
-		/>
+	<!-- Header -->
+	<StatusHeader
+		icon={ICON["icon-[mdi--brain]"].svg}
+		text="AI COMPUTE"
+		color={computeColor}
+		opacity={0.9}
+		fontSize={12}
+	/>
 
-		<!-- Compute Info -->
-		<StatusContent
-			title={compute.name}
-			subtitle={compute.statusInfo.statusText}
-			color="rgb(221, 214, 254)"
-			variant="primary"
-		/>
+	<!-- Compute Info -->
+	<StatusContent
+		title={compute.name}
+		subtitle={compute.statusInfo.statusText}
+		color="rgb(221, 214, 254)"
+		variant="primary"
+	/>
 </BaseStatusBox>
- 

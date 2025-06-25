@@ -14,7 +14,6 @@
 
 	let { video, onInputBoxClick, onOutputBoxClick }: Props = $props();
 
-	// Colors
 	const inputColor = "rgb(34, 197, 94)";
 	const outputColor = "rgb(59, 130, 246)";
 </script>

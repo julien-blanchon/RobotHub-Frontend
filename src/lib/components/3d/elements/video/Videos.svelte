@@ -11,7 +11,7 @@
 	interface Props {
 		workspaceId: string;
 	}
-	let {workspaceId}: Props = $props();
+	let { workspaceId }: Props = $props();
 
 	// Modal state
 	let isInputModalOpen = $state(false);
@@ -34,8 +34,8 @@
 		{video}
 		{workspaceId}
 		onCameraMove={() => {}}
-		onInputBoxClick={onInputBoxClick}
-		onOutputBoxClick={onOutputBoxClick}
+		{onInputBoxClick}
+		{onOutputBoxClick}
 	/>
 {/each}
 

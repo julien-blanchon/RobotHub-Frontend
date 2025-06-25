@@ -12,7 +12,8 @@
 		onRobotOutputBoxClick: (compute: RemoteCompute) => void;
 	}
 
-	let { compute, onVideoInputBoxClick, onRobotInputBoxClick, onRobotOutputBoxClick }: Props = $props();
+	let { compute, onVideoInputBoxClick, onRobotInputBoxClick, onRobotOutputBoxClick }: Props =
+		$props();
 
 	const { onPointerEnter, onPointerLeave, hovering } = useCursor();
 	interactivity();
@@ -31,21 +32,16 @@
 	position.z={compute.position.z}
 	scale={[1, 1, 1]}
 >
-	<T.Group
-		onpointerenter={onPointerEnter}
-		onpointerleave={onPointerLeave}
-		onclick={handleClick}
-	>
+	<T.Group onpointerenter={onPointerEnter} onpointerleave={onPointerLeave} onclick={handleClick}>
 		<GPU rotating={$hovering} />
 	</T.Group>
 	<T.Group scale={[8, 8, 8]} rotation={[-Math.PI / 2, 0, 0]}>
 		<ComputeStatusBillboard
 			{compute}
-			offset={0.8}
 			{onVideoInputBoxClick}
 			{onRobotInputBoxClick}
 			{onRobotOutputBoxClick}
 			visible={isToggled}
 		/>
 	</T.Group>
-</T.Group> 
+</T.Group>

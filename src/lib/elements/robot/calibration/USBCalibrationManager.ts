@@ -6,26 +6,26 @@ export class USBCalibrationManager {
   // Joint configuration
   private readonly jointIds = [1, 2, 3, 4, 5, 6];
   private readonly jointNames = ["Rotation", "Pitch", "Elbow", "Wrist_Pitch", "Wrist_Roll", "Jaw"];
-  
+
   // Calibration state
   private jointCalibrations: Record<string, JointCalibration> = {};
   private _calibrationState: CalibrationState = {
     isCalibrating: false,
     progress: 0
   };
-  
+
   // Connection state for calibration
   private isConnectedForCalibration = false;
   private baudRate: number = 1000000;
-  
+
   // Calibration polling
   private calibrationPollingAbortController: AbortController | null = null;
   private lastPositions: Record<string, number> = {};
   private calibrationCallbacks: (() => void)[] = [];
-  
+
   // Calibration completion callback with final positions
   private calibrationCompleteCallback: ((finalPositions: Record<string, number>) => void) | null = null;
-  
+
   // Servo reading queue for calibration
   private isReadingServos = false;
   private readingQueue: Array<{
@@ -36,7 +36,7 @@ export class USBCalibrationManager {
 
   constructor(baudRate: number = ROBOT_CONFIG.usb.baudRate) {
     this.baudRate = baudRate;
-    
+
     // Initialize joint calibrations
     this.jointNames.forEach(name => {
       this.jointCalibrations[name] = { isCalibrated: false };
@@ -66,7 +66,7 @@ export class USBCalibrationManager {
       console.log('[USBCalibrationManager] Already connected for calibration');
       return;
     }
-    
+
     try {
       console.log('[USBCalibrationManager] Connecting SDK for calibration...');
       await scsServoSDK.connect({ baudRate: this.baudRate });
@@ -80,7 +80,7 @@ export class USBCalibrationManager {
 
   async disconnectFromCalibration(): Promise<void> {
     if (!this.isConnectedForCalibration) return;
-    
+
     try {
       await scsServoSDK.disconnect();
       this.isConnectedForCalibration = false;
@@ -103,7 +103,7 @@ export class USBCalibrationManager {
     }
 
     console.log('[USBCalibrationManager] Starting calibration process');
-    
+
     // Ensure connection for calibration
     await this.ensureConnectedForCalibration();
 
@@ -158,7 +158,7 @@ export class USBCalibrationManager {
     try {
       const finalPositions = await this.readFinalPositionsAndSync();
       console.log('[USBCalibrationManager] ✅ Final positions read and synced to virtual robot');
-      
+
       // Notify robot of calibration completion with final positions
       if (this.calibrationCompleteCallback) {
         this.calibrationCompleteCallback(finalPositions);
@@ -237,19 +237,19 @@ export class USBCalibrationManager {
   // NEW: Read final positions and prepare for sync
   private async readFinalPositionsAndSync(): Promise<Record<string, number>> {
     const finalPositions: Record<string, number> = {};
-    
+
     console.log('[USBCalibrationManager] Reading final positions from all servos...');
-    
+
     // Read all servo positions sequentially
     for (let i = 0; i < this.jointIds.length; i++) {
       const servoId = this.jointIds[i];
       const jointName = this.jointNames[i];
-      
+
       try {
         const position = await this.readServoPosition(servoId);
         finalPositions[jointName] = position;
         this.lastPositions[jointName] = position;
-        
+
         console.log(`[USBCalibrationManager] ${jointName} (servo ${servoId}): ${position} (raw) -> ${this.normalizeValue(position, jointName).toFixed(1)}% (normalized)`);
       } catch (error) {
         console.warn(`[USBCalibrationManager] Failed to read final position for ${jointName} (servo ${servoId}):`, error);
@@ -257,7 +257,7 @@ export class USBCalibrationManager {
         finalPositions[jointName] = this.lastPositions[jointName] || 2048;
       }
     }
-    
+
     return finalPositions;
   }
 
@@ -391,9 +391,9 @@ export class USBCalibrationManager {
   // Cleanup
   async destroy(): Promise<void> {
     console.log('[USBCalibrationManager] 🧹 Destroying calibration manager...');
-    
+
     this.stopCalibrationPolling();
-    
+
     // Safely unlock all servos before disconnecting (best practice)
     if (this.isSDKConnected) {
       try {
@@ -404,11 +404,11 @@ export class USBCalibrationManager {
         console.warn('[USBCalibrationManager] Warning: Failed to safely unlock servos during cleanup:', error);
       }
     }
-    
+
     await this.disconnectFromCalibration();
     this.calibrationCallbacks = [];
     this.calibrationCompleteCallback = null;
-    
+
     console.log('[USBCalibrationManager] ✅ Calibration manager destroyed');
   }
 

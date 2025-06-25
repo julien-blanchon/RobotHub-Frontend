@@ -29,25 +29,25 @@
 	});
 
 	let isCheckingInferenceConnection = $state(false);
-	let inferenceConnectionStatus = $state<'unknown' | 'connected' | 'disconnected'>('unknown');
-	
+	let inferenceConnectionStatus = $state<"unknown" | "connected" | "disconnected">("unknown");
+
 	let isCheckingTransportConnection = $state(false);
-	let transportConnectionStatus = $state<'unknown' | 'connected' | 'disconnected'>('unknown');
+	let transportConnectionStatus = $state<"unknown" | "connected" | "disconnected">("unknown");
 
 	async function checkInferenceServerConnection() {
 		isCheckingInferenceConnection = true;
 		try {
 			const result = await remoteComputeManager.checkServerHealth();
 			if (result.success) {
-				inferenceConnectionStatus = 'connected';
-				toast.success('Inference server is connected');
+				inferenceConnectionStatus = "connected";
+				toast.success("Inference server is connected");
 			} else {
-				inferenceConnectionStatus = 'disconnected';
+				inferenceConnectionStatus = "disconnected";
 				toast.error(`Connection failed: ${result.error}`);
 			}
 		} catch (error) {
-			inferenceConnectionStatus = 'disconnected';
-			toast.error('Failed to connect to inference server');
+			inferenceConnectionStatus = "disconnected";
+			toast.error("Failed to connect to inference server");
 		} finally {
 			isCheckingInferenceConnection = false;
 		}
@@ -58,22 +58,22 @@
 		try {
 			// Test transport server health by making a simple HTTP request
 			const response = await fetch(`${settings.transportServerUrl}/health`, {
-				method: 'GET',
+				method: "GET",
 				headers: {
-					'Accept': 'application/json',
-				},
+					Accept: "application/json"
+				}
 			});
-			
+
 			if (response.ok) {
-				transportConnectionStatus = 'connected';
-				toast.success('Transport server is connected');
+				transportConnectionStatus = "connected";
+				toast.success("Transport server is connected");
 			} else {
-				transportConnectionStatus = 'disconnected';
+				transportConnectionStatus = "disconnected";
 				toast.error(`Transport server returned status: ${response.status}`);
 			}
 		} catch (error) {
-			transportConnectionStatus = 'disconnected';
-			toast.error('Failed to connect to transport server');
+			transportConnectionStatus = "disconnected";
+			toast.error("Failed to connect to transport server");
 		} finally {
 			isCheckingTransportConnection = false;
 		}
@@ -88,16 +88,22 @@
 <Sheet.Root bind:open>
 	<Sheet.Content
 		side="left"
-		class="w-80 gap-0 border-r border-slate-300 bg-gradient-to-b from-slate-100 to-slate-200 p-0 text-slate-900 dark:border-slate-600 dark:bg-gradient-to-b dark:from-slate-700 dark:to-slate-800 dark:text-white sm:w-96"
+		class="w-80 gap-0 border-r border-slate-300 bg-gradient-to-b from-slate-100 to-slate-200 p-0 text-slate-900 sm:w-96 dark:border-slate-600 dark:bg-gradient-to-b dark:from-slate-700 dark:to-slate-800 dark:text-white"
 	>
 		<!-- Header -->
-		<Sheet.Header class="border-b border-slate-300 bg-slate-200/80 p-6 backdrop-blur-sm dark:border-slate-600 dark:bg-slate-700/80">
+		<Sheet.Header
+			class="border-b border-slate-300 bg-slate-200/80 p-6 backdrop-blur-sm dark:border-slate-600 dark:bg-slate-700/80"
+		>
 			<div class="flex items-center justify-between">
 				<div class="flex items-center gap-3">
 					<span class="icon-[mdi--cog] size-6 text-orange-500 dark:text-orange-400"></span>
 					<div>
-						<Sheet.Title class="text-xl font-semibold text-slate-900 dark:text-slate-100">Robot Settings</Sheet.Title>
-						<p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Configure application preferences</p>
+						<Sheet.Title class="text-xl font-semibold text-slate-900 dark:text-slate-100"
+							>Robot Settings</Sheet.Title
+						>
+						<p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+							Configure application preferences
+						</p>
 					</div>
 				</div>
 			</div>
@@ -112,21 +118,26 @@
 				<div class="space-y-4">
 					<div class="mb-3 flex items-center gap-3">
 						<span class="icon-[mdi--server] size-5 text-blue-500 dark:text-blue-400"></span>
-						<h3 class="text-lg font-medium text-slate-900 dark:text-slate-100">Server Configuration</h3>
+						<h3 class="text-lg font-medium text-slate-900 dark:text-slate-100">
+							Server Configuration
+						</h3>
 					</div>
 
 					<div class="space-y-4">
 						<div class="space-y-3">
 							<div class="space-y-1">
-								<Label class="text-sm font-medium text-slate-800 dark:text-slate-200">Inference Server URL</Label>
+								<Label class="text-sm font-medium text-slate-800 dark:text-slate-200"
+									>Inference Server URL</Label
+								>
 								<p class="text-xs text-slate-600 dark:text-slate-400">
-									URL for the remote AI inference server that runs ACT models and manages robot sessions
+									URL for the remote AI inference server that runs ACT models and manages robot
+									sessions
 								</p>
 							</div>
 							<div class="flex gap-2">
 								<Input
 									bind:value={settings.inferenceServerUrl}
-									class="flex-1 bg-slate-100 border-slate-300 text-slate-900 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100"
+									class="flex-1 border-slate-300 bg-slate-100 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
 								/>
 								<Button
 									variant="outline"
@@ -136,7 +147,7 @@
 									class="border-slate-300 text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
 								>
 									{#if isCheckingInferenceConnection}
-										<span class="icon-[mdi--loading] animate-spin mr-1 size-4"></span>
+										<span class="icon-[mdi--loading] mr-1 size-4 animate-spin"></span>
 										Testing...
 									{:else}
 										<span class="icon-[mdi--connection] mr-1 size-4"></span>
@@ -145,30 +156,42 @@
 								</Button>
 							</div>
 							<div class="flex items-center gap-2">
-								{#if inferenceConnectionStatus === 'connected'}
-									<span class="icon-[mdi--check-circle] size-4 text-green-500 dark:text-green-400"></span>
-									<span class="text-xs text-green-600 dark:text-green-400">Connected to inference server</span>
-								{:else if inferenceConnectionStatus === 'disconnected'}
-									<span class="icon-[mdi--close-circle] size-4 text-red-500 dark:text-red-400"></span>
-									<span class="text-xs text-red-600 dark:text-red-400">Cannot connect to inference server</span>
+								{#if inferenceConnectionStatus === "connected"}
+									<span class="icon-[mdi--check-circle] size-4 text-green-500 dark:text-green-400"
+									></span>
+									<span class="text-xs text-green-600 dark:text-green-400"
+										>Connected to inference server</span
+									>
+								{:else if inferenceConnectionStatus === "disconnected"}
+									<span class="icon-[mdi--close-circle] size-4 text-red-500 dark:text-red-400"
+									></span>
+									<span class="text-xs text-red-600 dark:text-red-400"
+										>Cannot connect to inference server</span
+									>
 								{:else}
-									<span class="icon-[mdi--help-circle] size-4 text-slate-500 dark:text-slate-400"></span>
-									<span class="text-xs text-slate-600 dark:text-slate-400">Connection status unknown</span>
+									<span class="icon-[mdi--help-circle] size-4 text-slate-500 dark:text-slate-400"
+									></span>
+									<span class="text-xs text-slate-600 dark:text-slate-400"
+										>Connection status unknown</span
+									>
 								{/if}
 							</div>
 						</div>
 
 						<div class="space-y-3">
 							<div class="space-y-1">
-								<Label class="text-sm font-medium text-slate-800 dark:text-slate-200">Transport Server URL</Label>
+								<Label class="text-sm font-medium text-slate-800 dark:text-slate-200"
+									>Transport Server URL</Label
+								>
 								<p class="text-xs text-slate-600 dark:text-slate-400">
-									URL for the transport server that manages communication rooms and routes video streams and robot data using consumer/producer system
+									URL for the transport server that manages communication rooms and routes video
+									streams and robot data using consumer/producer system
 								</p>
 							</div>
 							<div class="flex gap-2">
 								<Input
 									bind:value={settings.transportServerUrl}
-									class="flex-1 bg-slate-100 border-slate-300 text-slate-900 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100"
+									class="flex-1 border-slate-300 bg-slate-100 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
 								/>
 								<Button
 									variant="outline"
@@ -178,7 +201,7 @@
 									class="border-slate-300 text-slate-700 hover:bg-slate-200 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
 								>
 									{#if isCheckingTransportConnection}
-										<span class="icon-[mdi--loading] animate-spin mr-1 size-4"></span>
+										<span class="icon-[mdi--loading] mr-1 size-4 animate-spin"></span>
 										Testing...
 									{:else}
 										<span class="icon-[mdi--connection] mr-1 size-4"></span>
@@ -187,15 +210,24 @@
 								</Button>
 							</div>
 							<div class="flex items-center gap-2">
-								{#if transportConnectionStatus === 'connected'}
-									<span class="icon-[mdi--check-circle] size-4 text-green-500 dark:text-green-400"></span>
-									<span class="text-xs text-green-600 dark:text-green-400">Connected to transport server</span>
-								{:else if transportConnectionStatus === 'disconnected'}
-									<span class="icon-[mdi--close-circle] size-4 text-red-500 dark:text-red-400"></span>
-									<span class="text-xs text-red-600 dark:text-red-400">Cannot connect to transport server</span>
+								{#if transportConnectionStatus === "connected"}
+									<span class="icon-[mdi--check-circle] size-4 text-green-500 dark:text-green-400"
+									></span>
+									<span class="text-xs text-green-600 dark:text-green-400"
+										>Connected to transport server</span
+									>
+								{:else if transportConnectionStatus === "disconnected"}
+									<span class="icon-[mdi--close-circle] size-4 text-red-500 dark:text-red-400"
+									></span>
+									<span class="text-xs text-red-600 dark:text-red-400"
+										>Cannot connect to transport server</span
+									>
 								{:else}
-									<span class="icon-[mdi--help-circle] size-4 text-slate-500 dark:text-slate-400"></span>
-									<span class="text-xs text-slate-600 dark:text-slate-400">Connection status unknown</span>
+									<span class="icon-[mdi--help-circle] size-4 text-slate-500 dark:text-slate-400"
+									></span>
+									<span class="text-xs text-slate-600 dark:text-slate-400"
+										>Connection status unknown</span
+									>
 								{/if}
 							</div>
 						</div>
@@ -208,18 +240,24 @@
 				<div class="space-y-4">
 					<div class="mb-3 flex items-center gap-3">
 						<span class="icon-[mdi--tune] size-5 text-orange-500 dark:text-orange-400"></span>
-						<h3 class="text-lg font-medium text-slate-900 dark:text-slate-100">Application Settings</h3>
+						<h3 class="text-lg font-medium text-slate-900 dark:text-slate-100">
+							Application Settings
+						</h3>
 					</div>
 
 					<div class="space-y-4">
 						<div class="flex items-center justify-between">
 							<div class="space-y-1">
-								<Label class="text-sm font-medium text-slate-800 dark:text-slate-200">Dark Mode</Label>
-								<p class="text-xs text-slate-600 dark:text-slate-400">Use dark theme for the interface</p>
+								<Label class="text-sm font-medium text-slate-800 dark:text-slate-200"
+									>Dark Mode</Label
+								>
+								<p class="text-xs text-slate-600 dark:text-slate-400">
+									Use dark theme for the interface
+								</p>
 							</div>
-							<Switch 
-								checked={mode.current === 'dark'} 
-								onCheckedChange={(checked) => setMode(checked ? 'dark' : 'light')}
+							<Switch
+								checked={mode.current === "dark"}
+								onCheckedChange={(checked) => setMode(checked ? "dark" : "light")}
 							/>
 						</div>
 
@@ -280,13 +318,16 @@
 				<!-- About Section -->
 				<div class="space-y-4">
 					<div class="mb-3 flex items-center gap-3">
-						<span class="icon-[mdi--information-outline] size-5 text-blue-500 dark:text-blue-400"></span>
+						<span class="icon-[mdi--information-outline] size-5 text-blue-500 dark:text-blue-400"
+						></span>
 						<h3 class="text-lg font-medium text-slate-900 dark:text-slate-100">About</h3>
 					</div>
 
 					<div class="space-y-4">
 						<div class="space-y-2">
-							<h4 class="text-sm font-medium text-slate-800 dark:text-slate-200">Acknowledgements</h4>
+							<h4 class="text-sm font-medium text-slate-800 dark:text-slate-200">
+								Acknowledgements
+							</h4>
 							<p class="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
 								This application is built with amazing open-source technologies and communities.
 							</p>
@@ -302,8 +343,12 @@
 							>
 								<span class="icon-[mdi--robot] size-5 text-yellow-500 dark:text-yellow-400"></span>
 								<div class="flex-1">
-									<div class="text-sm font-medium text-slate-800 dark:text-slate-200">Hugging Face LeRobot</div>
-									<p class="text-xs text-slate-600 dark:text-slate-400">Robotics AI framework and models</p>
+									<div class="text-sm font-medium text-slate-800 dark:text-slate-200">
+										Hugging Face LeRobot
+									</div>
+									<p class="text-xs text-slate-600 dark:text-slate-400">
+										Robotics AI framework and models
+									</p>
 								</div>
 							</a>
 
@@ -314,10 +359,13 @@
 								rel="noopener noreferrer"
 								class="flex items-center gap-3 rounded-lg border border-slate-300 bg-slate-100/50 p-3 transition-colors duration-200 hover:bg-slate-200/50 dark:border-slate-600 dark:bg-slate-800/50 dark:hover:bg-slate-700/50"
 							>
-								<span class="icon-[mdi--cube-outline] size-5 text-orange-500 dark:text-orange-400"></span>
+								<span class="icon-[mdi--cube-outline] size-5 text-orange-500 dark:text-orange-400"
+								></span>
 								<div class="flex-1">
 									<div class="text-sm font-medium text-slate-800 dark:text-slate-200">Threlte</div>
-									<p class="text-xs text-slate-600 dark:text-slate-400">3D graphics library for Svelte</p>
+									<p class="text-xs text-slate-600 dark:text-slate-400">
+										3D graphics library for Svelte
+									</p>
 								</div>
 							</a>
 
@@ -330,11 +378,12 @@
 							>
 								<span class="icon-[mdi--memory] size-5 text-green-500 dark:text-green-400"></span>
 								<div class="flex-1">
-									<div class="text-sm font-medium text-slate-800 dark:text-slate-200">bambot.org feetech.js</div>
+									<div class="text-sm font-medium text-slate-800 dark:text-slate-200">
+										bambot.org feetech.js
+									</div>
 									<p class="text-xs text-slate-600 dark:text-slate-400">
-										Amazing project by Tim Qian (https://x.com/tim_qian).
-										Most of the USB control part (feetech.js) comes from this project.
-										Thanks to Tim for sharing his work!
+										Amazing project by Tim Qian (https://x.com/tim_qian). Most of the USB control
+										part (feetech.js) comes from this project. Thanks to Tim for sharing his work!
 									</p>
 								</div>
 							</a>
@@ -346,9 +395,12 @@
 								rel="noopener noreferrer"
 								class="flex items-center gap-3 rounded-lg border border-slate-300 bg-slate-100/50 p-3 transition-colors duration-200 hover:bg-slate-200/50 dark:border-slate-600 dark:bg-slate-800/50 dark:hover:bg-slate-700/50"
 							>
-								<span class="icon-[mdi--cube-outline] size-5 text-orange-500 dark:text-orange-400"></span>
+								<span class="icon-[mdi--cube-outline] size-5 text-orange-500 dark:text-orange-400"
+								></span>
 								<div class="flex-1">
-									<div class="text-sm font-medium text-slate-800 dark:text-slate-200">URDF Viewer</div>
+									<div class="text-sm font-medium text-slate-800 dark:text-slate-200">
+										URDF Viewer
+									</div>
 									<p class="text-xs text-slate-600 dark:text-slate-400">
 										Nice component for viewing URDF models with Threlte
 									</p>

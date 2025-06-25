@@ -7,7 +7,7 @@ interface Icon {
 // const plusIcon = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNMTkgMTNoLTZ2NmgtMnYtNkg1di0yaDZWNWgydjZoNnoiLz48L3N2Zz4=";
 // https://icon-sets.iconify.design
 
-export const ICON = {
+export const ICON: Record<string, Icon> = {
     "icon-[material-symbols--upload]": {
         svg: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjMDAwIiBkPSJNMTEgMTZWNy44NWwtMi42IDIuNkw3IDlsNS01bDUgNWwtMS40IDEuNDVsLTIuNi0yLjZWMTZ6bS01IDRxLS44MjUgMC0xLjQxMi0uNTg3VDQgMTh2LTNoMnYzaDEydi0zaDJ2M3EwIC44MjUtLjU4NyAxLjQxM1QxOCAyMHoiLz48L3N2Zz4=",
         alt: "Upload"

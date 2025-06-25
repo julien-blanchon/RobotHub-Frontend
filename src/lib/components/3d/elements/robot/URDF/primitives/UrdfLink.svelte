@@ -7,9 +7,7 @@
 	import { getChildJoints } from "../utils/UrdfParser";
 	import UrdfJoint from "./UrdfJoint.svelte";
 	import type IUrdfRobot from "../interfaces/IUrdfRobot";
-	import type IUrdfJoint from "../interfaces/IUrdfJoint";
 	import { T } from "@threlte/core";
-	import { Billboard, HTML, Portal } from "@threlte/extras";
 	// import Pointcloud from "@/components/test/Pointcloud.svelte";
 
 	interface Props {
@@ -55,10 +53,6 @@
 	}: Props = $props();
 
 	let showPointCloud = false;
-
-	$effect(() => {
-		console.log("render");
-	});
 </script>
 
 {@html `<!-- Link ${link.name} -->`}

@@ -36,10 +36,6 @@
 	const baseColor = visual?.color_rgba
 		? numberArrayToColor(visual.color_rgba.slice(0, 3) as [number, number, number])
 		: defaultColor;
-
-	$effect(() => {
-		console.log("render");
-	});
 </script>
 
 {#if visual.type === "mesh"}

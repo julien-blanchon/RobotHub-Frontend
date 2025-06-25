@@ -6,7 +6,6 @@
 		StatusHeader, 
 		StatusContent
 	} from "$lib/components/3d/ui";
-	import { Text } from "threlte-uikit";
 
 	interface Props {
 		video: VideoInstance;
@@ -14,16 +13,9 @@
 
 	let { video }: Props = $props();
 
-	// Video theme color (orange)
 	const videoColor = "rgb(217, 119, 6)";
-
 </script>
 
-<!--
-@component
-Video box showing basic video instance information and status.
-Displays video name and ID with consistent theming.
--->
 
 <BaseStatusBox
 	color={videoColor}

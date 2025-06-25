@@ -1,14 +1,13 @@
 <script lang="ts">
 	import type { RemoteCompute } from "$lib/elements/compute//RemoteCompute.svelte";
 	import { ICON } from "$lib/utils/icon";
-	import { 
-		BaseStatusBox, 
-		StatusHeader, 
-		StatusContent, 
+	import {
+		BaseStatusBox,
+		StatusHeader,
+		StatusContent,
 		StatusIndicator,
 		StatusButton
 	} from "$lib/components/3d/ui";
-	import { Container, SVG, Text } from "threlte-uikit";
 
 	interface Props {
 		compute: RemoteCompute;
@@ -20,12 +19,6 @@
 	// Input theme color (green)
 	const inputColor = "rgb(34, 197, 94)";
 </script>
-
-<!--
-@component
-Compact input box showing the status of video and robot inputs for Inference Sessions.
-Displays input connection information when session exists or connection prompt when disconnected.
--->
 
 <BaseStatusBox
 	minWidth={120}
@@ -67,11 +60,7 @@ Displays input connection information when session exists or connection prompt w
 			fontSize={12}
 		/>
 
-		<StatusContent
-			title="Setup Required"
-			color="rgb(134, 239, 172)"
-			variant="secondary"
-		/>
+		<StatusContent title="Setup Required" color="rgb(134, 239, 172)" variant="secondary" />
 
 		<StatusButton
 			text="Add Session"
@@ -81,4 +70,4 @@ Displays input connection information when session exists or connection prompt w
 			textOpacity={0.7}
 		/>
 	{/if}
-</BaseStatusBox> 
+</BaseStatusBox>

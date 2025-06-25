@@ -10,7 +10,7 @@
 		backgroundOpacity?: number;
 		disabled?: boolean;
 		clickable?: boolean;
-		children: import('svelte').Snippet;
+		children: import("svelte").Snippet;
 		onclick?: () => void;
 	}
 
@@ -51,14 +51,10 @@
 	}
 
 	let currentBorderOpacity = $derived(isHovered ? Math.min(borderOpacity * 1.5, 1) : borderOpacity);
-	let currentBackgroundOpacity = $derived(isHovered ? Math.min(backgroundOpacity * 2, 0.5) : backgroundOpacity);
+	let currentBackgroundOpacity = $derived(
+		isHovered ? Math.min(backgroundOpacity * 2, 0.5) : backgroundOpacity
+	);
 </script>
-
-<!--
-@component
-Base status box component with hover effects and common styling.
-Uses a single color with opacity variations for simplicity.
--->
 
 <Container
 	{minWidth}
@@ -88,4 +84,4 @@ Uses a single color with opacity variations for simplicity.
 	>
 		{@render children()}
 	</Container>
-</Container> 
+</Container>

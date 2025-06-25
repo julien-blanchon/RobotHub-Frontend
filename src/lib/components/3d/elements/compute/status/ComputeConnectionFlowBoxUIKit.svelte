@@ -14,18 +14,13 @@
 		onRobotOutputBoxClick: (compute: RemoteCompute) => void;
 	}
 
-	let { compute, onVideoInputBoxClick, onRobotInputBoxClick, onRobotOutputBoxClick }: Props = $props();
+	let { compute, onVideoInputBoxClick, onRobotInputBoxClick, onRobotOutputBoxClick }: Props =
+		$props();
 
 	// Colors
 	const inputColor = "rgb(34, 197, 94)";
 	const outputColor = "rgb(59, 130, 246)";
 </script>
-
-<!--
-@component
-Elegant 2->1->1 connection flow layout for AI compute processing.
-Clean vertical stacking of inputs that merge into compute, then flow to output.
--->
 
 <Container flexDirection="row" alignItems="center" gap={12}>
 	<!-- Left: Stacked Inputs -->
@@ -35,11 +30,7 @@ Clean vertical stacking of inputs that merge into compute, then flow to output.
 	</Container>
 
 	<!-- Arrow: Inputs to Compute -->
-	<StatusArrow
-		direction="right"
-		color={inputColor}
-		opacity={compute.hasSession ? 1 : 0.5}
-	/>
+	<StatusArrow direction="right" color={inputColor} opacity={compute.hasSession ? 1 : 0.5} />
 
 	<!-- Center: Compute -->
 	<ComputeBoxUIKit {compute} />
@@ -53,4 +44,4 @@ Clean vertical stacking of inputs that merge into compute, then flow to output.
 
 	<!-- Right: Output -->
 	<ComputeOutputBoxUIKit {compute} handleClick={() => onRobotOutputBoxClick(compute)} />
-</Container> 
+</Container>

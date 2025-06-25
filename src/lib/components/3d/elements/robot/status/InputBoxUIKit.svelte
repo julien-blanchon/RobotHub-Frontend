@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { Robot } from "$lib/elements/robot/Robot.svelte.js";
 	import { ICON } from "$lib/utils/icon";
-	import { 
-		BaseStatusBox, 
-		StatusHeader, 
-		StatusContent, 
+	import {
+		BaseStatusBox,
+		StatusHeader,
+		StatusContent,
 		StatusIndicator,
 		StatusButton
 	} from "$lib/components/3d/ui";
@@ -21,15 +21,8 @@
 		onInputBoxClick(robot);
 	}
 
-	// Input theme color (green)
 	const inputColor = "rgb(34, 197, 94)";
 </script>
-
-<!--
-@component
-Input connection box showing the status of the input connection.
-Displays input information when connected or connection prompt when disconnected.
--->
 
 <BaseStatusBox
 	color={inputColor}
@@ -47,15 +40,12 @@ Displays input information when connected or connection prompt when disconnected
 			opacity={0.9}
 		/>
 
-				<StatusContent
-					title={robot.consumer?.name.slice(0, 30) ?? 'No Input'}
-					color={inputColor}
-				/>
+		<StatusContent title={robot.consumer?.name.slice(0, 30) ?? "No Input"} color={inputColor} />
 
-			{#if robot.consumer?.constructor.name}
-				<Text
-					text={robot.consumer.constructor.name.replace("Driver", "").slice(0, 30)}
-					fontSize={11}
+		{#if robot.consumer?.constructor.name}
+			<Text
+				text={robot.consumer.constructor.name.replace("Driver", "").slice(0, 30)}
+				fontSize={11}
 				fontWeight="normal"
 				color="rgb(134, 239, 172)"
 				opacity={0.9}
@@ -87,11 +77,7 @@ Displays input information when connected or connection prompt when disconnected
 			fontSize={13}
 		/>
 
-		<StatusContent 
-			title="Click to Connect"
-			color={inputColor}
-			variant="secondary"
-		/>
+		<StatusContent title="Click to Connect" color={inputColor} variant="secondary" />
 
 		<StatusButton
 			text="Add Input"
@@ -101,4 +87,4 @@ Displays input information when connected or connection prompt when disconnected
 			textOpacity={0.7}
 		/>
 	{/if}
-</BaseStatusBox> 
+</BaseStatusBox>

@@ -15,7 +15,6 @@
 
 	let { robot, onRobotBoxClick }: Props = $props();
 
-	// Robot theme color (orange)
 	const robotColor = "rgb(245, 158, 11)";
 </script>
 

@@ -20,7 +20,7 @@ export function getRootLinks(robot: IUrdfRobot): IUrdfLink[] {
 	// Compute the links
 	const links: IUrdfLink[] = [];
 	const joints = robot.joints;
-	
+
 	for (const link of Object.values(robot.links)) {
 		let isRoot = true;
 		for (const joint of joints) {
@@ -35,7 +35,7 @@ export function getRootLinks(robot: IUrdfRobot): IUrdfLink[] {
 		}
 	}
 
-	
+
 
 	return links;
 }

@@ -21,9 +21,9 @@
 	let { open = $bindable(), compute, workspaceId }: Props = $props();
 
 	let isConnecting = $state(false);
-	let sessionId = $state('');
-	let policyPath = $state('./checkpoints/act_so101_beyond');
-	let cameraNames = $state('front');
+	let sessionId = $state("");
+	let policyPath = $state("./checkpoints/act_so101_beyond");
+	let cameraNames = $state("front");
 	let useProvidedWorkspace = $state(false);
 
 	// Auto-generate session ID when modal opens
@@ -37,15 +37,18 @@
 		if (!compute) return;
 
 		if (!sessionId.trim() || !policyPath.trim()) {
-			toast.error('Please fill in all required fields');
+			toast.error("Please fill in all required fields");
 			return;
 		}
 
 		isConnecting = true;
 		try {
-			const cameras = cameraNames.split(',').map(name => name.trim()).filter(name => name);
+			const cameras = cameraNames
+				.split(",")
+				.map((name) => name.trim())
+				.filter((name) => name);
 			if (cameras.length === 0) {
-				cameras.push('front');
+				cameras.push("front");
 			}
 
 			const config: AISessionConfig = {
@@ -64,8 +67,8 @@
 				toast.error(`Failed to create session: ${result.error}`);
 			}
 		} catch (error) {
-			console.error('Session creation error:', error);
-			toast.error('Failed to create session');
+			console.error("Session creation error:", error);
+			toast.error("Failed to create session");
 		} finally {
 			isConnecting = false;
 		}
@@ -78,13 +81,13 @@
 		try {
 			const result = await remoteComputeManager.startSession(compute.id);
 			if (result.success) {
-				toast.success('Inference Session started');
+				toast.success("Inference Session started");
 			} else {
 				toast.error(`Failed to start session: ${result.error}`);
 			}
 		} catch (error) {
-			console.error('Session start error:', error);
-			toast.error('Failed to start session');
+			console.error("Session start error:", error);
+			toast.error("Failed to start session");
 		} finally {
 			isConnecting = false;
 		}
@@ -97,13 +100,13 @@
 		try {
 			const result = await remoteComputeManager.stopSession(compute.id);
 			if (result.success) {
-				toast.success('Inference Session stopped');
+				toast.success("Inference Session stopped");
 			} else {
 				toast.error(`Failed to stop session: ${result.error}`);
 			}
 		} catch (error) {
-			console.error('Session stop error:', error);
-			toast.error('Failed to stop session');
+			console.error("Session stop error:", error);
+			toast.error("Failed to stop session");
 		} finally {
 			isConnecting = false;
 		}
@@ -116,13 +119,13 @@
 		try {
 			const result = await remoteComputeManager.deleteSession(compute.id);
 			if (result.success) {
-				toast.success('Inference Session deleted');
+				toast.success("Inference Session deleted");
 			} else {
 				toast.error(`Failed to delete session: ${result.error}`);
 			}
 		} catch (error) {
-			console.error('Session delete error:', error);
-			toast.error('Failed to delete session');
+			console.error("Session delete error:", error);
+			toast.error("Failed to delete session");
 		} finally {
 			isConnecting = false;
 		}
@@ -134,9 +137,11 @@
 		class="max-h-[80vh] max-w-2xl overflow-y-auto border-slate-300 bg-slate-100 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
 	>
 		<Dialog.Header class="pb-3">
-			<Dialog.Title class="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-100">
+			<Dialog.Title
+				class="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-100"
+			>
 				<span class="icon-[mdi--robot-outline] size-5 text-purple-500 dark:text-purple-400"></span>
-				AI Compute Session - {compute.name || 'No Compute Selected'}
+				AI Compute Session - {compute.name || "No Compute Selected"}
 			</Dialog.Title>
 			<Dialog.Description class="text-sm text-slate-600 dark:text-slate-400">
 				Configure and manage ACT model inference sessions for robot control
@@ -150,70 +155,100 @@
 			>
 				<div class="flex items-center gap-2">
 					<span class="icon-[mdi--brain] size-4 text-purple-500 dark:text-purple-400"></span>
-					<span class="text-sm font-medium text-purple-700 dark:text-purple-300">Session Status</span>
+					<span class="text-sm font-medium text-purple-700 dark:text-purple-300"
+						>Session Status</span
+					>
 				</div>
 				{#if compute.hasSession}
 					<Badge variant="default" class="bg-purple-500 text-xs dark:bg-purple-600">
 						{compute.statusInfo.statusText}
 					</Badge>
 				{:else}
-					<Badge variant="secondary" class="text-xs text-slate-600 dark:text-slate-400">No Session</Badge>
+					<Badge variant="secondary" class="text-xs text-slate-600 dark:text-slate-400"
+						>No Session</Badge
+					>
 				{/if}
 			</div>
 
 			<!-- Current Session Details -->
 			{#if compute.hasSession && compute.sessionData}
-				<Card.Root class="border-purple-300/30 bg-purple-100/5 dark:border-purple-500/30 dark:bg-purple-500/5">
+				<Card.Root
+					class="border-purple-300/30 bg-purple-100/5 dark:border-purple-500/30 dark:bg-purple-500/5"
+				>
 					<Card.Header>
-						<Card.Title class="flex items-center gap-2 text-base text-purple-700 dark:text-purple-200">
+						<Card.Title
+							class="flex items-center gap-2 text-base text-purple-700 dark:text-purple-200"
+						>
 							<span class="icon-[mdi--cog] size-4"></span>
 							Current Session
 						</Card.Title>
 					</Card.Header>
 					<Card.Content>
 						<div class="space-y-3">
-							<div class="rounded-lg border border-purple-300/30 bg-purple-100/20 p-3 dark:border-purple-500/30 dark:bg-purple-900/20">
+							<div
+								class="rounded-lg border border-purple-300/30 bg-purple-100/20 p-3 dark:border-purple-500/30 dark:bg-purple-900/20"
+							>
 								<div class="grid grid-cols-2 gap-2 text-xs">
 									<div>
-										<span class="text-purple-700 font-medium dark:text-purple-300">Session ID:</span>
-										<span class="text-purple-800 block dark:text-purple-100">{compute.sessionId}</span>
+										<span class="font-medium text-purple-700 dark:text-purple-300">Session ID:</span
+										>
+										<span class="block text-purple-800 dark:text-purple-100"
+											>{compute.sessionId}</span
+										>
 									</div>
 									<div>
-										<span class="text-purple-700 font-medium dark:text-purple-300">Status:</span>
-										<span class="text-purple-800 block dark:text-purple-100">{compute.statusInfo.emoji} {compute.statusInfo.statusText}</span>
+										<span class="font-medium text-purple-700 dark:text-purple-300">Status:</span>
+										<span class="block text-purple-800 dark:text-purple-100"
+											>{compute.statusInfo.emoji} {compute.statusInfo.statusText}</span
+										>
 									</div>
 									<div>
-										<span class="text-purple-700 font-medium dark:text-purple-300">Policy:</span>
-										<span class="text-purple-800 block dark:text-purple-100">{compute.sessionConfig?.policyPath}</span>
+										<span class="font-medium text-purple-700 dark:text-purple-300">Policy:</span>
+										<span class="block text-purple-800 dark:text-purple-100"
+											>{compute.sessionConfig?.policyPath}</span
+										>
 									</div>
 									<div>
-										<span class="text-purple-700 font-medium dark:text-purple-300">Cameras:</span>
-										<span class="text-purple-800 block dark:text-purple-100">{compute.sessionConfig?.cameraNames.join(', ')}</span>
+										<span class="font-medium text-purple-700 dark:text-purple-300">Cameras:</span>
+										<span class="block text-purple-800 dark:text-purple-100"
+											>{compute.sessionConfig?.cameraNames.join(", ")}</span
+										>
 									</div>
 								</div>
 							</div>
 
 							<!-- Connection Details -->
-							<div class="rounded-lg border border-green-300/30 bg-green-100/20 p-3 dark:border-green-500/30 dark:bg-green-900/20">
-								<div class="text-sm font-medium text-green-700 mb-2 dark:text-green-300">📡 Inference Server Connections</div>
+							<div
+								class="rounded-lg border border-green-300/30 bg-green-100/20 p-3 dark:border-green-500/30 dark:bg-green-900/20"
+							>
+								<div class="mb-2 text-sm font-medium text-green-700 dark:text-green-300">
+									📡 Inference Server Connections
+								</div>
 								<div class="space-y-1 text-xs">
 									<div>
 										<span class="text-green-600 dark:text-green-400">Workspace:</span>
-										<span class="text-green-700 font-mono ml-2 dark:text-green-200">{compute.sessionData.workspace_id}</span>
+										<span class="ml-2 font-mono text-green-700 dark:text-green-200"
+											>{compute.sessionData.workspace_id}</span
+										>
 									</div>
 									{#each Object.entries(compute.sessionData.camera_room_ids) as [camera, roomId]}
 										<div>
 											<span class="text-green-600 dark:text-green-400">📹 {camera}:</span>
-											<span class="text-green-700 font-mono ml-2 dark:text-green-200">{roomId}</span>
+											<span class="ml-2 font-mono text-green-700 dark:text-green-200">{roomId}</span
+											>
 										</div>
 									{/each}
 									<div>
 										<span class="text-green-600 dark:text-green-400">📥 Joint Input:</span>
-										<span class="text-green-700 font-mono ml-2 dark:text-green-200">{compute.sessionData.joint_input_room_id}</span>
+										<span class="ml-2 font-mono text-green-700 dark:text-green-200"
+											>{compute.sessionData.joint_input_room_id}</span
+										>
 									</div>
 									<div>
 										<span class="text-green-600 dark:text-green-400">📤 Joint Output:</span>
-										<span class="text-green-700 font-mono ml-2 dark:text-green-200">{compute.sessionData.joint_output_room_id}</span>
+										<span class="ml-2 font-mono text-green-700 dark:text-green-200"
+											>{compute.sessionData.joint_output_room_id}</span
+										>
 									</div>
 								</div>
 							</div>
@@ -226,10 +261,10 @@
 										size="sm"
 										onclick={handleStartSession}
 										disabled={isConnecting}
-										class="bg-green-500 hover:bg-green-600 text-xs disabled:opacity-50 dark:bg-green-600 dark:hover:bg-green-700"
+										class="bg-green-500 text-xs hover:bg-green-600 disabled:opacity-50 dark:bg-green-600 dark:hover:bg-green-700"
 									>
 										{#if isConnecting}
-											<span class="icon-[mdi--loading] animate-spin mr-1 size-3"></span>
+											<span class="icon-[mdi--loading] mr-1 size-3 animate-spin"></span>
 											Starting...
 										{:else}
 											<span class="icon-[mdi--play] mr-1 size-3"></span>
@@ -246,7 +281,7 @@
 										class="text-xs disabled:opacity-50"
 									>
 										{#if isConnecting}
-											<span class="icon-[mdi--loading] animate-spin mr-1 size-3"></span>
+											<span class="icon-[mdi--loading] mr-1 size-3 animate-spin"></span>
 											Stopping...
 										{:else}
 											<span class="icon-[mdi--stop] mr-1 size-3"></span>
@@ -262,7 +297,7 @@
 									class="text-xs disabled:opacity-50"
 								>
 									{#if isConnecting}
-										<span class="icon-[mdi--loading] animate-spin mr-1 size-3"></span>
+										<span class="icon-[mdi--loading] mr-1 size-3 animate-spin"></span>
 										Deleting...
 									{:else}
 										<span class="icon-[mdi--delete] mr-1 size-3"></span>
@@ -277,9 +312,13 @@
 
 			<!-- Create New Session -->
 			{#if !compute.hasSession}
-				<Card.Root class="border-purple-300/30 bg-purple-100/5 dark:border-purple-500/30 dark:bg-purple-500/5">
+				<Card.Root
+					class="border-purple-300/30 bg-purple-100/5 dark:border-purple-500/30 dark:bg-purple-500/5"
+				>
 					<Card.Header>
-						<Card.Title class="flex items-center gap-2 text-base text-purple-700 dark:text-purple-200">
+						<Card.Title
+							class="flex items-center gap-2 text-base text-purple-700 dark:text-purple-200"
+						>
 							<span class="icon-[mdi--plus-circle] size-4"></span>
 							Create Inference Session
 						</Card.Title>
@@ -288,47 +327,59 @@
 						<div class="space-y-4">
 							<div class="grid grid-cols-2 gap-4">
 								<div class="space-y-2">
-									<Label for="sessionId" class="text-purple-700 dark:text-purple-300">Session ID</Label>
+									<Label for="sessionId" class="text-purple-700 dark:text-purple-300"
+										>Session ID</Label
+									>
 									<Input
 										id="sessionId"
 										bind:value={sessionId}
 										placeholder="my-session-01"
-										class="bg-slate-50 border-slate-300 text-slate-900 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100"
+										class="border-slate-300 bg-slate-50 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
 									/>
 								</div>
 								<div class="space-y-2">
-									<Label for="policyPath" class="text-purple-700 dark:text-purple-300">Policy Path</Label>
+									<Label for="policyPath" class="text-purple-700 dark:text-purple-300"
+										>Policy Path</Label
+									>
 									<Input
 										id="policyPath"
 										bind:value={policyPath}
 										placeholder="./checkpoints/act_so101_beyond"
-										class="bg-slate-50 border-slate-300 text-slate-900 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100"
+										class="border-slate-300 bg-slate-50 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
 									/>
 								</div>
 							</div>
 
 							<div class="grid grid-cols-2 gap-4">
 								<div class="space-y-2">
-									<Label for="cameraNames" class="text-purple-700 dark:text-purple-300">Camera Names</Label>
+									<Label for="cameraNames" class="text-purple-700 dark:text-purple-300"
+										>Camera Names</Label
+									>
 									<Input
 										id="cameraNames"
 										bind:value={cameraNames}
 										placeholder="front, wrist, overhead"
-										class="bg-slate-50 border-slate-300 text-slate-900 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100"
+										class="border-slate-300 bg-slate-50 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
 									/>
-									<p class="text-xs text-slate-600 dark:text-slate-400">Comma-separated camera names</p>
+									<p class="text-xs text-slate-600 dark:text-slate-400">
+										Comma-separated camera names
+									</p>
 								</div>
 								<div class="space-y-2">
-									<Label for="transportServerUrl" class="text-purple-700 dark:text-purple-300">Transport Server URL</Label>
+									<Label for="transportServerUrl" class="text-purple-700 dark:text-purple-300"
+										>Transport Server URL</Label
+									>
 									<Input
 										id="transportServerUrl"
 										value={settings.transportServerUrl}
 										disabled
 										placeholder="http://localhost:8000"
-										class="bg-slate-50 border-slate-300 text-slate-900 opacity-60 cursor-not-allowed dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100"
+										class="cursor-not-allowed border-slate-300 bg-slate-50 text-slate-900 opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
 										title="Change this value in the settings panel"
 									/>
-									<p class="text-xs text-slate-600 dark:text-slate-400">Configure in settings panel</p>
+									<p class="text-xs text-slate-600 dark:text-slate-400">
+										Configure in settings panel
+									</p>
 								</div>
 							</div>
 
@@ -339,7 +390,7 @@
 									bind:checked={useProvidedWorkspace}
 									class="rounded border-slate-300 bg-slate-50 dark:border-slate-600 dark:bg-slate-800"
 								/>
-								<Label for="useWorkspace" class="text-purple-700 text-sm dark:text-purple-300">
+								<Label for="useWorkspace" class="text-sm text-purple-700 dark:text-purple-300">
 									Use current workspace ({workspaceId})
 								</Label>
 							</div>
@@ -347,8 +398,9 @@
 							<Alert.Root>
 								<span class="icon-[mdi--information] size-4"></span>
 								<Alert.Description>
-									This will create a new ACT inference session with dedicated rooms for camera inputs,
-									joint inputs, and joint outputs in the inference server communication system.
+									This will create a new ACT inference session with dedicated rooms for camera
+									inputs, joint inputs, and joint outputs in the inference server communication
+									system.
 								</Alert.Description>
 							</Alert.Root>
 
@@ -359,7 +411,7 @@
 								class="w-full bg-purple-500 hover:bg-purple-600 disabled:opacity-50 dark:bg-purple-600 dark:hover:bg-purple-700"
 							>
 								{#if isConnecting}
-									<span class="icon-[mdi--loading] animate-spin mr-2 size-4"></span>
+									<span class="icon-[mdi--loading] mr-2 size-4 animate-spin"></span>
 									Creating Session...
 								{:else}
 									<span class="icon-[mdi--rocket-launch] mr-2 size-4"></span>
@@ -372,11 +424,13 @@
 			{/if}
 
 			<!-- Quick Info -->
-			<div class="rounded border border-slate-300 bg-slate-100/30 p-2 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-800/30 dark:text-slate-500">
+			<div
+				class="rounded border border-slate-300 bg-slate-100/30 p-2 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-800/30 dark:text-slate-500"
+			>
 				<span class="icon-[mdi--information] mr-1 size-3"></span>
-				Inference Sessions require a trained ACT model and create dedicated communication rooms for video inputs,
-				robot joint states, and control outputs in the inference server system.
+				Inference Sessions require a trained ACT model and create dedicated communication rooms for video
+				inputs, robot joint states, and control outputs in the inference server system.
 			</div>
 		</div>
 	</Dialog.Content>
-</Dialog.Root> 
+</Dialog.Root>

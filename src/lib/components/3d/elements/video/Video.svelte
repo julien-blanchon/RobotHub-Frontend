@@ -1,7 +1,16 @@
 <script lang="ts">
 	import { T } from "@threlte/core";
 	import { interactivity } from "@threlte/extras";
-	import { VideoTexture, CanvasTexture, LinearFilter, RGBAFormat, Shape, Path, ExtrudeGeometry, BoxGeometry } from "three";
+	import {
+		VideoTexture,
+		CanvasTexture,
+		LinearFilter,
+		RGBAFormat,
+		Shape,
+		Path,
+		ExtrudeGeometry,
+		BoxGeometry
+	} from "three";
 	import { onMount } from "svelte";
 	import type { VideoInstance } from "$lib/elements/video/VideoManager.svelte";
 	import { videoManager } from "$lib/elements/video/VideoManager.svelte";
@@ -10,7 +19,7 @@
 	interface Props {
 		// Video instance (required)
 		videoInstance: VideoInstance;
-		
+
 		// Workspace ID (required for API calls)
 		workspaceId: string;
 
@@ -82,45 +91,45 @@
 
 	// Function to create loading texture with text
 	const createLoadingTexture = (text: string, backgroundColor: string = fallbackColor) => {
-		const canvas = document.createElement('canvas');
-		const ctx = canvas.getContext('2d')!;
-		
+		const canvas = document.createElement("canvas");
+		const ctx = canvas.getContext("2d")!;
+
 		// Set canvas size (should match video aspect ratio)
 		canvas.width = 512;
 		canvas.height = 288; // 16:9 aspect ratio
-		
+
 		// Fill background
 		ctx.fillStyle = backgroundColor;
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
-		
+
 		// Setup text styling
-		ctx.fillStyle = '#FFFFFF';
-		ctx.textAlign = 'center';
-		ctx.textBaseline = 'middle';
-		ctx.font = 'bold 32px Arial, sans-serif';
-		
+		ctx.fillStyle = "#FFFFFF";
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+		ctx.font = "bold 32px Arial, sans-serif";
+
 		// Add text shadow for better readability
-		ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+		ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
 		ctx.shadowBlur = 4;
 		ctx.shadowOffsetX = 2;
 		ctx.shadowOffsetY = 2;
-		
+
 		// Draw the loading text
 		ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-		
+
 		// Draw emoji if provided
 		if (loadingEmoji) {
-			ctx.font = 'bold 48px Arial, sans-serif';
-			ctx.shadowColor = 'transparent';
+			ctx.font = "bold 48px Arial, sans-serif";
+			ctx.shadowColor = "transparent";
 			ctx.fillText(loadingEmoji, canvas.width / 2, canvas.height / 2 - 60);
 		}
-		
+
 		// Create and return Three.js texture
 		const texture = new CanvasTexture(canvas);
 		texture.minFilter = LinearFilter;
 		texture.magFilter = LinearFilter;
 		texture.needsUpdate = true;
-		
+
 		return texture;
 	};
 
@@ -224,7 +233,10 @@
 			}
 
 			// Cache status values to prevent reactive loops
-			const canActivate = lazyLoad && (videoInstance.input.connectionState === 'prepared' || videoInstance.input.connectionState === 'paused');
+			const canActivate =
+				lazyLoad &&
+				(videoInstance.input.connectionState === "prepared" ||
+					videoInstance.input.connectionState === "paused");
 			const hasPreparedRoom = videoInstance.input.preparedRoomId !== null;
 
 			// Add a small delay to avoid loading on quick hovers
@@ -261,7 +273,10 @@
 			cleanupVideo();
 
 			// Cache status values to prevent reactive loops
-			const canPause = lazyLoad && videoInstance.input.connectionState === 'connected' && videoInstance.input.connectionPolicy === 'lazy';
+			const canPause =
+				lazyLoad &&
+				videoInstance.input.connectionState === "connected" &&
+				videoInstance.input.connectionPolicy === "lazy";
 
 			// Only pause remote streams with lazy policy (not persistent connections)
 			if (canPause) {
@@ -283,11 +298,11 @@
 		}
 
 		const currentStream = videoInstance.currentStream;
-		
+
 		// Only update if the stream reference has actually changed
 		if (currentStream !== lastStreamRef) {
 			lastStreamRef = currentStream;
-			
+
 			// Gracefully stop current video
 			try {
 				videoElement.pause();

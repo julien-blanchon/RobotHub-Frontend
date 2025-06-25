@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { ICON } from "$lib/utils/icon";
 	import type { VideoInstance } from "$lib/elements/video/VideoManager.svelte";
-	import { BaseStatusBox, StatusHeader, StatusContent, StatusIndicator, StatusButton } from "$lib/components/3d/ui";
+	import {
+		BaseStatusBox,
+		StatusHeader,
+		StatusContent,
+		StatusIndicator,
+		StatusButton
+	} from "$lib/components/3d/ui";
 
 	interface Props {
 		video: VideoInstance;
@@ -10,18 +16,10 @@
 
 	let { video, handleClick }: Props = $props();
 
-	// Input theme color (green)
 	const inputColor = "rgb(34, 197, 94)";
-
 </script>
 
-<!--
-@component
-Input connection box showing the status of the input connection.
-Displays input information when connected or connection prompt when disconnected.
--->
-
-<BaseStatusBox 
+<BaseStatusBox
 	color={inputColor}
 	borderOpacity={0.6}
 	backgroundOpacity={0.2}
@@ -30,24 +28,24 @@ Displays input information when connected or connection prompt when disconnected
 >
 	{#if video.hasInput}
 		<!-- Active Input State -->
-		{#if video.input.type === 'local-camera'}
-			<StatusHeader 
-				icon={ICON["icon-[material-symbols--download]"].svg} 
-				text="CAMERA" 
+		{#if video.input.type === "local-camera"}
+			<StatusHeader
+				icon={ICON["icon-[material-symbols--download]"].svg}
+				text="CAMERA"
 				color={inputColor}
 				opacity={0.9}
 			/>
 		{:else}
-			<StatusHeader 
-				icon={ICON["icon-[material-symbols--download]"].svg} 
-				text="REMOTE" 
+			<StatusHeader
+				icon={ICON["icon-[material-symbols--download]"].svg}
+				text="REMOTE"
 				color="rgb(96, 165, 250)"
 				opacity={0.9}
 			/>
 		{/if}
 
-		<StatusContent 
-			title={video.input.type === 'local-camera' ? 'Local Camera' : `Room: ${video.input.roomId}`}
+		<StatusContent
+			title={video.input.type === "local-camera" ? "Local Camera" : `Room: ${video.input.roomId}`}
 			subtitle="Connected"
 			color={inputColor}
 			variant="primary"
@@ -57,20 +55,16 @@ Displays input information when connected or connection prompt when disconnected
 		<StatusIndicator color={inputColor} />
 	{:else}
 		<!-- No Input State -->
-		<StatusHeader 
-			icon={ICON["icon-[material-symbols--download]"].svg} 
-			text="NO INPUT" 
+		<StatusHeader
+			icon={ICON["icon-[material-symbols--download]"].svg}
+			text="NO INPUT"
 			color={inputColor}
 			opacity={0.7}
 		/>
 
-		<StatusContent 
-			title="Click to Start" 
-			color={inputColor} 
-			variant="secondary"
-		/>
+		<StatusContent title="Click to Start" color={inputColor} variant="secondary" />
 
-		<StatusButton 
+		<StatusButton
 			icon={ICON["icon-[mdi--plus]"].svg}
 			text="Add Input"
 			color={inputColor}
@@ -78,4 +72,4 @@ Displays input information when connected or connection prompt when disconnected
 			textOpacity={0.7}
 		/>
 	{/if}
-</BaseStatusBox> 
+</BaseStatusBox>

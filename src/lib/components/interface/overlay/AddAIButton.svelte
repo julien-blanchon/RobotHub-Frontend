@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Button } from "@/components/ui/button";
-	import { Badge } from "@/components/ui/badge";
 	import * as DropdownMenu from "@/components/ui/dropdown-menu";
 	import { toast } from "svelte-sonner";
 	import { cn } from "$lib/utils";
@@ -14,10 +13,10 @@
 	let { open = $bindable() }: Props = $props();
 
 	const aiOptions = [
-		{ id: 'act', label: 'ACT Model', icon: 'icon-[mdi--brain]', enabled: true },
-		{ id: 'pi0', label: 'Pi0', icon: 'icon-[mdi--brain]', enabled: false },
-		{ id: 'nano-vla', label: 'Nano VLA', icon: 'icon-[mdi--brain]', enabled: false },
-		{ id: 'nvidia-groot', label: 'Nvidia Groot', icon: 'icon-[mdi--robot-outline]', enabled: false }
+		{ id: "act", label: "ACT Model", icon: "icon-[mdi--brain]", enabled: true },
+		{ id: "pi0", label: "Pi0", icon: "icon-[mdi--brain]", enabled: false },
+		{ id: "nano-vla", label: "Nano VLA", icon: "icon-[mdi--brain]", enabled: false },
+		{ id: "nvidia-groot", label: "Nvidia Groot", icon: "icon-[mdi--robot-outline]", enabled: false }
 	];
 
 	async function addAI(aiType: string) {
@@ -27,12 +26,12 @@
 
 			const computeId = generateName();
 			const computeName = `${formatAIType(aiType)} ${computeId}`;
-			
+
 			// Create a new compute instance
 			const compute = remoteComputeManager.createCompute(computeId, computeName);
-			
+
 			toast.success(`Created ${formatAIType(aiType)} compute: ${computeName}`);
-			
+
 			// Close the dropdown
 			open = false;
 		} catch (error) {
@@ -47,12 +46,12 @@
 
 	function formatAIType(aiType: string): string {
 		switch (aiType) {
-			case 'pi0':
-				return 'Pi0';
-			case 'nano-vla':
-				return 'Nano VLA';
-			case 'nvidia-groot':
-				return 'Nvidia Groot';
+			case "pi0":
+				return "Pi0";
+			case "nano-vla":
+				return "Nano VLA";
+			case "nvidia-groot":
+				return "Nvidia Groot";
 			default:
 				return aiType;
 		}
@@ -60,14 +59,14 @@
 
 	function getAIDescription(aiType: string): string {
 		switch (aiType) {
-			case 'pi0':
-				return 'Lightweight AI model';
-			case 'nano-vla':
-				return 'Vision-language-action model';
-			case 'nvidia-groot':
-				return 'Humanoid robotics model';
+			case "pi0":
+				return "Lightweight AI model";
+			case "nano-vla":
+				return "Vision-language-action model";
+			case "nvidia-groot":
+				return "Humanoid robotics model";
 			default:
-				return 'AI model';
+				return "AI model";
 		}
 	}
 </script>
@@ -90,7 +89,7 @@
 
 <!-- Dropdown Menu Button -->
 <DropdownMenu.Root bind:open>
-	<DropdownMenu.Trigger >
+	<DropdownMenu.Trigger>
 		{#snippet child({ props })}
 			<Button
 				{...props}
@@ -143,7 +142,9 @@
 						<span class="font-medium text-white transition-colors duration-200"
 							>{formatAIType(ai.id)}</span
 						>
-						<span class="text-xs text-purple-100 transition-colors duration-200 dark:text-purple-200">
+						<span
+							class="text-xs text-purple-100 transition-colors duration-200 dark:text-purple-200"
+						>
 							{getAIDescription(ai.id)}
 						</span>
 					</div>
@@ -151,4 +152,4 @@
 			{/each}
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
-</DropdownMenu.Root> 
+</DropdownMenu.Root>

@@ -11,7 +11,7 @@
 	interface Props {
 		workspaceId: string;
 	}
-	let {workspaceId}: Props = $props();
+	let { workspaceId }: Props = $props();
 
 	let isInputModalOpen = $state(false);
 	let isOutputModalOpen = $state(false);
@@ -22,12 +22,12 @@
 		selectedRobot = robot;
 		isInputModalOpen = true;
 	}
-	
+
 	function onRobotBoxClick(robot: Robot) {
 		selectedRobot = robot;
 		isManualControlSheetOpen = true;
 	}
-	
+
 	function onOutputBoxClick(robot: Robot) {
 		selectedRobot = robot;
 		isOutputModalOpen = true;
@@ -43,7 +43,7 @@
 					z: 0
 				});
 			} catch (error) {
-				console.error('Failed to create robot:', error);
+				console.error("Failed to create robot:", error);
 			}
 		}
 
@@ -54,12 +54,15 @@
 
 	onDestroy(() => {
 		// Clean up robots and unlock servos for safety
-		console.log('🧹 Cleaning up robots and unlocking servos...');
-		robotManager.destroy().then(() => {
-			console.log('✅ Cleanup completed successfully');
-		}).catch((error) => {
-			console.error('❌ Error during cleanup:', error);
-		});
+		console.log("🧹 Cleaning up robots and unlocking servos...");
+		robotManager
+			.destroy()
+			.then(() => {
+				console.log("✅ Cleanup completed successfully");
+			})
+			.catch((error) => {
+				console.error("❌ Error during cleanup:", error);
+			});
 	});
 </script>
 
@@ -67,9 +70,9 @@
 	<RobotGridItem
 		{robot}
 		onCameraMove={() => {}}
-		onInputBoxClick={onInputBoxClick}
-		onRobotBoxClick={onRobotBoxClick}
-		onOutputBoxClick={onOutputBoxClick}	
+		{onInputBoxClick}
+		{onRobotBoxClick}
+		{onOutputBoxClick}
 	/>
 {/each}
 

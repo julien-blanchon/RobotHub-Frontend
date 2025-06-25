@@ -3,11 +3,10 @@
 	import type { IntersectionEvent } from "@threlte/extras";
 	import { interactivity } from "@threlte/extras";
 	import type { Snippet } from "svelte";
-	import { Spring, Tween } from "svelte/motion";
+	import { Spring } from "svelte/motion";
 	import { useCursor } from "@threlte/extras";
 	import { onMount, onDestroy } from "svelte";
 	import { Group } from "three";
-	import type { Robot } from "$lib/elements/robot/Robot.svelte";
 
 	interface Props {
 		content: Snippet<[{ isHovered: boolean; isSelected: boolean; debouncedIsHovered: boolean }]>; // renderable
@@ -39,7 +38,6 @@
 			}
 		}
 	});
-
 
 	const handleKeyDown = (event: KeyboardEvent) => {
 		if (event.key === "Escape" && isSelected) {

@@ -13,13 +13,7 @@
 		onOutputBoxClick: (video: VideoInstance) => void;
 	}
 
-	let {
-		video,
-		workspaceId,
-		onCameraMove,
-		onInputBoxClick,
-		onOutputBoxClick
-	}: Props = $props();
+	let { video, workspaceId, onCameraMove, onInputBoxClick, onOutputBoxClick }: Props = $props();
 
 	const { onPointerEnter, onPointerLeave } = useCursor();
 	interactivity();
@@ -35,7 +29,7 @@
 
 <T.Group
 	position.x={video.position.x}
-	position.y={video.position.y+1}
+	position.y={video.position.y + 1}
 	position.z={video.position.z}
 	scale={[1, 1, 1]}
 >

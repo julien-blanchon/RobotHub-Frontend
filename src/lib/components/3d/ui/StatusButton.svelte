@@ -32,12 +32,6 @@
 	}: Props = $props();
 </script>
 
-<!--
-@component
-Status button component for action buttons with optional icons.
-Uses single color with opacity variations for consistent styling.
--->
-
 <Container
 	backgroundColor={color}
 	{backgroundOpacity}

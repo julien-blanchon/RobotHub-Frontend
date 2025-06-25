@@ -284,10 +284,6 @@
 
 		rgbdData = createRGBDData();
 	});
-
-	$effect(() => {
-		console.log("render");
-	});
 </script>
 
 {#if pointCloudGeometry}

@@ -14,8 +14,7 @@ import {
 import { settings } from '$lib/runes/settings.svelte';
 import type { 
   CreateSessionRequest, 
-  CreateSessionResponse, 
-  SessionStatusResponse 
+  CreateSessionResponse
 } from '@robothub/inference-server-client';
 
 export interface AISessionConfig {

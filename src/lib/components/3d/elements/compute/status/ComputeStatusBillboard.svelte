@@ -7,7 +7,6 @@
 
 	interface Props {
 		compute: RemoteCompute;
-		offset?: number;
 		visible?: boolean;
 		onVideoInputBoxClick: (compute: RemoteCompute) => void;
 		onRobotInputBoxClick: (compute: RemoteCompute) => void;
@@ -16,7 +15,6 @@
 
 	let {
 		compute,
-		offset = 10,
 		visible = true,
 		onVideoInputBoxClick,
 		onRobotInputBoxClick,
@@ -44,13 +42,13 @@
 				justifyContent="center"
 				padding={20}
 			>
-				<ComputeConnectionFlowBoxUIKit 
-					{compute} 
-					{onVideoInputBoxClick} 
-					{onRobotInputBoxClick} 
-					{onRobotOutputBoxClick} 
+				<ComputeConnectionFlowBoxUIKit
+					{compute}
+					{onVideoInputBoxClick}
+					{onRobotInputBoxClick}
+					{onRobotOutputBoxClick}
 				/>
 			</Container>
 		</Root>
 	</Billboard>
-</T.Group> 
+</T.Group>

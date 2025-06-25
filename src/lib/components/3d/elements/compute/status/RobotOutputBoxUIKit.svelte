@@ -10,15 +10,8 @@
 
 	let { compute, handleClick }: Props = $props();
 
-	// Output theme color (blue)
 	const outputColor = "rgb(59, 130, 246)";
 </script>
-
-<!--
-@component
-Robot output box showing the status of robot joint commands output from Inference Sessions.
-Displays robot command output information when session exists or connection prompt when disconnected.
--->
 
 <BaseStatusBox 
 	color={outputColor}

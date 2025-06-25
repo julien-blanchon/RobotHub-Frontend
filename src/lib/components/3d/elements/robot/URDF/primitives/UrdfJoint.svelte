@@ -6,8 +6,6 @@
 	import UrdfLink from "./UrdfLink.svelte";
 	import { Vector3 } from "three";
 	import { Billboard, MeshLineGeometry, Text } from "@threlte/extras";
-
-	import type IUrdfLink from "../interfaces/IUrdfLink";
 	import type IUrdfRobot from "../interfaces/IUrdfRobot";
 	import { radiansToDegrees } from "@/utils";
 

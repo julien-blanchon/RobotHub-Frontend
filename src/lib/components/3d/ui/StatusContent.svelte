@@ -40,16 +40,8 @@
 	const config = sizeConfigs[size];
 	const opacities = opacityLevels[variant];
 
-	// Convert align to flexbox properties
 	const flexAlign = align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center';
 </script>
-
-<!--
-@component
-Simplified status content component with predefined styling levels.
-Uses consistent opacity and sizing patterns across all components.
-Fixed text centering by properly handling flexbox alignment.
--->
 
 <Container
 	padding={config.padding}
