@@ -58,7 +58,7 @@ COPY --chown=user:user static-server.js ./
 # Switch to non-root user
 USER user
 
-ARG PUBLIC_TRANSPORT_SERVER_URL=https://blanchon-robothub-transport-server.hf.space/api
+ARG PUBLIC_TRANSPORT_SERVER_URL=https://blanchon-robothub-transportserver.hf.space/api
 ENV PUBLIC_TRANSPORT_SERVER_URL=${PUBLIC_TRANSPORT_SERVER_URL}
 
 ARG PUBLIC_INFERENCE_SERVER_URL=https://blanchon-robothub-inferenceserver.hf.space/api
