@@ -12,7 +12,6 @@ export * from './models.js';
 export * from './drivers/index.js';
 
 // Robot calibration (avoid naming conflicts with models)
-export { USBCalibrationManager } from './calibration/USBCalibrationManager.js';
 export { CalibrationState as CalibrationStateManager } from './calibration/CalibrationState.svelte.js';
 export { default as USBCalibrationPanel } from './calibration/USBCalibrationPanel.svelte';
 

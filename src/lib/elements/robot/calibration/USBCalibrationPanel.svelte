@@ -1,12 +1,10 @@
 <!-- USB Calibration Panel - Compact Modal Version -->
 <script lang="ts">
-	import type { USBCalibrationManager } from "./USBCalibrationManager.js";
-	import { CalibrationState } from "./CalibrationState.svelte.js";
 	import { Button } from "@/components/ui/button/index.js";
 	import { Badge } from "@/components/ui/badge/index.js";
 
 	interface Props {
-		calibrationManager: USBCalibrationManager;
+		calibrationManager: any; // USBServoDriver (Consumer or Producer)
 		connectionType?: "consumer" | "producer";
 		onCalibrationComplete?: () => void;
 		onCancel?: () => void;
@@ -22,14 +20,11 @@
 	// Joint names for reference
 	const jointNames = ["Rotation", "Pitch", "Elbow", "Wrist_Pitch", "Wrist_Roll", "Jaw"];
 
-	// Create reactive calibration state manager for high-performance updates
-	const calibrationState = new CalibrationState(calibrationManager);
-
 	// Reactive getters from the calibration state
-	const isCalibrating = $derived(calibrationState.isCalibrating);
-	const progress = $derived(calibrationState.progress);
-	const isCalibrated = $derived(calibrationState.isCalibrated);
-	const needsCalibration = $derived(calibrationState.needsCalibration);
+	const isCalibrating = $derived(calibrationManager.calibrationState.isCalibrating);
+	const progress = $derived(calibrationManager.calibrationState.progress);
+	const isCalibrated = $derived(calibrationManager.calibrationState.isCalibrated);
+	const needsCalibration = $derived(calibrationManager.calibrationState.needsCalibration);
 
 	// Connection type descriptions
 	const connectionInfo = $derived(
@@ -44,19 +39,13 @@
 				}
 	);
 
-	// Cleanup on component destruction
-	$effect(() => {
-		return () => {
-			calibrationState.destroy();
-		};
-	});
 
 	async function startCalibration() {
 		await calibrationManager.startCalibration();
 	}
 
-	async function stopCalibration() {
-		await calibrationManager.stopCalibration();
+	async function completeCalibration() {
+		await calibrationManager.completeCalibration();
 		if (onCalibrationComplete) {
 			onCalibrationComplete();
 		}
@@ -83,7 +72,7 @@
 
 	function handleCancel() {
 		if (isCalibrating) {
-			calibrationManager.stopCalibration();
+			calibrationManager.cancelCalibration();
 		}
 		if (onCancel) {
 			onCancel();
@@ -102,7 +91,7 @@
 					<Badge variant="secondary" class="text-xs">{Math.round(progress)}%</Badge>
 				</div>
 				<div class="flex gap-2">
-					<Button variant="default" size="sm" onclick={stopCalibration}>Complete</Button>
+					<Button variant="default" size="sm" onclick={completeCalibration}>Complete</Button>
 					<Button variant="outline" size="sm" onclick={handleCancel}>Cancel</Button>
 				</div>
 			</div>
@@ -119,20 +108,20 @@
 			<div class="max-h-48 overflow-y-auto">
 				<div class="grid grid-cols-2 gap-2">
 					{#each jointNames as jointName}
-						{@const currentValue = calibrationState.getCurrentValue(jointName)}
-						{@const calibration = calibrationState.getJointCalibration(jointName)}
+						{@const currentValue = calibrationManager.calibrationState.getCurrentValue(jointName)}
+						{@const calibration = calibrationManager.calibrationState.getJointCalibration(jointName)}
 
 						<div class="space-y-1 rounded bg-slate-700/50 p-2">
 							<div class="flex items-center justify-between">
 								<span class="text-xs font-medium text-slate-300">{jointName}</span>
 								<span class="font-mono text-xs text-green-400"
-									>{calibrationState.formatServoValue(currentValue)}</span
+									>{calibrationManager.calibrationState.formatServoValue(currentValue)}</span
 								>
 							</div>
 
 							<div class="flex justify-between text-xs text-slate-500">
-								<span>Min: {calibrationState.formatServoValue(calibration?.minServoValue)}</span>
-								<span>Max: {calibrationState.formatServoValue(calibration?.maxServoValue)}</span>
+								<span>Min: {calibrationManager.calibrationState.formatServoValue(calibration?.minServoValue)}</span>
+								<span>Max: {calibrationManager.calibrationState.formatServoValue(calibration?.maxServoValue)}</span>
 							</div>
 
 							{#if calibration?.minServoValue !== undefined && calibration?.maxServoValue !== undefined && currentValue !== undefined}
@@ -178,8 +167,8 @@
 			<div class="max-h-32 overflow-y-auto">
 				<div class="grid grid-cols-2 gap-1">
 					{#each jointNames as jointName}
-						{@const calibration = calibrationState.getJointCalibration(jointName)}
-						{@const range = calibrationState.getJointRange(jointName)}
+						{@const calibration = calibrationManager.calibrationState.getJointCalibration(jointName)}
+						{@const range = calibrationManager.calibrationState.getJointRange(jointName)}
 
 						<div class="flex items-center justify-between rounded bg-slate-700/30 p-2 text-xs">
 							<span class="font-medium text-slate-300">{jointName}</span>

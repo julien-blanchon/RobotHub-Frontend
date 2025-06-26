@@ -1,114 +1,271 @@
-import type { USBCalibrationManager } from './USBCalibrationManager.js';
 import type { JointCalibration } from '../models.js';
 import { ROBOT_CONFIG } from '../config.js';
 
 export class CalibrationState {
-  private manager: USBCalibrationManager;
+  // Reactive calibration state
+  isCalibrating = $state(false);
+  progress = $state(0);
   
-  // Reactive state using Svelte 5 runes - direct state management
-  private _isCalibrating = $state(false);
-  private _progress = $state(0);
-  private _isCalibrated = $state(false);
-  private _needsCalibration = $state(true);
-  private _jointValues = $state<Record<string, number>>({});
-  private _jointCalibrations = $state<Record<string, JointCalibration>>({});
+  // Joint calibration data
+  private jointCalibrations = $state<Record<string, JointCalibration>>({});
+  private currentValues = $state<Record<string, number>>({});
   
-  constructor(manager: USBCalibrationManager) {
-    this.manager = manager;
-    
-    // Initialize reactive state
-    manager.jointNames_.forEach(name => {
-      this._jointValues[name] = 0;
-      this._jointCalibrations[name] = { isCalibrated: false };
-    });
-    
-    // Subscribe to manager changes
-    this.setupManagerSubscription();
-    
-    // Initial state sync
-    this.syncManagerState();
-  }
-  
-  // Reactive getters - now use internal reactive state
-  get isCalibrating(): boolean { return this._isCalibrating; }
-  get progress(): number { return this._progress; }
-  get isCalibrated(): boolean { return this._isCalibrated; }
-  get needsCalibration(): boolean { return this._needsCalibration; }
-  get jointValues(): Record<string, number> { return this._jointValues; }
-  get jointCalibrations(): Record<string, JointCalibration> { return this._jointCalibrations; }
-  
-  // Get current value for a specific joint
-  getCurrentValue(jointName: string): number | undefined {
-    return this._jointValues[jointName];
-  }
-  
-  // Get calibration for a specific joint
-  getJointCalibration(jointName: string): JointCalibration | undefined {
-    return this._jointCalibrations[jointName];
-  }
-  
-  // Get range for a specific joint
-  getJointRange(jointName: string): number {
-    const calibration = this._jointCalibrations[jointName];
-    if (!calibration?.minServoValue || !calibration?.maxServoValue) return 0;
-    return Math.abs(calibration.maxServoValue - calibration.minServoValue);
-  }
-  
-  private updateInterval: Timer | null = null;
-  private managerUnsubscribe: (() => void) | null = null;
+  // Callbacks for completion with final positions
+  private completionCallbacks: Array<(positions: Record<string, number>) => void> = [];
 
-  private setupManagerSubscription(): void {
-    // Use centralized config for UI update frequency
-    this.updateInterval = setInterval(() => {
-      this.syncManagerState();
-    }, ROBOT_CONFIG.polling.uiUpdateRate); // Centralized UI update rate
-    
-    // Also listen to manager calibration changes for immediate updates
-    const unsubscribe = this.manager.onCalibrationChange(() => {
-      console.debug('[CalibrationState] Manager calibration changed, syncing state');
-      this.syncManagerState();
+  constructor() {
+    // Initialize calibration data for expected joints
+    const jointNames = ["Rotation", "Pitch", "Elbow", "Wrist_Pitch", "Wrist_Roll", "Jaw"];
+    jointNames.forEach(name => {
+      this.jointCalibrations[name] = { 
+        isCalibrated: false,
+        minServoValue: undefined,
+        maxServoValue: undefined
+      };
+      this.currentValues[name] = 0;
     });
-    
-    // Store unsubscribe function for cleanup
-    this.managerUnsubscribe = unsubscribe;
   }
 
-  private syncManagerState(): void {
-    // Sync manager state to reactive state
-    this._isCalibrating = this.manager.calibrationState.isCalibrating;
-    this._progress = this.manager.calibrationState.progress;
-    this._isCalibrated = this.manager.isCalibrated;
-    this._needsCalibration = this.manager.needsCalibration;
+  // Computed properties
+  get needsCalibration(): boolean {
+    return Object.values(this.jointCalibrations).some(cal => !cal.isCalibrated);
+  }
+
+  get isCalibrated(): boolean {
+    return Object.values(this.jointCalibrations).every(cal => cal.isCalibrated);
+  }
+
+  // Update current servo value during calibration
+  updateCurrentValue(jointName: string, servoValue: number): void {
+    this.currentValues[jointName] = servoValue;
     
-    // Update joint values and calibrations
-    this.manager.jointNames_.forEach(name => {
-      const currentValue = this.manager.getCurrentRawValue(name);
-      if (currentValue !== undefined) {
-        this._jointValues[name] = currentValue;
-      }
-      
-      const calibration = this.manager.getJointCalibration(name);
+    // Update calibration range if calibrating
+    if (this.isCalibrating) {
+      const calibration = this.jointCalibrations[jointName];
       if (calibration) {
-        // Create new object to ensure reactivity
-        this._jointCalibrations[name] = { ...calibration };
+        // Update min/max values
+        if (calibration.minServoValue === undefined || servoValue < calibration.minServoValue) {
+          calibration.minServoValue = servoValue;
+        }
+        if (calibration.maxServoValue === undefined || servoValue > calibration.maxServoValue) {
+          calibration.maxServoValue = servoValue;
+        }
+        
+        // Update progress based on range coverage
+        this.updateProgress();
       }
-    }); 
+    }
   }
 
-  // Cleanup method
-  destroy(): void {
-    if (this.updateInterval) {
-      clearInterval(this.updateInterval);
-      this.updateInterval = null;
-    }
-    if (this.managerUnsubscribe) {
-      this.managerUnsubscribe();
-      this.managerUnsubscribe = null;
-    }
+  // Get current value for a joint
+  getCurrentValue(jointName: string): number | undefined {
+    return this.currentValues[jointName];
   }
-  
+
+  // Get calibration data for a joint
+  getJointCalibration(jointName: string): JointCalibration | undefined {
+    return this.jointCalibrations[jointName];
+  }
+
+  // Get formatted range string for display
+  getJointRange(jointName: string): string {
+    const calibration = this.jointCalibrations[jointName];
+    if (!calibration || calibration.minServoValue === undefined || calibration.maxServoValue === undefined) {
+      return "Not set";
+    }
+    return `${calibration.minServoValue}-${calibration.maxServoValue}`;
+  }
+
   // Format servo value for display
   formatServoValue(value: number | undefined): string {
-    return value !== undefined ? value.toString() : '---';
+    return value !== undefined ? value.toString() : "---";
+  }
+
+  // Start calibration process
+  startCalibration(): void {
+    console.log("[CalibrationState] Starting calibration...");
+    this.isCalibrating = true;
+    this.progress = 0;
+    
+    // Reset calibration data
+    Object.keys(this.jointCalibrations).forEach(jointName => {
+      this.jointCalibrations[jointName] = {
+        isCalibrated: false,
+        minServoValue: undefined,
+        maxServoValue: undefined
+      };
+    });
+  }
+
+  // Complete calibration and mark joints as calibrated
+  completeCalibration(): Record<string, number> {
+    console.log("[CalibrationState] Completing calibration...");
+    
+    const finalPositions: Record<string, number> = {};
+    
+    // Mark all joints with sufficient range as calibrated
+    Object.keys(this.jointCalibrations).forEach(jointName => {
+      const calibration = this.jointCalibrations[jointName];
+      if (calibration.minServoValue !== undefined && calibration.maxServoValue !== undefined) {
+        const range = calibration.maxServoValue - calibration.minServoValue;
+        if (range >= ROBOT_CONFIG.calibration.minRangeThreshold) {
+          calibration.isCalibrated = true;
+          finalPositions[jointName] = this.currentValues[jointName] || 0;
+          console.log(`[CalibrationState] Joint ${jointName} calibrated: ${this.getJointRange(jointName)} (range: ${range})`);
+        } else {
+          console.warn(`[CalibrationState] Joint ${jointName} range too small: ${range} < ${ROBOT_CONFIG.calibration.minRangeThreshold}`);
+        }
+      }
+    });
+
+    this.isCalibrating = false;
+    this.progress = 100;
+    
+    // Notify completion callbacks
+    this.completionCallbacks.forEach(callback => {
+      try {
+        callback(finalPositions);
+      } catch (error) {
+        console.error("[CalibrationState] Error in completion callback:", error);
+      }
+    });
+    
+    return finalPositions;
+  }
+
+  // Cancel calibration
+  cancelCalibration(): void {
+    console.log("[CalibrationState] Calibration cancelled");
+    this.isCalibrating = false;
+    this.progress = 0;
+    
+    // Reset calibration data
+    Object.keys(this.jointCalibrations).forEach(jointName => {
+      this.jointCalibrations[jointName] = {
+        isCalibrated: false,
+        minServoValue: undefined,
+        maxServoValue: undefined
+      };
+    });
+  }
+
+  // Skip calibration (use predefined values)
+  skipCalibration(): void {
+    console.log("[CalibrationState] Skipping calibration with predefined values");
+    
+    // Set predefined calibration values for SO-100 arm
+    const predefinedCalibrations = {
+      "Rotation": { minServoValue: 500, maxServoValue: 3500, isCalibrated: true },
+      "Pitch": { minServoValue: 500, maxServoValue: 3500, isCalibrated: true },
+      "Elbow": { minServoValue: 500, maxServoValue: 3500, isCalibrated: true },
+      "Wrist_Pitch": { minServoValue: 500, maxServoValue: 3500, isCalibrated: true },
+      "Wrist_Roll": { minServoValue: 500, maxServoValue: 3500, isCalibrated: true },
+      "Jaw": { minServoValue: 1000, maxServoValue: 3000, isCalibrated: true }
+    };
+    
+    Object.entries(predefinedCalibrations).forEach(([jointName, calibration]) => {
+      this.jointCalibrations[jointName] = calibration;
+    });
+    
+    this.isCalibrating = false;
+    this.progress = 100;
+  }
+
+  // Convert raw servo value to normalized percentage (for USB INPUT - reading from servo)
+  normalizeValue(rawValue: number, jointName: string): number {
+    const calibration = this.jointCalibrations[jointName];
+    if (!calibration || !calibration.isCalibrated || 
+        calibration.minServoValue === undefined || calibration.maxServoValue === undefined) {
+      // No calibration, use appropriate default conversion
+      const isGripper = jointName.toLowerCase() === 'jaw' || jointName.toLowerCase() === 'gripper';
+      if (isGripper) {
+        return Math.max(0, Math.min(100, (rawValue / 4095) * 100));
+      } else {
+        return Math.max(-100, Math.min(100, ((rawValue - 2048) / 2048) * 100));
+      }
+    }
+
+    const { minServoValue, maxServoValue } = calibration;
+    if (maxServoValue === minServoValue) return 0;
+
+    // Bound the input servo value to calibrated range
+    const bounded = Math.max(minServoValue, Math.min(maxServoValue, rawValue));
+    
+    const isGripper = jointName.toLowerCase() === 'jaw' || jointName.toLowerCase() === 'gripper';
+    if (isGripper) {
+      // Gripper: 0-100%
+      return ((bounded - minServoValue) / (maxServoValue - minServoValue)) * 100;
+    } else {
+      // Regular joint: -100 to +100%
+      return (((bounded - minServoValue) / (maxServoValue - minServoValue)) * 200) - 100;
+    }
+  }
+
+  // Convert normalized percentage to raw servo value (for USB OUTPUT - writing to servo)
+  denormalizeValue(normalizedValue: number, jointName: string): number {
+    const calibration = this.jointCalibrations[jointName];
+    if (!calibration || !calibration.isCalibrated || 
+        calibration.minServoValue === undefined || calibration.maxServoValue === undefined) {
+      // No calibration, use appropriate default conversion
+      const isGripper = jointName.toLowerCase() === 'jaw' || jointName.toLowerCase() === 'gripper';
+      if (isGripper) {
+        return Math.round((normalizedValue / 100) * 4095);
+      } else {
+        return Math.round(2048 + (normalizedValue / 100) * 2048);
+      }
+    }
+
+    const { minServoValue, maxServoValue } = calibration;
+    const range = maxServoValue - minServoValue;
+
+    let normalizedRatio: number;
+    const isGripper = jointName.toLowerCase() === 'jaw' || jointName.toLowerCase() === 'gripper';
+    if (isGripper) {
+      // Gripper: 0-100% -> 0-1
+      normalizedRatio = Math.max(0, Math.min(1, normalizedValue / 100));
+    } else {
+      // Regular joint: -100 to +100% -> 0-1
+      normalizedRatio = Math.max(0, Math.min(1, (normalizedValue + 100) / 200));
+    }
+
+    return Math.round(minServoValue + normalizedRatio * range);
+  }
+
+  // Register callback for calibration completion with final positions
+  onCalibrationCompleteWithPositions(callback: (positions: Record<string, number>) => void): () => void {
+    this.completionCallbacks.push(callback);
+    
+    // Return unsubscribe function
+    return () => {
+      const index = this.completionCallbacks.indexOf(callback);
+      if (index >= 0) {
+        this.completionCallbacks.splice(index, 1);
+      }
+    };
+  }
+
+  // Update progress based on calibration coverage
+  private updateProgress(): void {
+    if (!this.isCalibrating) return;
+
+    let totalProgress = 0;
+    let jointCount = 0;
+
+    Object.values(this.jointCalibrations).forEach(calibration => {
+      jointCount++;
+      if (calibration.minServoValue !== undefined && calibration.maxServoValue !== undefined) {
+        const range = calibration.maxServoValue - calibration.minServoValue;
+        // Progress is based on range size (more range = more progress)
+        const jointProgress = Math.min(100, (range / ROBOT_CONFIG.calibration.minRangeThreshold) * 100);
+        totalProgress += jointProgress;
+      }
+    });
+
+    this.progress = jointCount > 0 ? totalProgress / jointCount : 0;
+  }
+
+  // Cleanup
+  destroy(): void {
+    this.completionCallbacks = [];
   }
 } 

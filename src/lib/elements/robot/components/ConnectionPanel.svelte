@@ -39,30 +39,34 @@
 		}
 	});
 
-	// Set up calibration completion callback with position sync
-	robot.calibrationManager.onCalibrationCompleteWithPositions((finalPositions) => {
-		console.log("[ConnectionPanel] Calibration complete, syncing robot to final positions");
-		robot.syncToCalibrationPositions(finalPositions);
-	});
+	// Find USB driver for calibration (if any)
+	function getUSBDriver(): any {
+		// Check consumer first
+		if (robot.consumer && 'calibrationState' in robot.consumer) {
+			return robot.consumer;
+		}
+		// Then check producers
+		return robot.producers.find(p => 'calibrationState' in p) || null;
+	}
 
 	async function connectUSBConsumer() {
 		try {
 			connecting = true;
 			error = null;
 
-			// Check if calibration is needed
-			if (robot.calibrationManager.needsCalibration) {
-				pendingUSBConnection = "consumer";
-				showUSBCalibration = true;
-				return; // Don't proceed with connection yet
-			}
-
+			// USB drivers handle their own calibration requirements
 			await robot.setConsumer({
 				type: "usb",
 				baudRate: 1000000
 			});
 		} catch (err) {
 			console.error("Failed to connect USB consumer:", err);
+			// Check if it's a calibration error
+			if (err instanceof Error && err.message.includes('calibration')) {
+				pendingUSBConnection = "consumer";
+				showUSBCalibration = true;
+				return;
+			}
 			error = err instanceof Error ? err.message : "Unknown error";
 		} finally {
 			connecting = false;
@@ -92,19 +96,19 @@
 			connecting = true;
 			error = null;
 
-			// Check if calibration is needed
-			if (robot.calibrationManager.needsCalibration) {
-				pendingUSBConnection = "producer";
-				showUSBCalibration = true;
-				return; // Don't proceed with connection yet
-			}
-
+			// USB drivers handle their own calibration requirements
 			await robot.addProducer({
 				type: "usb",
 				baudRate: 1000000
 			});
 		} catch (err) {
 			console.error("Failed to connect USB producer:", err);
+			// Check if it's a calibration error
+			if (err instanceof Error && err.message.includes('calibration')) {
+				pendingUSBConnection = "producer";
+				showUSBCalibration = true;
+				return;
+			}
 			error = err instanceof Error ? err.message : "Unknown error";
 		} finally {
 			connecting = false;
@@ -533,12 +537,18 @@
 					to software values.
 				</div>
 
-				<USBCalibrationPanel
-					calibrationManager={robot.calibrationManager}
-					connectionType={pendingUSBConnection || "consumer"}
-					{onCalibrationComplete}
-					onCancel={onCalibrationCancel}
-				/>
+				{#if getUSBDriver()}
+					<USBCalibrationPanel
+						calibrationManager={getUSBDriver()}
+						connectionType={pendingUSBConnection || "consumer"}
+						{onCalibrationComplete}
+						onCancel={onCalibrationCancel}
+					/>
+				{:else}
+					<div class="text-center text-slate-400">
+						No USB driver available for calibration
+					</div>
+				{/if}
 			</div>
 		</div>
 	{/if}

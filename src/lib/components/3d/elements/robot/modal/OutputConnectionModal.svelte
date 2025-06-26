@@ -50,13 +50,6 @@
 		}
 	});
 
-	// Set up calibration completion callback
-	$effect(() => {
-		robot.calibrationManager.onCalibrationCompleteWithPositions((finalPositions) => {
-			robot.syncToCalibrationPositions(finalPositions);
-		});
-	});
-
 	// Room management functions
 	async function refreshRooms() {
 		try {
@@ -138,17 +131,19 @@
 			isConnecting = true;
 			error = null;
 
-			// Check if calibration is needed
-			if (robot.calibrationManager.needsCalibration) {
-				pendingUSBConnection = "output";
-				showUSBCalibration = true;
-				return;
-			}
-
+			// Create USB producer first, which will handle calibration internally
 			await robot.addProducer({
 				type: "usb",
 				baudRate: 1000000
 			});
+
+			// Check if any USB drivers need calibration
+			const uncalibratedDrivers = robot.getUncalibratedUSBDrivers();
+			if (uncalibratedDrivers.length > 0) {
+				pendingUSBConnection = "output";
+				showUSBCalibration = true;
+				return;
+			}
 
 			toast.success("USB Output Connected", {
 				description: "Successfully connected to physical robot hardware"
@@ -185,18 +180,29 @@
 	// Handle calibration completion
 	async function onCalibrationComplete() {
 		showUSBCalibration = false;
-
-		if (pendingUSBConnection === "output") {
-			await connectUSBOutput();
-		}
-
 		pendingUSBConnection = null;
+
+		toast.success("Calibration Complete", {
+			description: "Hardware calibrated and ready for use"
+		});
 	}
 
 	function onCalibrationCancel() {
 		showUSBCalibration = false;
 		pendingUSBConnection = null;
 		isConnecting = false;
+		
+		// Clean up the uncalibrated USB producer
+		const uncalibratedDrivers = robot.getUncalibratedUSBDrivers();
+		if (uncalibratedDrivers.length > 0) {
+			// Remove the most recent producer (should be the one we just added)
+			const lastProducer = robot.producers[robot.producers.length - 1];
+			if (lastProducer) {
+				robot.removeProducer(lastProducer.id).catch(err => {
+					console.error("Failed to clean up USB producer after calibration cancel:", err);
+				});
+			}
+		}
 	}
 </script>
 
@@ -262,12 +268,19 @@
 								</Alert.Description>
 							</Alert.Root>
 
-							<USBCalibrationPanel
-								calibrationManager={robot.calibrationManager}
-								connectionType="producer"
-								{onCalibrationComplete}
-								onCancel={onCalibrationCancel}
-							/>
+							<!-- Show calibration panels for each uncalibrated USB driver -->
+							{#each robot.getUncalibratedUSBDrivers() as usbDriver}
+								<USBCalibrationPanel
+									calibrationManager={usbDriver}
+									connectionType="producer"
+									{onCalibrationComplete}
+									onCancel={onCalibrationCancel}
+								/>
+							{:else}
+								<div class="text-center text-slate-400">
+									No USB drivers require calibration
+								</div>
+							{/each}
 						</Card.Content>
 					</Card.Root>
 				{:else}

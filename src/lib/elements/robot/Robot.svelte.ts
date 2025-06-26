@@ -12,8 +12,8 @@ import { USBConsumer } from './drivers/USBConsumer.js';
 import { USBProducer } from './drivers/USBProducer.js';
 import { RemoteConsumer } from './drivers/RemoteConsumer.js';
 import { RemoteProducer } from './drivers/RemoteProducer.js';
-import { USBCalibrationManager } from './calibration/USBCalibrationManager.js';
-import type { UrdfRobotState } from '@/types/robot.js';
+import { USBServoDriver } from './drivers/USBServoDriver.js';
+
 import { ROBOT_CONFIG } from './config.js';
 import type IUrdfRobot from '@/components/3d/elements/robot/URDF/interfaces/IUrdfRobot.js';
 
@@ -45,9 +45,6 @@ export class Robot implements Positionable {
   
   // URDF robot state for 3D visualization - PUBLIC for reactive access
   urdfRobotState = $state<IUrdfRobot | null>(null);
-  
-  // Shared USB calibration manager for this robot
-  private usbCalibrationManager: USBCalibrationManager = new USBCalibrationManager();
   
   // Derived reactive values for components
   jointArray = $derived(Object.values(this.joints));
@@ -83,49 +80,53 @@ export class Robot implements Positionable {
     this.position = { ...newPosition };
   }
 
-  // Calibration access
-  get calibrationManager(): USBCalibrationManager {
-    return this.usbCalibrationManager;
-  }
-
-  // NEW: Sync virtual robot to final calibration positions
-  syncToCalibrationPositions(finalPositions: Record<string, number>): void {
-    console.log(`[Robot ${this.id}] 🔄 Syncing virtual robot to final calibration positions...`);
+  // Get all USB drivers (both consumer and producers) for calibration
+  getUSBDrivers(): USBServoDriver[] {
+    const usbDrivers: USBServoDriver[] = [];
     
-    Object.entries(finalPositions).forEach(([jointName, rawPosition]) => {
-      const joint = this.joints[jointName];
-      if (!joint) {
-        console.warn(`[Robot ${this.id}] Joint ${jointName} not found for position sync`);
-        return;
+    // Check consumer
+    if (this.consumer && USBServoDriver.isUSBDriver(this.consumer)) {
+      usbDrivers.push(this.consumer);
+    }
+    
+    // Check producers
+    this.producers.forEach(producer => {
+      if (USBServoDriver.isUSBDriver(producer)) {
+        usbDrivers.push(producer);
       }
-
-      // Convert raw servo position to normalized value using calibration data
-      const normalizedValue = this.usbCalibrationManager.normalizeValue(rawPosition, jointName);
-      
-      // Clamp to appropriate normalized range based on joint type
-      let clampedValue: number;
-      if (jointName.toLowerCase() === 'jaw' || jointName.toLowerCase() === 'gripper') {
-        clampedValue = Math.max(0, Math.min(100, normalizedValue));
-      } else {
-        clampedValue = Math.max(-100, Math.min(100, normalizedValue));
-      }
-      
-      console.log(`[Robot ${this.id}] ${jointName}: ${rawPosition} (raw) -> ${normalizedValue.toFixed(1)} -> ${clampedValue.toFixed(1)} (normalized)`);
-      
-      // Update joint value to match physical servo position
-      this.joints[jointName] = { ...joint, value: clampedValue };
     });
     
-    console.log(`[Robot ${this.id}] ✅ Virtual robot synced to calibration positions`);
+    return usbDrivers;
   }
 
-  // Joint value updates (normalized)
+  // Get uncalibrated USB drivers that need calibration
+  getUncalibratedUSBDrivers(): USBServoDriver[] {
+    return this.getUSBDrivers().filter(driver => driver.needsCalibration);
+  }
+
+  // Check if robot has any USB drivers
+  hasUSBDrivers(): boolean {
+    return this.getUSBDrivers().length > 0;
+  }
+
+  // Check if all USB drivers are calibrated
+  areAllUSBDriversCalibrated(): boolean {
+    const usbDrivers = this.getUSBDrivers();
+    return usbDrivers.length > 0 && usbDrivers.every(driver => driver.isCalibrated);
+  }
+
+  // Joint value updates (normalized) - for manual control
   updateJoint(name: string, normalizedValue: number): void {
     if (!this.isManualControlEnabled) {
       console.warn('Manual control is disabled');
       return;
     }
 
+    this.updateJointValue(name, normalizedValue, true);
+  }
+
+  // Internal joint value update (used by both manual control and USB calibration sync)
+  updateJointValue(name: string, normalizedValue: number, sendToProducers: boolean = false): void {
     const joint = this.joints[name];
     if (!joint) {
       console.warn(`Joint ${name} not found`);
@@ -139,13 +140,15 @@ export class Robot implements Positionable {
       normalizedValue = Math.max(-100, Math.min(100, normalizedValue));
     }
 
-    console.debug(`[Robot ${this.id}] Manual update joint ${name} to ${normalizedValue} (normalized)`);
+    console.debug(`[Robot ${this.id}] Update joint ${name} to ${normalizedValue} (normalized, sendToProducers: ${sendToProducers})`);
 
     // Create a new joint object to ensure reactivity
     this.joints[name] = { ...joint, value: normalizedValue };
 
-    // Send normalized command to producers
-    this.sendToProducers({ joints: [{ name, value: normalizedValue }] });
+    // Send normalized command to producers if requested
+    if (sendToProducers) {
+      this.sendToProducers({ joints: [{ name, value: normalizedValue }] });
+    }
   }
 
   executeCommand(command: RobotCommand): void {
@@ -183,27 +186,7 @@ export class Robot implements Positionable {
       console.debug(`[Robot ${this.id}] Executing command with ${command.joints.length} joints:`, 
         command.joints.map(j => `${j.name}=${j.value}`).join(', '));
       
-      // Check if USB calibration is in progress
-      if (this.usbCalibrationManager.calibrationState.isCalibrating) {
-        console.debug(`[Robot ${this.id}] 🚫 Blocking virtual robot updates - USB calibration in progress`);
-        // Still send to producers, but don't update virtual robot
-        this.sendToProducers(command);
-        return;
-      }
-      
-      // Check if USB calibration is needed (if we have USB consumer/producers)
-      const hasUSBDrivers = (this.consumer instanceof USBConsumer) || 
-                           this.producers.some(p => p instanceof USBProducer);
-      
-      if (hasUSBDrivers && this.usbCalibrationManager.needsCalibration) {
-        console.debug(`[Robot ${this.id}] ⏳ Blocking virtual robot updates - USB drivers need calibration`);
-        // Still send to producers, but don't update virtual robot
-        this.sendToProducers(command);
-        return;
-      }
-      
-      console.debug(`[Robot ${this.id}] ✅ Updating virtual robot - USB calibrated or no USB drivers`);
-      
+      // Update virtual robot joints with normalized values
       command.joints.forEach(jointCmd => {
         const joint = this.joints[jointCmd.name];
         if (joint) {
@@ -273,9 +256,30 @@ export class Robot implements Positionable {
 
     const consumer = this.createConsumer(config);
     
+    // Set up calibration completion callback for USB drivers
+    if (USBServoDriver.isUSBDriver(consumer)) {
+      const calibrationUnsubscribe = consumer.onCalibrationCompleteWithPositions(async (finalPositions: Record<string, number>) => {
+        console.log(`[Robot ${this.id}] Calibration complete, syncing robot to final positions`);
+        consumer.syncRobotPositions(finalPositions, (jointName: string, normalizedValue: number) => {
+          this.updateJointValue(jointName, normalizedValue, false); // Don't send to producers to avoid feedback loop
+        });
+        
+        // Start listening now that calibration is complete
+        if ('startListening' in consumer && consumer.startListening) {
+          try {
+            await consumer.startListening();
+            console.log(`[Robot ${this.id}] Started listening after calibration completion`);
+          } catch (error) {
+            console.error(`[Robot ${this.id}] Failed to start listening after calibration:`, error);
+          }
+        }
+      });
+      this.unsubscribeFns.push(calibrationUnsubscribe);
+    }
+    
     // Only pass joinExistingRoom to remote drivers
     if (config.type === 'remote') {
-      await (consumer as any).connect(joinExistingRoom);
+      await (consumer as RemoteConsumer).connect(joinExistingRoom);
     } else {
       await consumer.connect();
     }
@@ -292,9 +296,18 @@ export class Robot implements Positionable {
     });
     this.unsubscribeFns.push(statusUnsubscribe);
 
-    // Start listening for consumers with this capability
+    // Start listening for consumers with this capability (only if calibrated for USB)
     if ('startListening' in consumer && consumer.startListening) {
-      await consumer.startListening();
+      // For USB consumers, only start listening if calibrated
+      if (USBServoDriver.isUSBDriver(consumer)) {
+        if (consumer.isCalibrated) {
+          await consumer.startListening();
+        }
+        // If not calibrated, startListening will be called after calibration completion
+      } else {
+        // For non-USB consumers, start listening immediately
+        await consumer.startListening();
+      }
     }
 
     this.consumer = consumer;
@@ -319,9 +332,22 @@ export class Robot implements Positionable {
   private async _addProducer(config: USBDriverConfig | RemoteDriverConfig, joinExistingRoom: boolean): Promise<string> {
     const producer = this.createProducer(config);
     
+    // Set up calibration completion callback for USB drivers
+    if (USBServoDriver.isUSBDriver(producer)) {
+      const calibrationUnsubscribe = producer.onCalibrationCompleteWithPositions(async (finalPositions: Record<string, number>) => {
+        console.log(`[Robot ${this.id}] Calibration complete, syncing robot to final positions`);
+        producer.syncRobotPositions(finalPositions, (jointName: string, normalizedValue: number) => {
+          this.updateJointValue(jointName, normalizedValue, false); // Don't send to producers to avoid feedback loop
+        });
+        
+        console.log(`[Robot ${this.id}] USB Producer calibration completed and ready for commands`);
+      });
+      this.unsubscribeFns.push(calibrationUnsubscribe);
+    }
+    
     // Only pass joinExistingRoom to remote drivers
     if (config.type === 'remote') {
-      await (producer as any).connect(joinExistingRoom);
+      await (producer as RemoteProducer).connect(joinExistingRoom);
     } else {
       await producer.connect();
     }
@@ -366,7 +392,7 @@ export class Robot implements Positionable {
   private createConsumer(config: USBDriverConfig | RemoteDriverConfig): Consumer {
     switch (config.type) {
       case 'usb':
-        return new USBConsumer(config, this.usbCalibrationManager);
+        return new USBConsumer(config);
       case 'remote':
         return new RemoteConsumer(config);
       default:
@@ -378,7 +404,7 @@ export class Robot implements Positionable {
   private createProducer(config: USBDriverConfig | RemoteDriverConfig): Producer {
     switch (config.type) {
       case 'usb':
-        return new USBProducer(config, this.usbCalibrationManager);
+        return new USBProducer(config);
       case 'remote':
         return new RemoteProducer(config);
       default:
@@ -465,7 +491,6 @@ export class Robot implements Positionable {
       })
     );
 
-    // Clean up calibration manager
-    await this.usbCalibrationManager.destroy();
+    // Calibration cleanup is handled by individual USB drivers
   }
 } 
