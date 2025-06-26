@@ -1,4 +1,4 @@
-import type { Producer, ConnectionStatus, RobotCommand, USBDriverConfig } from '../models.js';
+import type { Producer, RobotCommand } from '../models.js';
 import { ROBOT_CONFIG } from '../config.js';
 import { USBServoDriver } from './USBServoDriver.js';
 
