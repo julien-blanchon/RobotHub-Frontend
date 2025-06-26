@@ -8,7 +8,7 @@
 	import UrdfJoint from "./UrdfJoint.svelte";
 	import type IUrdfRobot from "../interfaces/IUrdfRobot";
 	import { T } from "@threlte/core";
-	// import Pointcloud from "@/components/test/Pointcloud.svelte";
+	import Pointcloud from "@/components/3d/misc/Pointcloud.svelte";
 
 	interface Props {
 		robot: IUrdfRobot;
@@ -104,14 +104,14 @@
 					<T.BoxGeometry />
 					<T.MeshBasicMaterial color="red" />
 				</T.Mesh>
-				<!-- <Pointcloud
+				<Pointcloud
 					cameraPositionX={joint.origin_xyz[0]}
 					cameraPositionY={joint.origin_xyz[1]}
 					cameraPositionZ={joint.origin_xyz[2]}
 					cameraRotationX={joint.origin_rpy[0]}
 					cameraRotationY={joint.origin_rpy[1]}
 					cameraRotationZ={joint.origin_rpy[2]}
-				/> -->
+				/>
 			</T.Group>
 		</T.Group>
 	{/if}

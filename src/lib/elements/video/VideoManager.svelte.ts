@@ -36,9 +36,6 @@ export class VideoInstance implements Positionable {
 		active: false,
 		client: null as videoTypes.VideoProducer | null,
 		roomId: null as string | null,
-		// New properties for UI state
-		type: null as 'recording' | 'remote' | null,
-		stream: null as MediaStream | null,
 	});
 
 	// Position (reactive and bindable)
@@ -275,8 +272,6 @@ export class VideoManager {
 			video.output.active = true;
 			video.output.client = producer;
 			video.output.roomId = roomId;
-			video.output.type = 'remote';
-			video.output.stream = video.input.stream;
 
 			console.log(`Video output started to room ${roomId} for video ${videoId}`);
 			return { success: true };
@@ -535,8 +530,6 @@ export class VideoManager {
 			video.output.active = true;
 			video.output.client = producer;
 			video.output.roomId = result.roomId;
-			video.output.type = 'remote';
-			video.output.stream = video.input.stream;
 
 			// Refresh room list
 			await this.listRooms(workspaceId);
@@ -561,8 +554,6 @@ export class VideoManager {
 		video.output.active = false;
 		video.output.client = null;
 		video.output.roomId = null;
-		video.output.type = null;
-		video.output.stream = null;
 
 		console.log(`Output stopped for video ${videoId}`);
 	}

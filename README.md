@@ -15,7 +15,7 @@ app_port: 8000
 pinned: true
 license: mit
 fullWidth: true
-short_description: Web interface of the RobotHub platform – build, monitor & control robots with AI assistance
+short_description: Web interface of the RobotHub platform 
 ---
 
 # 🤖 RobotHub Arena – Frontend

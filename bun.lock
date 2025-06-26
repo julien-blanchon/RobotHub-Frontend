@@ -6,6 +6,7 @@
       "dependencies": {
         "@robothub/inference-server-client": "file:./external/RobotHub-InferenceServer/client",
         "@robothub/transport-server-client": "file:./external/RobotHub-InferenceServer/external/RobotHub-TransportServer/client/js",
+        "@sparkjsdev/spark": "^0.1.4",
         "@threlte/core": "^8.0.4",
         "@threlte/extras": "^9.2.1",
         "@types/three": "0.177.0",
@@ -254,6 +255,8 @@
     "@rollup/rollup-win32-ia32-msvc": ["@rollup/rollup-win32-ia32-msvc@4.44.0", "", { "os": "win32", "cpu": "ia32" }, "sha512-3XJ0NQtMAXTWFW8FqZKcw3gOQwBtVWP/u8TpHP3CRPXD7Pd6s8lLdH3sHWh8vqKCyyiI8xW5ltJScQmBU9j7WA=="],
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.44.0", "", { "os": "win32", "cpu": "x64" }, "sha512-Q2Mgwt+D8hd5FIPUuPDsvPR7Bguza6yTkJxspDGkZj7tBRn2y4KSWYuIXpftFSjBra76TbKerCV7rgFPQrn+wQ=="],
+
+    "@sparkjsdev/spark": ["@sparkjsdev/spark@0.1.4", "", { "dependencies": { "fflate": "^0.8.2" } }, "sha512-VbrZFx96mOEYEhdPoeG39lSc1axRULJNqBH1gRqOjGKo1UcG3yVpva6+jJt2Aat3V4kwH8TwdGvlQypzABrxhg=="],
 
     "@sveltejs/acorn-typescript": ["@sveltejs/acorn-typescript@1.0.5", "", { "peerDependencies": { "acorn": "^8.9.0" } }, "sha512-IwQk4yfwLdibDlrXVE04jTZYlLnwsTT2PIOQQGNLWfjavGifnk1JD1LcZjZaBTRcxZu2FfPfNLOE04DSu9lqtQ=="],
 

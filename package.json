@@ -48,13 +48,14 @@
 		"vite": "^6.3.5"
 	},
 	"dependencies": {
+		"@robothub/inference-server-client": "file:./external/RobotHub-InferenceServer/client",
+		"@robothub/transport-server-client": "file:./external/RobotHub-InferenceServer/external/RobotHub-TransportServer/client/js",
+		"@sparkjsdev/spark": "^0.1.4",
 		"@threlte/core": "^8.0.4",
 		"@threlte/extras": "^9.2.1",
 		"@types/three": "0.177.0",
 		"clsx": "^2.1.1",
 		"feetech.js": "file:./packages/feetech.js",
-		"@robothub/transport-server-client": "file:./external/RobotHub-InferenceServer/external/RobotHub-TransportServer/client/js",
-		"@robothub/inference-server-client": "file:./external/RobotHub-InferenceServer/client",
 		"tailwind-merge": "^3.3.0",
 		"three": "^0.177.0",
 		"threlte-uikit": "^1.1.0",
