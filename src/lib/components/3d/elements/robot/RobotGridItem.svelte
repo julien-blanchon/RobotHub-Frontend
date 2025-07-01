@@ -6,7 +6,7 @@
 	import RobotStatusBillboard from "@/components/3d/elements/robot/status/RobotStatusBillboard.svelte";
 	import type { Robot } from "$lib/elements/robot/Robot.svelte.js";
 	import { createUrdfRobot } from "$lib/elements/robot/createRobot.svelte";
-	import { interactivity, type IntersectionEvent, useCursor } from "@threlte/extras";
+	import { type IntersectionEvent, useCursor } from "@threlte/extras";
 	import type { RobotUrdfConfig } from "$lib/types/urdf";
 	import { onMount } from "svelte";
 	import type IUrdfRobot from "@/components/3d/elements/robot/URDF/interfaces/IUrdfRobot.js";
@@ -66,6 +66,7 @@
 		// Batch update all joints that have changed (or all joints on initial sync)
 		let updatedCount = 0;
 		robot.jointArray.forEach((joint) => {
+			if (!urdfRobotState) return;
 			if (isInitialSync || Math.abs((lastJointValues[joint.name] || 0) - joint.value) > threshold) {
 				lastJointValues[joint.name] = joint.value;
 				const urdfJoint = findUrdfJoint(urdfRobotState, joint.name);
@@ -92,7 +93,7 @@
 		});
 	});
 
-	function findUrdfJoint(robot: Robot, jointName: string): any {
+	function findUrdfJoint(robot: IUrdfRobot, jointName: string): any {
 		// Search through the robot's joints array
 		if (robot.joints && Array.isArray(robot.joints)) {
 			for (const joint of robot.joints) {
@@ -105,7 +106,7 @@
 	}
 
 	const { onPointerEnter, onPointerLeave, hovering } = useCursor();
-	interactivity();
+	
 
 	let isToggled = $state(false);
 
@@ -123,7 +124,13 @@
 	scale={[10, 10, 10]}
 	rotation={[-Math.PI / 2, 0, 0]}
 >
-	<T.Group onpointerenter={onPointerEnter} onpointerleave={onPointerLeave} onclick={handleClick}>
+	<T.Group onpointerenter={(event) => {
+		event.stopPropagation();
+		onPointerEnter();
+	}} onpointerleave={(event) => {
+		event.stopPropagation();
+		onPointerLeave();
+	}} onclick={handleClick}>
 		{#if urdfRobotState}
 			{#each getRootLinks(urdfRobotState) as link}
 				<UrdfLink
@@ -144,7 +151,6 @@
 					nameHeight={0.1}
 					showLine={$hovering || isToggled}
 					opacity={1}
-					isInteractive={false}
 				/>
 			{/each}
 		{:else}

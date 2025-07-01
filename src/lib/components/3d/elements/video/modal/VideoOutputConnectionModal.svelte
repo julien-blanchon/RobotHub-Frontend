@@ -7,6 +7,7 @@
 	import { toast } from "svelte-sonner";
 	import { videoManager } from "$lib/elements/video/VideoManager.svelte";
 	import type { VideoInstance } from "$lib/elements/video/VideoManager.svelte";
+	import { settings } from "$lib/runes/settings.svelte";
 
 	interface Props {
 		workspaceId: string;
@@ -92,7 +93,6 @@
 		try {
 			isConnecting = true;
 			error = null;
-			const roomId = customRoomId.trim() || video.id;
 			const result = await videoManager.startVideoOutputAsProducer(workspaceId, video.id);
 			if (result.success) {
 				customRoomId = "";
@@ -366,10 +366,10 @@
 						<div class="flex items-center justify-between">
 							<div>
 								<Card.Title
-									class="flex items-center gap-2 text-base text-purple-700 dark:text-purple-200"
+									class="flex items-center gap-2 text-base text-purple-700 dark:text-purple-200 pb-1"
 								>
 									<span class="icon-[mdi--cloud-upload] size-4"></span>
-									Remote Collaboration (Rooms)
+									Remote Control
 								</Card.Title>
 								<Card.Description class="text-xs text-purple-600/70 dark:text-purple-300/70">
 									Broadcast video stream to remote systems and users
@@ -483,7 +483,7 @@
 												: "No rooms available. Create one to get started."}
 										</div>
 									{:else}
-										{#each videoManager.rooms as room}
+										{#each videoManager.rooms as room (room.id)}
 											<div
 												class="rounded border border-slate-300 bg-slate-50/50 p-2 dark:border-slate-600 dark:bg-slate-800/50"
 											>
@@ -494,13 +494,36 @@
 														>
 															{room.id}
 														</p>
-														<div class="flex gap-3 text-xs text-slate-600 dark:text-slate-400">
+														<div class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400">
 															<span
 																>{room.participants?.producer
 																	? "🔴 Has Output"
 																	: "🟢 Available"}</span
 															>
 															<span>👥 {room.participants?.consumers?.length || 0} inputs</span>
+															<!-- Monitoring links -->
+															<div class="flex gap-1">
+																<a
+																	href={`${settings.transportServerUrl.replace('/api', '')}/${workspaceId}/video/consumer?room=${room.id}`}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	class="inline-flex items-center gap-1 rounded bg-blue-500/10 px-1.5 py-0.5 text-xs text-blue-600 hover:bg-blue-500/20 dark:bg-blue-400/10 dark:text-blue-400 dark:hover:bg-blue-400/20"
+																	title="Monitor Consumer"
+																>
+																	<span class="icon-[mdi--monitor-eye] size-3"></span>
+																	Consumer
+																</a>
+																<a
+																	href={`${settings.transportServerUrl.replace('/api', '')}/${workspaceId}/video/producer?room=${room.id}`}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	class="inline-flex items-center gap-1 rounded bg-green-500/10 px-1.5 py-0.5 text-xs text-green-600 hover:bg-green-500/20 dark:bg-green-400/10 dark:text-green-400 dark:hover:bg-green-400/20"
+																	title="Monitor Producer"
+																>
+																	<span class="icon-[mdi--monitor-eye] size-3"></span>
+																	Producer
+																</a>
+															</div>
 														</div>
 													</div>
 													{#if !room.participants?.producer}
@@ -540,17 +563,7 @@
 					</Card.Content>
 				</Card.Root>
 
-				<!-- Help Information -->
-				<Alert.Root
-					class="border-slate-300 bg-slate-100/30 dark:border-slate-700 dark:bg-slate-800/30"
-				>
-					<span class="icon-[mdi--help-circle] size-4 text-slate-600 dark:text-slate-400"></span>
-					<Alert.Title class="text-slate-700 dark:text-slate-300">Video Output Options</Alert.Title>
-					<Alert.Description class="text-xs text-slate-600 dark:text-slate-400">
-						<strong>Recording:</strong> Save locally • <strong>Remote:</strong> Broadcast to rooms •
-						Only one active at a time
-					</Alert.Description>
-				</Alert.Root>
+
 			</div>
 		</div>
 	</Dialog.Content>

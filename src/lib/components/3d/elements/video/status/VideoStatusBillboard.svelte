@@ -18,7 +18,7 @@
 	interactivity();
 </script>
 
-{#if visible}
+<!-- {#if visible} -->
 	<T.Group
 		onpointerdown={(e) => e.stopPropagation()}
 		onpointerup={(e) => e.stopPropagation()}
@@ -39,7 +39,7 @@
 					justifyContent="center"
 					padding={20}
 				>
-					<VideoConnectionFlowBoxUIKit {video} {onInputBoxClick} {onOutputBoxClick} />
+					<VideoConnectionFlowBoxUIKit {visible} {video} {onInputBoxClick} {onOutputBoxClick} />
 				</Container>
 			</Root>
 		</Billboard>
@@ -73,4 +73,4 @@
 		</HTML>
 	</Billboard> -->
 	</T.Group>
-{/if}
+<!-- {/if} -->

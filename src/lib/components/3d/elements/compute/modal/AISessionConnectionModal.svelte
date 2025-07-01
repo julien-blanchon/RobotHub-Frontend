@@ -5,8 +5,8 @@
 	import { Badge } from "@/components/ui/badge";
 	import { Input } from "@/components/ui/input";
 	import { Label } from "@/components/ui/label";
-	import * as Alert from "@/components/ui/alert";
-	import { remoteComputeManager } from "$lib/elements/compute//RemoteComputeManager.svelte";
+	import { Textarea } from "@/components/ui/textarea";
+	import { remoteComputeManager, MODEL_TYPES } from "$lib/elements/compute";
 	import type { RemoteCompute } from "$lib/elements/compute//RemoteCompute.svelte";
 	import type { AISessionConfig } from "$lib/elements/compute//RemoteComputeManager.svelte";
 	import { settings } from "$lib/runes/settings.svelte";
@@ -22,9 +22,12 @@
 
 	let isConnecting = $state(false);
 	let sessionId = $state("");
-	let policyPath = $state("./checkpoints/act_so101_beyond");
-	let cameraNames = $state("front");
-	let useProvidedWorkspace = $state(false);
+	let policyPath = $state("");
+	let cameraNames = $state("");
+	let languageInstruction = $state("");
+
+	// Use the compute's model type (can't be changed here)
+	const modelConfig = $derived(MODEL_TYPES[compute.modelType]);
 
 	// Auto-generate session ID when modal opens
 	$effect(() => {
@@ -33,11 +36,28 @@
 		}
 	});
 
+	// Set defaults when modal opens
+	$effect(() => {
+		if (open && modelConfig) {
+			if (!policyPath) {
+				policyPath = modelConfig.defaultPolicyPath;
+			}
+			if (!cameraNames) {
+				cameraNames = modelConfig.defaultCameraNames.join(", ");
+			}
+		}
+	});
+
 	async function handleCreateSession() {
 		if (!compute) return;
 
 		if (!sessionId.trim() || !policyPath.trim()) {
 			toast.error("Please fill in all required fields");
+			return;
+		}
+
+		if (modelConfig.requiresLanguageInstruction && !languageInstruction.trim()) {
+			toast.error("Language instruction is required for this model type");
 			return;
 		}
 
@@ -51,17 +71,19 @@
 				cameras.push("front");
 			}
 
-			const config: AISessionConfig = {
+			const sessionConfig: AISessionConfig = {
 				sessionId: sessionId.trim(),
+				modelType: compute.modelType,
 				policyPath: policyPath.trim(),
 				cameraNames: cameras,
 				transportServerUrl: settings.transportServerUrl,
-				workspaceId: useProvidedWorkspace ? workspaceId : undefined
+				workspaceId: workspaceId,
+				languageInstruction: languageInstruction.trim() || undefined
 			};
 
-			const result = await remoteComputeManager.createSession(compute.id, config);
+			const result = await remoteComputeManager.createSession(compute.id, sessionConfig);
 			if (result.success) {
-				toast.success(`Inference Session created: ${sessionId}`);
+				toast.success(`${modelConfig.label} session created: ${sessionId}`);
 				open = false;
 			} else {
 				toast.error(`Failed to create session: ${result.error}`);
@@ -140,11 +162,11 @@
 			<Dialog.Title
 				class="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-100"
 			>
-				<span class="icon-[mdi--robot-outline] size-5 text-purple-500 dark:text-purple-400"></span>
-				AI Compute Session - {compute.name || "No Compute Selected"}
+				<span class="{modelConfig.icon} size-5 text-purple-500 dark:text-purple-400"></span>
+				{modelConfig.label} Session - {compute.name || "No Compute Selected"}
 			</Dialog.Title>
 			<Dialog.Description class="text-sm text-slate-600 dark:text-slate-400">
-				Configure and manage ACT model inference sessions for robot control
+				Configure and manage {modelConfig.label} inference sessions for robot control
 			</Dialog.Description>
 		</Dialog.Header>
 
@@ -154,7 +176,7 @@
 				class="flex items-center justify-between rounded-lg border border-purple-300/30 bg-purple-100/20 p-3 dark:border-purple-500/30 dark:bg-purple-900/20"
 			>
 				<div class="flex items-center gap-2">
-					<span class="icon-[mdi--brain] size-4 text-purple-500 dark:text-purple-400"></span>
+					<span class="{modelConfig.icon} size-4 text-purple-500 dark:text-purple-400"></span>
 					<span class="text-sm font-medium text-purple-700 dark:text-purple-300"
 						>Session Status</span
 					>
@@ -325,84 +347,84 @@
 					</Card.Header>
 					<Card.Content>
 						<div class="space-y-4">
-							<div class="grid grid-cols-2 gap-4">
-								<div class="space-y-2">
-									<Label for="sessionId" class="text-purple-700 dark:text-purple-300"
-										>Session ID</Label
-									>
-									<Input
-										id="sessionId"
-										bind:value={sessionId}
-										placeholder="my-session-01"
-										class="border-slate-300 bg-slate-50 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
-									/>
-								</div>
-								<div class="space-y-2">
-									<Label for="policyPath" class="text-purple-700 dark:text-purple-300"
-										>Policy Path</Label
-									>
-									<Input
-										id="policyPath"
-										bind:value={policyPath}
-										placeholder="./checkpoints/act_so101_beyond"
-										class="border-slate-300 bg-slate-50 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
-									/>
-								</div>
-							</div>
-
-							<div class="grid grid-cols-2 gap-4">
-								<div class="space-y-2">
-									<Label for="cameraNames" class="text-purple-700 dark:text-purple-300"
-										>Camera Names</Label
-									>
-									<Input
-										id="cameraNames"
-										bind:value={cameraNames}
-										placeholder="front, wrist, overhead"
-										class="border-slate-300 bg-slate-50 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
-									/>
-									<p class="text-xs text-slate-600 dark:text-slate-400">
-										Comma-separated camera names
-									</p>
-								</div>
-								<div class="space-y-2">
-									<Label for="transportServerUrl" class="text-purple-700 dark:text-purple-300"
-										>Transport Server URL</Label
-									>
-									<Input
-										id="transportServerUrl"
-										value={settings.transportServerUrl}
-										disabled
-										placeholder="http://localhost:8000"
-										class="cursor-not-allowed border-slate-300 bg-slate-50 text-slate-900 opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
-										title="Change this value in the settings panel"
-									/>
-									<p class="text-xs text-slate-600 dark:text-slate-400">
-										Configure in settings panel
-									</p>
-								</div>
-							</div>
-
-							<div class="flex items-center space-x-2">
-								<input
-									type="checkbox"
-									id="useWorkspace"
-									bind:checked={useProvidedWorkspace}
-									class="rounded border-slate-300 bg-slate-50 dark:border-slate-600 dark:bg-slate-800"
+							<div class="space-y-2">
+								<Label for="sessionId" class="text-purple-700 dark:text-purple-300"
+									>Session ID</Label
+								>
+								<Input
+									id="sessionId"
+									bind:value={sessionId}
+									placeholder="my-session-01"
+									class="border-slate-300 bg-slate-50 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
 								/>
-								<Label for="useWorkspace" class="text-sm text-purple-700 dark:text-purple-300">
-									Use current workspace ({workspaceId})
-								</Label>
+							</div>
+							<div class="space-y-2">
+								<Label for="policyPath" class="text-purple-700 dark:text-purple-300"
+									>Policy Path</Label
+								>
+								<Input
+									id="policyPath"
+									bind:value={policyPath}
+									placeholder={modelConfig.defaultPolicyPath}
+									class="border-slate-300 bg-slate-50 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+								/>
 							</div>
 
-							<Alert.Root>
-								<span class="icon-[mdi--information] size-4"></span>
-								<Alert.Description>
-									This will create a new ACT inference session with dedicated rooms for camera
+							<div class="space-y-2">
+								<Label for="cameraNames" class="text-purple-700 dark:text-purple-300"
+									>Camera Names</Label
+								>
+								<Input
+									id="cameraNames"
+									bind:value={cameraNames}
+									placeholder="front, wrist, overhead"
+									class="border-slate-300 bg-slate-50 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+								/>
+															<p class="text-xs text-slate-600 dark:text-slate-400">
+								Comma-separated camera names
+							</p>
+							</div>
+
+							{#if modelConfig.requiresLanguageInstruction}
+								<div class="space-y-2">
+									<Label for="languageInstruction" class="text-purple-700 dark:text-purple-300">
+										Language Instruction
+									</Label>
+									<Textarea
+										id="languageInstruction"
+										bind:value={languageInstruction}
+										placeholder="Pick up the red cup and place it on the table"
+										class="border-slate-300 bg-slate-50 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+										rows={3}
+									/>
+									<p class="text-xs text-slate-600 dark:text-slate-400">
+										Natural language instruction for the task (required for {modelConfig.label})
+									</p>
+								</div>
+							{/if}
+
+							<div class="rounded-lg border border-green-300/30 bg-green-100/20 p-3 dark:border-green-500/30 dark:bg-green-900/20">
+								<div class="flex items-center gap-2">
+									<span class="icon-[mdi--folder] size-4 text-green-600 dark:text-green-400"></span>
+									<span class="text-sm font-medium text-green-700 dark:text-green-300">
+										Workspace: {workspaceId}
+									</span>
+								</div>
+								<p class="mt-1 text-xs text-green-600 dark:text-green-400">
+									Session will be created in the current workspace
+								</p>
+							</div>
+
+							<div
+								class="rounded-lg border border-slate-300 bg-slate-50 p-3 dark:border-slate-600 dark:bg-slate-800"
+							>
+								<div class="text-xs text-slate-600 dark:text-slate-400">
+									<span class="icon-[mdi--lightbulb] size-3"></span>
+									<strong>Tip:</strong> This will create a new {modelConfig.label} inference session with dedicated rooms for camera
 									inputs, joint inputs, and joint outputs in the inference server communication
 									system.
-								</Alert.Description>
-							</Alert.Root>
+								</div>
+							</div>
 
 							<Button
 								variant="default"
@@ -428,7 +450,7 @@
 				class="rounded border border-slate-300 bg-slate-100/30 p-2 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-800/30 dark:text-slate-500"
 			>
 				<span class="icon-[mdi--information] mr-1 size-3"></span>
-				Inference Sessions require a trained ACT model and create dedicated communication rooms for video
+				Inference Sessions require a trained {modelConfig.label} and create dedicated communication rooms for video
 				inputs, robot joint states, and control outputs in the inference server system.
 			</div>
 		</div>

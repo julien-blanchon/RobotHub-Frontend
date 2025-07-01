@@ -34,6 +34,8 @@ export class VideoInstance implements Positionable {
 	// Output state (what this video is broadcasting)
 	output = $state({
 		active: false,
+		type: null as 'recording' | 'remote-broadcast' | null,
+		stream: null as MediaStream | null,
 		client: null as videoTypes.VideoProducer | null,
 		roomId: null as string | null,
 	});
@@ -270,6 +272,8 @@ export class VideoManager {
 
 			// Update output state
 			video.output.active = true;
+			video.output.type = 'remote-broadcast';
+			video.output.stream = video.input.stream;
 			video.output.client = producer;
 			video.output.roomId = roomId;
 
@@ -528,6 +532,8 @@ export class VideoManager {
 
 			// Update output state
 			video.output.active = true;
+			video.output.type = 'remote-broadcast';
+			video.output.stream = video.input.stream;
 			video.output.client = producer;
 			video.output.roomId = result.roomId;
 
@@ -552,6 +558,8 @@ export class VideoManager {
 		}
 
 		video.output.active = false;
+		video.output.type = null;
+		video.output.stream = null;
 		video.output.client = null;
 		video.output.roomId = null;
 

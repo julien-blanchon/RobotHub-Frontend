@@ -16,7 +16,6 @@
 	let { video, workspaceId, onCameraMove, onInputBoxClick, onOutputBoxClick }: Props = $props();
 
 	const { onPointerEnter, onPointerLeave } = useCursor();
-	interactivity();
 
 	let isToggled = $state(false);
 	let hovering = $state(false);

@@ -8,6 +8,7 @@ import { positionManager } from '$lib/utils/positionManager.js';
 import { settings } from '$lib/runes/settings.svelte';
 import { robotics } from '@robothub/transport-server-client';
 import type { robotics as roboticsTypes } from '@robothub/transport-server-client';
+import { robotUrdfConfigMap } from "$lib/configs/robotUrdfConfig";
 
 export class RobotManager {
   private _robots = $state<Robot[]>([]);
@@ -135,9 +136,7 @@ export class RobotManager {
    */
   async createSO100Robot(id?: string, position?: Position3D): Promise<Robot> {
     const robotId = id || `so100-${Date.now()}`;
-    const urdfConfig: RobotUrdfConfig = {
-      urdfUrl: "/robots/so-100/so_arm100.urdf"
-    };
+    const urdfConfig = robotUrdfConfigMap["so-arm100"];
     
     return this.createRobotFromUrdf(robotId, urdfConfig, position);
   }

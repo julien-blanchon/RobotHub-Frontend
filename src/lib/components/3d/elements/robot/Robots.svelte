@@ -7,6 +7,7 @@
 	import type { Robot } from "$lib/elements/robot/Robot.svelte.js";
 	import { generateName } from "$lib/utils/generateName";
 	import RobotGridItem from "@/components/3d/elements/robot/RobotGridItem.svelte";
+	import { interactivity } from "@threlte/extras";
 
 	interface Props {
 		workspaceId: string;
@@ -63,6 +64,11 @@
 			.catch((error) => {
 				console.error("❌ Error during cleanup:", error);
 			});
+	});
+	interactivity({
+		filter: (hits, state) => {
+			return hits.slice(0, 1);
+		}
 	});
 </script>
 

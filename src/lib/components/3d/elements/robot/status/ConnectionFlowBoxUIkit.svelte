@@ -5,21 +5,41 @@
 	import InputBoxUIKit from "./InputBoxUIKit.svelte";
 	import RobotBoxUIKit from "./RobotBoxUIKit.svelte";
 	import OutputBoxUIKit from "./OutputBoxUIKit.svelte";
+	import { Tween } from "svelte/motion";
+	import { cubicOut } from "svelte/easing";
 
 	interface Props {
+		visible: boolean;
 		robot: Robot;
 		onInputBoxClick: (robot: Robot) => void;
 		onRobotBoxClick: (robot: Robot) => void;
 		onOutputBoxClick: (robot: Robot) => void;
+		duration?: number;
+		delay?: number;
 	}
 
-	let { robot, onInputBoxClick, onRobotBoxClick, onOutputBoxClick }: Props = $props();
+	let { visible, robot, onInputBoxClick, onRobotBoxClick, onOutputBoxClick, duration = 100, delay = 0 }: Props = $props();
 
 	const inputColor = "rgb(34, 197, 94)";
 	const outputColor = "rgb(59, 130, 246)";
+
+	const tweenedScale = Tween.of(() => {
+		return visible ? 1 : 0;
+	}, { duration: duration, easing: cubicOut, delay: delay });
+	const tweenedOpacity = Tween.of(() => {
+		return visible ? 1 : 0;
+	}, { duration: duration, easing: cubicOut, delay: delay });
 </script>
 
-<Container flexDirection="row" alignItems="center" gap={12}>
+<Container
+	flexDirection="row"
+	alignItems="center"
+	gap={12}
+	transformScaleX={tweenedScale.current}
+	transformScaleY={tweenedScale.current}
+	transformScaleZ={tweenedScale.current}
+	opacity={tweenedOpacity.current}
+>
 	<!-- Input Box -->
 	<InputBoxUIKit {robot} {onInputBoxClick} />
 

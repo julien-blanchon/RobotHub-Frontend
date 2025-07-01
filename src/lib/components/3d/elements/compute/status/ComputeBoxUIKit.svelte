@@ -38,7 +38,7 @@
 	<StatusContent
 		title={compute.name}
 		subtitle={compute.statusInfo.statusText}
-		color="rgb(221, 214, 254)"
+		color="rgb(107, 33, 168)"
 		variant="primary"
 	/>
 </BaseStatusBox>

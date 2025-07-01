@@ -137,7 +137,6 @@
           nameHeight={0.1}
           showLine={isHovered || isSelected}
           opacity={1}
-          isInteractive={false}
         />
       {/each}
     </T.Group>

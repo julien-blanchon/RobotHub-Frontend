@@ -44,17 +44,23 @@
 		}
 	}
 
-	async function quickAddSO100() {
-		await addRobot("so-arm100");
+	async function quickAddDefault() {
+		const defaultRobotType = robotTypes.find(type => robotUrdfConfigMap[type].isDefault);
+		if (defaultRobotType) {
+			await addRobot(defaultRobotType);
+		} else {
+			// Fallback to first robot type if no default is set
+			await addRobot(robotTypes[0]);
+		}
 	}
 
 </script>
 
-<!-- Main Add Button (SO-100) -->
+<!-- Main Add Button (Default Robot) -->
 <Button
 	variant="default"
 	size="sm"
-	onclick={quickAddSO100}
+	onclick={quickAddDefault}
 	class="group rounded-r-none border-0 bg-emerald-500 text-white transition-all duration-200 hover:bg-emerald-400 dark:bg-emerald-600 dark:hover:bg-emerald-500"
 >
 	<span
@@ -103,6 +109,7 @@
 			</DropdownMenu.GroupHeading>
 
 			{#each robotTypes as robotType}
+				{@const urdfConfig = robotUrdfConfigMap[robotType]}
 				<DropdownMenu.Item
 					class={[
 						"group group cursor-pointer bg-emerald-500 text-white transition-all duration-200",
@@ -112,19 +119,19 @@
 				>
 					<span
 						class={[
-							robotType === "so-arm100" ? "icon-[ix--robotic-arm]" : "icon-[mdi--robot-industrial]",
+							urdfConfig.icon || "icon-[mdi--robot-industrial]",
 							"mr-3 size-4 text-emerald-100 transition-colors duration-200 dark:text-emerald-200"
 						]}
 					></span>
 					<div class="flex flex-1 flex-col">
 						<span class="font-medium text-white transition-colors duration-200"
-							>{robotType.replace(/-/g, " ").toUpperCase()}</span
+							>{urdfConfig.displayName || robotType.replace(/-/g, " ").toUpperCase()}</span
 						>
 						<span class="text-xs text-emerald-100 transition-colors duration-200 dark:text-emerald-200">
-							{robotType === "so-arm100" ? "6-DOF Robotic Arm" : "Industrial Robot"}
+							{urdfConfig.description || "Robot"}
 						</span>
 					</div>
-					{#if robotType === "so-arm100"}
+					{#if urdfConfig.isDefault}
 						<Badge
 							variant="secondary"
 							class="ml-2 bg-emerald-600 text-xs text-emerald-100 group-data-highlighted:bg-emerald-300 group-data-highlighted:text-emerald-900 dark:bg-emerald-700 dark:text-emerald-100 dark:group-data-highlighted:bg-emerald-400 dark:group-data-highlighted:text-emerald-900"

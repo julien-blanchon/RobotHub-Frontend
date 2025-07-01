@@ -128,7 +128,7 @@
 							class="rounded-lg border border-slate-300 bg-slate-50 p-2 dark:border-slate-600 dark:bg-slate-800"
 						>
 							<div class="font-mono text-sm break-all text-slate-800 dark:text-slate-200">
-								https://blanchon-robothub-frontend.hf.space<span
+								https://blanchon-robothub-frontend.hf.space/<span
 									class="rounded bg-blue-100 px-1 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
 									>#{workspaceId}</span
 								>

@@ -2,11 +2,13 @@
 	import { onMount } from "svelte";
 	import { remoteComputeManager } from "$lib/elements/compute/RemoteComputeManager.svelte";
 	import AISessionConnectionModal from "@/components/3d/elements/compute/modal/AISessionConnectionModal.svelte";
+	import AIModelConfigurationModal from "@/components/3d/elements/compute/modal/AIModelConfigurationModal.svelte";
 	import VideoInputConnectionModal from "@/components/3d/elements/compute/modal/VideoInputConnectionModal.svelte";
 	import RobotInputConnectionModal from "@/components/3d/elements/compute/modal/RobotInputConnectionModal.svelte";
 	import RobotOutputConnectionModal from "@/components/3d/elements/compute/modal/RobotOutputConnectionModal.svelte";
 	import ComputeGridItem from "@/components/3d/elements/compute/ComputeGridItem.svelte";
 	import type { RemoteCompute } from "$lib/elements/compute/RemoteCompute.svelte";
+	import { interactivity } from "@threlte/extras";
 
 	interface Props {
 		workspaceId: string;
@@ -14,6 +16,7 @@
 	let { workspaceId }: Props = $props();
 
 	let isAISessionModalOpen = $state(false);
+	let isAIConfigModalOpen = $state(false);
 	let isVideoInputModalOpen = $state(false);
 	let isRobotInputModalOpen = $state(false);
 	let isRobotOutputModalOpen = $state(false);
@@ -64,6 +67,11 @@
 
 		return () => clearInterval(interval);
 	});
+	interactivity({
+		filter: (hits, state) => {
+			return hits.slice(0, 1);
+		}
+	});
 </script>
 
 {#each remoteComputeManager.computes as compute (compute.id)}
@@ -76,7 +84,7 @@
 {/each}
 
 {#if selectedCompute}
-	<!-- Inference Session Creation Modal -->
+	<!-- Inference Session Configuration Modal (for existing computes without sessions) -->
 	<AISessionConnectionModal bind:open={isAISessionModalOpen} compute={selectedCompute} {workspaceId} />
 	<!-- Video Input Connection Modal -->
 	<VideoInputConnectionModal bind:open={isVideoInputModalOpen} compute={selectedCompute} {workspaceId} />
@@ -85,3 +93,6 @@
 	<!-- Robot Output Connection Modal -->
 	<RobotOutputConnectionModal bind:open={isRobotOutputModalOpen} compute={selectedCompute} {workspaceId} /> 
 {/if}
+
+<!-- AI Model Configuration Modal (for creating new models) -->
+<AIModelConfigurationModal bind:open={isAIConfigModalOpen} {workspaceId} />

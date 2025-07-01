@@ -16,7 +16,6 @@
 		$props();
 
 	const { onPointerEnter, onPointerLeave, hovering } = useCursor();
-	interactivity();
 
 	let isToggled = $state(false);
 
@@ -24,6 +23,7 @@
 		event.stopPropagation();
 		isToggled = !isToggled;
 	}
+
 </script>
 
 <T.Group

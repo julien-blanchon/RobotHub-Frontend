@@ -41,7 +41,7 @@
 		<StatusContent
 			title="Joint States"
 			subtitle="6 DOF Robot"
-			color="rgb(254, 215, 170)"
+			color="rgb(180, 83, 9)"
 			variant="primary"
 		/>
 
@@ -57,7 +57,7 @@
 			fontSize={11}
 		/>
 
-		<StatusContent title="Setup Robot" color="rgb(254, 215, 170)" variant="secondary" />
+		<StatusContent title="Setup Robot" color="rgb(245, 158, 11)" variant="secondary" />
 
 		<StatusButton
 			icon={ICON["icon-[mdi--plus]"].svg}

@@ -43,7 +43,7 @@
 		<StatusContent
 			title={`${Object.keys(compute.inputConnections.cameras).length} Cameras`}
 			subtitle="Joint States"
-			color="rgb(187, 247, 208)"
+			color="rgb(21, 128, 61)"
 			variant="primary"
 		/>
 
@@ -60,7 +60,7 @@
 			fontSize={12}
 		/>
 
-		<StatusContent title="Setup Required" color="rgb(134, 239, 172)" variant="secondary" />
+		<StatusContent title="Setup Required" color="rgb(34, 197, 94)" variant="secondary" />
 
 		<StatusButton
 			text="Add Session"

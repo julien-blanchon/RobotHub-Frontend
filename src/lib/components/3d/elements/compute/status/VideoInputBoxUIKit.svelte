@@ -35,7 +35,7 @@
 		<!-- Camera Streams -->
 		<StatusContent 
 			title={`${Object.keys(compute.inputConnections.cameras).length} Cameras`}
-			color="rgb(187, 247, 208)"
+			color="rgb(21, 128, 61)"
 			variant="primary"
 		/>
 
@@ -53,7 +53,7 @@
 
 		<StatusContent 
 			title="Setup Video" 
-			color="rgb(134, 239, 172)" 
+			color="rgb(34, 197, 94)" 
 			variant="secondary"
 		/>
 

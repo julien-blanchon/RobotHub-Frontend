@@ -28,7 +28,6 @@
 		nameHeight?: number;
 		showLine?: boolean;
 		opacity?: number;
-		isInteractive?: boolean;
 	}
 
 	let {
@@ -49,7 +48,6 @@
 		nameHeight = 0.1,
 		showLine = true,
 		opacity = 0.7,
-		isInteractive = false
 	}: Props = $props();
 
 	let showPointCloud = false;
@@ -85,7 +83,6 @@
 		{jointIndicatorColor}
 		{showLine}
 		{opacity}
-		{isInteractive}
 		{showVisual}
 		{showCollision}
 		{visualOpacity}

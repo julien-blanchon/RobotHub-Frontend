@@ -1,81 +1,55 @@
 <script lang="ts">
 	import { Button } from "@/components/ui/button";
 	import * as DropdownMenu from "@/components/ui/dropdown-menu";
-	import { toast } from "svelte-sonner";
 	import { cn } from "$lib/utils";
-	import { generateName } from "@/utils/generateName";
-	import { remoteComputeManager } from "$lib/elements/compute//RemoteComputeManager.svelte";
+	import { MODEL_TYPES, type ModelType } from "$lib/elements/compute";
+	import AIModelConfigurationModal from "@/components/3d/elements/compute/modal/AIModelConfigurationModal.svelte";
 
 	interface Props {
+		workspaceId: string;
 		open?: boolean;
 	}
 
-	let { open = $bindable() }: Props = $props();
+	let { open = $bindable(), workspaceId }: Props = $props();
 
-	const aiOptions = [
-		{ id: "act", label: "ACT Model", icon: "icon-[mdi--brain]", enabled: true },
-		{ id: "pi0", label: "Pi0", icon: "icon-[mdi--brain]", enabled: false },
-		{ id: "nano-vla", label: "Nano VLA", icon: "icon-[mdi--brain]", enabled: false },
-		{ id: "nvidia-groot", label: "Nvidia Groot", icon: "icon-[mdi--robot-outline]", enabled: false }
-	];
+	let isConfigModalOpen = $state(false);
+	let selectedModelType = $state<ModelType>('act');
 
-	async function addAI(aiType: string) {
-		try {
-			// Basic validation
-			if (!aiType) return;
+	// Get available model types
+	const availableModels = Object.values(MODEL_TYPES).filter(model => model.enabled);
 
-			const computeId = generateName();
-			const computeName = `${formatAIType(aiType)} ${computeId}`;
-
-			// Create a new compute instance
-			const compute = remoteComputeManager.createCompute(computeId, computeName);
-
-			toast.success(`Created ${formatAIType(aiType)} compute: ${computeName}`);
-
-			// Close the dropdown
-			open = false;
-		} catch (error) {
-			console.error("AI creation failed:", error);
-			toast.error("Failed to create AI compute");
-		}
+	function openConfigModal(modelType: ModelType) {
+		selectedModelType = modelType;
+		isConfigModalOpen = true;
+		open = false; // Close the dropdown
 	}
 
-	async function quickAddAI() {
-		await addAI("act");
+	function quickAddACT() {
+		openConfigModal('act');
 	}
 
-	function formatAIType(aiType: string): string {
-		switch (aiType) {
-			case "pi0":
-				return "Pi0";
-			case "nano-vla":
-				return "Nano VLA";
-			case "nvidia-groot":
-				return "Nvidia Groot";
-			default:
-				return aiType;
-		}
+	function formatModelType(modelType: string): string {
+		const config = MODEL_TYPES[modelType as ModelType];
+		return config ? config.label : modelType;
 	}
 
-	function getAIDescription(aiType: string): string {
-		switch (aiType) {
-			case "pi0":
-				return "Lightweight AI model";
-			case "nano-vla":
-				return "Vision-language-action model";
-			case "nvidia-groot":
-				return "Humanoid robotics model";
-			default:
-				return "AI model";
-		}
+	function getModelDescription(modelType: string): string {
+		const config = MODEL_TYPES[modelType as ModelType];
+		return config ? config.description : "AI model";
+	}
+
+	function getModelIcon(modelType: string): string {
+		const config = MODEL_TYPES[modelType as ModelType];
+		return config ? config.icon : "icon-[mdi--brain]";
 	}
 </script>
 
-<!-- Main Add Button (Neural Network) -->
+<!-- Main Add Button (ACT Model - Quick Add) -->
 <Button
 	variant="default"
 	size="sm"
-	onclick={quickAddAI}
+	onclick={quickAddACT}
+	disabled={true}
 	class="group rounded-r-none border-0 bg-purple-500 text-white transition-all duration-200 hover:bg-purple-400 dark:bg-purple-600 dark:hover:bg-purple-500"
 >
 	<span
@@ -93,6 +67,7 @@
 		{#snippet child({ props })}
 			<Button
 				{...props}
+				disabled={true}
 				variant="default"
 				size="sm"
 				class={cn(
@@ -112,44 +87,29 @@
 		{/snippet}
 	</DropdownMenu.Trigger>
 
-	<DropdownMenu.Content
-		class="w-56 border-purple-400/30 bg-purple-500 backdrop-blur-sm dark:border-purple-500/30 dark:bg-purple-600"
-		align="center"
-	>
-		<DropdownMenu.Group>
-			<DropdownMenu.GroupHeading
-				class="text-xs font-semibold tracking-wider text-purple-100 uppercase dark:text-purple-200"
+	<DropdownMenu.Content class="w-64 bg-slate-100 border-slate-300 dark:bg-slate-900 dark:border-slate-600">
+		{#each availableModels as model}
+			<DropdownMenu.Item
+				class="flex items-center gap-3 p-3 cursor-pointer hover:bg-purple-100 dark:hover:bg-purple-900/30"
+				onclick={() => openConfigModal(model.id)}
 			>
-				AI Types
-			</DropdownMenu.GroupHeading>
-
-			{#each aiOptions as ai}
-				<DropdownMenu.Item
-					class={[
-						"group group cursor-pointer bg-purple-500 text-white transition-all duration-200",
-						"data-highlighted:bg-purple-600 dark:bg-purple-600 dark:data-highlighted:bg-purple-700"
-					]}
-					onclick={async () => await addAI(ai.id)}
-					disabled={!ai.enabled}
-				>
-					<span
-						class={[
-							ai.icon,
-							"mr-3 size-4 text-purple-100 transition-colors duration-200 dark:text-purple-200"
-						]}
-					></span>
-					<div class="flex flex-1 flex-col">
-						<span class="font-medium text-white transition-colors duration-200"
-							>{formatAIType(ai.id)}</span
-						>
-						<span
-							class="text-xs text-purple-100 transition-colors duration-200 dark:text-purple-200"
-						>
-							{getAIDescription(ai.id)}
-						</span>
+				<span class="{model.icon} size-5 text-purple-500 dark:text-purple-400"></span>
+				<div class="flex-1">
+					<div class="font-medium text-slate-900 dark:text-slate-100">
+						{model.label}
 					</div>
-				</DropdownMenu.Item>
-			{/each}
-		</DropdownMenu.Group>
+					<div class="text-xs text-slate-600 dark:text-slate-400">
+						{model.description}
+					</div>
+				</div>
+			</DropdownMenu.Item>
+		{/each}
 	</DropdownMenu.Content>
 </DropdownMenu.Root>
+
+<!-- Configuration Modal -->
+<AIModelConfigurationModal 
+	bind:open={isConfigModalOpen} 
+	{workspaceId}
+	initialModelType={selectedModelType}
+/>

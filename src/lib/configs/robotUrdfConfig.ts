@@ -3,6 +3,10 @@ import type { RobotUrdfConfig } from "$lib/types/urdf";
 export const robotUrdfConfigMap: { [key: string]: RobotUrdfConfig } = {
 	"so-arm100": {
 		urdfUrl: "/robots/so-100/so_arm100.urdf",
+		displayName: "SO ARM 100",
+		description: "6-DOF Robotic Arm",
+		icon: "icon-[ix--robotic-arm]",
+		isDefault: true,
 		jointNameIdMap: {
 			Rotation: 1,
 			Pitch: 2,

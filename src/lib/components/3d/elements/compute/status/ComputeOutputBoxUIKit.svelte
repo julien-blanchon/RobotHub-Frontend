@@ -42,7 +42,7 @@
 		<StatusContent
 			title={compute.isRunning ? "Active" : "Ready"}
 			subtitle="Commands"
-			color="rgb(191, 219, 254)"
+			color="rgb(37, 99, 235)"
 			variant="primary"
 		/>
 
@@ -64,7 +64,7 @@
 
 		<StatusContent
 			title={!compute.hasSession ? "Need Session" : "Configure"}
-			color="rgb(147, 197, 253)"
+			color="rgb(59, 130, 246)"
 			variant="secondary"
 		/>
 

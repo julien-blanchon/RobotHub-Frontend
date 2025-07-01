@@ -4,6 +4,8 @@
 	import { Root, Container } from "threlte-uikit";
 	import ComputeConnectionFlowBoxUIKit from "./ComputeConnectionFlowBoxUIKit.svelte";
 	import type { RemoteCompute } from "$lib/elements/compute//RemoteCompute.svelte";
+	import { Tween } from "svelte/motion";
+	import { cubicOut } from "svelte/easing";	
 
 	interface Props {
 		compute: RemoteCompute;
@@ -11,6 +13,8 @@
 		onVideoInputBoxClick: (compute: RemoteCompute) => void;
 		onRobotInputBoxClick: (compute: RemoteCompute) => void;
 		onRobotOutputBoxClick: (compute: RemoteCompute) => void;
+		duration?: number;
+		delay?: number;
 	}
 
 	let {
@@ -18,10 +22,19 @@
 		visible = true,
 		onVideoInputBoxClick,
 		onRobotInputBoxClick,
-		onRobotOutputBoxClick
+		onRobotOutputBoxClick,
+		duration = 100,
+		delay = 0
 	}: Props = $props();
 
 	interactivity();
+
+	const tweenedScale = Tween.of(() => {
+		return visible ? 1 : 0;
+	}, { duration: duration, easing: cubicOut, delay: delay });
+	const tweenedOpacity = Tween.of(() => {
+		return visible ? 1 : 0;
+	}, { duration: duration, easing: cubicOut, delay: delay });
 </script>
 
 <T.Group
@@ -31,7 +44,6 @@
 	rotation={[-Math.PI / 2, 0, 0]}
 	scale={[0.1, 0.1, 0.1]}
 	pointerEvents="listener"
-	{visible}
 >
 	<Billboard>
 		<Root name={`compute-status-billboard-${compute.id}`}>
@@ -41,6 +53,10 @@
 				alignItems="center"
 				justifyContent="center"
 				padding={20}
+				transformScaleX={tweenedScale.current}
+				transformScaleY={tweenedScale.current}
+				transformScaleZ={tweenedScale.current}
+				opacity={tweenedOpacity.current}
 			>
 				<ComputeConnectionFlowBoxUIKit
 					{compute}

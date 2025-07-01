@@ -26,49 +26,44 @@
 </script>
 
 <div class="select-none">
-	<!-- Button Bar Container -->
-	<div class="fixed top-4 left-4 z-50 flex gap-2 select-none">
-		<!-- Add Robot Button Group -->
-		<div class="flex items-center justify-center gap-2 overflow-hidden rounded-lg">
+	<!-- Responsive Button Bar Container -->
+	<div class="fixed top-2 left-2 right-2 z-50 flex flex-wrap items-center justify-between gap-1 select-none md:top-4 md:left-4 md:right-4 md:gap-2">
+		<!-- Left Group: Logo + Add Buttons -->
+		<div class="flex items-center gap-1 flex-wrap md:gap-2">
 			<!-- Logo/Favicon -->
 			<div class="flex items-center justify-center">
-				<!-- From /favicon_1024.png -->
 				<img
 					src="/favicon_1024.png"
 					alt="Logo"
 					draggable="false"
-					class="h-10 w-10 invert-0 filter dark:invert"
+					class="h-8 w-8 invert-0 filter dark:invert md:h-10 md:w-10"
 				/>
 			</div>
-			<!-- Add robot button and dropdown menu (Top Left) -->
-			<div class="flex items-center justify-center">
+			
+			<!-- Add Robot Button Group -->
+			<div class="flex items-center justify-center overflow-hidden rounded-lg">
 				<AddRobotButton bind:open={addRobotDropdownMenuOpen} />
 			</div>
-		</div>
 
-		<!-- Add Sensor Button Group -->
-		<div class="flex items-center justify-center overflow-hidden rounded-lg">
-			<!-- Add sensor button and dropdown menu -->
-			<div class="flex items-center justify-center">
+			<!-- Add Sensor Button Group - Hidden on very small screens -->
+			<div class="hidden min-[480px]:flex items-center justify-center overflow-hidden rounded-lg">
 				<AddSensorButton bind:open={addSensorDropdownMenuOpen} />
 			</div>
-		</div>
 
-		<!-- Add AI Button Group -->
-		<div class="flex items-center justify-center overflow-hidden rounded-lg">
-			<!-- Add AI button and dropdown menu -->
-			<div class="flex items-center justify-center">
-				<AddAIButton bind:open={addAIDropdownMenuOpen} />
+			<!-- Add AI Button Group - Hidden on small screens -->
+			<div class="hidden min-[560px]:flex items-center justify-center overflow-hidden rounded-lg">
+				<AddAIButton bind:open={addAIDropdownMenuOpen} workspaceId={workspaceId} />
 			</div>
 		</div>
-	</div>
 
-	<div class="fixed top-4 right-4 z-50 flex gap-2">
-		<!-- Workspace ID Button -->
-		<WorkspaceIdButton {workspaceId} bind:open={workspaceIdMenuOpen} />
+		<!-- Right Group: Workspace ID + Settings -->
+		<div class="flex items-center gap-1 md:gap-2">
+			<!-- Workspace ID Button -->
+			<WorkspaceIdButton {workspaceId} bind:open={workspaceIdMenuOpen} />
 
-		<!-- Settings Button and Sheet (Top Right, Left Side) -->
-		<SettingsButton bind:open={settingsOpen} />
+			<!-- Settings Button -->
+			<SettingsButton bind:open={settingsOpen} />
+		</div>
 	</div>
 </div>
 <SettingsSheet bind:open={settingsOpen} />

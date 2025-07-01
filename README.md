@@ -106,7 +106,7 @@ The **workspace-id** in the URL hash ties all three services together.  Share `h
 2. Click *Add Robot* → spawns an SO-100 6-DoF arm (URDF).  
 3. Click *Add Sensor → Camera* → creates a virtual camera element.  
 4. Click *Add Model → ACT* → spawns a *Compute* block.
-5. On the Compute block choose *Create Session* – select model path (`./checkpoints/act_so101_beyond`) and cameras (`front`).
+5. On the Compute block choose *Create Session* – select model path (`LaetusH/act_so101_beyond`) and cameras (`front`).
 6. Connect:  
    • *Video Input* – local webcam → `front` room.  
    • *Robot Input* – robot → *joint-input* room (producer).  
@@ -244,7 +244,7 @@ Typical lifecycle:
    ```jsonc
    {
      "session_id": "pick_place_demo",
-     "policy_path": "./checkpoints/act_so101_beyond",
+     "policy_path": "LaetusH/act_so101_beyond",
      "camera_names": ["front", "wrist"],
      "transport_server_url": "http://localhost:8000",
      "workspace_id": "<existing-or-new>"  // optional

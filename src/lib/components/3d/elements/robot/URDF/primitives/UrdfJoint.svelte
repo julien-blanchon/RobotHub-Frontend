@@ -145,7 +145,6 @@
 				{nameHeight}
 				{showLine}
 				opacity={1}
-				isInteractive={true}
 			/>
 		{/if}
 

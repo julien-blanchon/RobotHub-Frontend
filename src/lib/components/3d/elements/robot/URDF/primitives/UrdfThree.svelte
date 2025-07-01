@@ -62,7 +62,6 @@
 			{nameHeight}
 			showLine={false}
 			opacity={1}
-			isInteractive={false}
 		/>
 	{/each}
 </T.Group>

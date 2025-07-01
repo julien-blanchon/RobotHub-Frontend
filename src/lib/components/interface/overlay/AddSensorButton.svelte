@@ -30,6 +30,13 @@
 			isDefault: true
 		},
 		{ 
+			id: 'depth-camera', 
+			label: 'Depth Camera', 
+			description: 'Depth Camera Sensor',
+			icon: 'icon-[mdi--camera]', 
+			enabled: false 
+		},
+		{ 
 			id: 'lidar', 
 			label: 'Lidar', 
 			description: 'Distance Sensor',

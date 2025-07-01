@@ -9,6 +9,7 @@
 	import type { Robot } from "$lib/elements/robot/Robot.svelte.js";
 	import { robotManager } from "$lib/elements/robot/RobotManager.svelte.js";
 	import USBCalibrationPanel from "$lib/elements/robot/calibration/USBCalibrationPanel.svelte";
+	import { settings } from "@/runes/settings.svelte";
 
 	interface Props {
 		workspaceId: string;
@@ -181,9 +182,9 @@
 		showUSBCalibration = false;
 		pendingUSBConnection = null;
 		isConnecting = false;
-		
+
 		// Clean up the uncalibrated USB consumer
-		robot.removeConsumer().catch(err => {
+		robot.removeConsumer().catch((err) => {
 			console.error("Failed to clean up USB consumer after calibration cancel:", err);
 		});
 	}
@@ -261,9 +262,7 @@
 									onCancel={onCalibrationCancel}
 								/>
 							{:else}
-								<div class="text-center text-slate-400">
-									No USB drivers require calibration
-								</div>
+								<div class="text-center text-slate-400">No USB drivers require calibration</div>
 							{/each}
 						</Card.Content>
 					</Card.Root>
@@ -370,13 +369,14 @@
 							<div class="flex items-center justify-between">
 								<div>
 									<Card.Title
-										class="flex items-center gap-2 text-base text-purple-700 dark:text-purple-200"
+										class="flex items-center gap-2 pb-1 text-base text-purple-700 dark:text-purple-200"
 									>
 										<span class="icon-[mdi--cloud-sync] size-4"></span>
-										Remote Collaboration (Rooms)
+										Remote Control
 									</Card.Title>
 									<Card.Description class="text-xs text-purple-600/70 dark:text-purple-300/70">
-										Receive commands from AI systems, remote users, or other software
+										Receive commands from AI systems, remote users, or other software from anywhere
+										in the world
 									</Card.Description>
 								</div>
 								<Button
@@ -499,11 +499,36 @@
 															>
 																{room.id}
 															</p>
-															<div class="flex gap-3 text-xs text-slate-600 dark:text-slate-400">
+															<div class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400">
 																<span>{room.has_producer ? "📤 Has Output" : "📥 No Output"}</span>
 																<span>👥 {room.participants?.total || 0} users</span>
+																<!-- Monitoring links -->
+																<div class="flex gap-1">
+																	<a
+																		href={`${settings.transportServerUrl.replace('/api', '')}/${workspaceId}/robotics/consumer?room=${room.id}`}
+																		target="_blank"
+																		rel="noopener noreferrer"
+																		class="inline-flex items-center gap-1 rounded bg-blue-500/10 px-1.5 py-0.5 text-xs text-blue-600 hover:bg-blue-500/20 dark:bg-blue-400/10 dark:text-blue-400 dark:hover:bg-blue-400/20"
+																		title="Monitor Consumer"
+																	>
+																		<span class="icon-[mdi--monitor-eye] size-3"></span>
+																		Consumer
+																	</a>
+																	<a
+																		href={`${settings.transportServerUrl.replace('/api', '')}/${workspaceId}/robotics/producer?room=${room.id}`}
+																		target="_blank"
+																		rel="noopener noreferrer"
+																		class="inline-flex items-center gap-1 rounded bg-green-500/10 px-1.5 py-0.5 text-xs text-green-600 hover:bg-green-500/20 dark:bg-green-400/10 dark:text-green-400 dark:hover:bg-green-400/20"
+																		title="Monitor Producer"
+																	>
+																		<span class="icon-[mdi--monitor-eye] size-3"></span>
+																		Producer
+																	</a>
+																</div>
 															</div>
+															
 														</div>
+														
 														<Button
 															variant="secondary"
 															size="sm"
@@ -514,7 +539,7 @@
 															disabled={isConnecting || robot.hasConsumer}
 															class="h-6 shrink-0 bg-purple-500 px-2 text-xs hover:bg-purple-600 disabled:opacity-50 dark:bg-purple-600 dark:hover:bg-purple-700"
 														>
-															<span class="icon-[mdi--login] mr-1 size-3"></span>
+															<span class="icon-[mdi--login] size-5 h-full w-full"></span>
 															Join as Input
 														</Button>
 													</div>
@@ -532,18 +557,6 @@
 							{/if}
 						</Card.Content>
 					</Card.Root>
-
-					<!-- Help Information -->
-					<Alert.Root
-						class="border-slate-300 bg-slate-100/30 dark:border-slate-700 dark:bg-slate-800/30"
-					>
-						<span class="icon-[mdi--help-circle] size-4 text-slate-600 dark:text-slate-400"></span>
-						<Alert.Title class="text-slate-700 dark:text-slate-300">Input Sources</Alert.Title>
-						<Alert.Description class="text-xs text-slate-600 dark:text-slate-400">
-							<strong>USB:</strong> Read physical movements • <strong>Remote:</strong> Receive network
-							commands • Only one active at a time
-						</Alert.Description>
-					</Alert.Root>
 				{/if}
 			</div>
 		</div>

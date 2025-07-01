@@ -1,5 +1,5 @@
 import type { Positionable, Position3D } from '$lib/types/positionable.js';
-import type { AISessionConfig, AISessionResponse } from './RemoteComputeManager.svelte';
+import type { AISessionConfig, AISessionResponse, ModelType } from './RemoteComputeManager.svelte';
 
 export type ComputeStatus = 'disconnected' | 'ready' | 'running' | 'stopped' | 'initializing';
 
@@ -10,6 +10,7 @@ export class RemoteCompute implements Positionable {
   position = $state<Position3D>({ x: 0, y: 0, z: 0 });
   name = $state<string>('');
   status = $state<ComputeStatus>('disconnected');
+  modelType = $state<ModelType>('act'); // Default to ACT model
   
   // Session data
   sessionId = $state<string | null>(null);

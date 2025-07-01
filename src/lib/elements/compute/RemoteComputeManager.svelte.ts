@@ -17,12 +17,86 @@ import type {
   CreateSessionResponse
 } from '@robothub/inference-server-client';
 
+export type ModelType = 'act' | 'diffusion' | 'smolvla' | 'pi0' | 'groot' | 'custom';
+
+export interface ModelTypeConfig {
+  id: ModelType;
+  label: string;
+  icon: string;
+  description: string;
+  defaultPolicyPath: string;
+  defaultCameraNames: string[];
+  requiresLanguageInstruction?: boolean;
+  enabled: boolean;
+}
+
+export const MODEL_TYPES: Record<ModelType, ModelTypeConfig> = {
+  act: {
+    id: 'act',
+    label: 'ACT Model',
+    icon: 'icon-[mdi--brain]',
+    description: 'Action Chunking with Transformers',
+    defaultPolicyPath: 'LaetusH/act_so101_beyond',
+    defaultCameraNames: ['front'],
+    enabled: true
+  },
+  diffusion: {
+    id: 'diffusion',
+    label: 'Diffusion Policy',
+    icon: 'icon-[mdi--creation]',
+    description: 'Diffusion-based robot control',
+    defaultPolicyPath: 'diffusion_policy/default',
+    defaultCameraNames: ['front', 'wrist'],
+    enabled: true
+  },
+  smolvla: {
+    id: 'smolvla',
+    label: 'SmolVLA',
+    icon: 'icon-[mdi--eye-outline]',
+    description: 'Small Vision-Language-Action model',
+    defaultPolicyPath: 'smolvla/latest',
+    defaultCameraNames: ['front'],
+    requiresLanguageInstruction: true,
+    enabled: true
+  },
+  pi0: {
+    id: 'pi0',
+    label: 'Pi0',
+    icon: 'icon-[mdi--pi]',
+    description: 'Lightweight robotics model',
+    defaultPolicyPath: 'pi0/base',
+    defaultCameraNames: ['front'],
+    enabled: true
+  },
+  groot: {
+    id: 'groot',
+    label: 'NVIDIA Groot',
+    icon: 'icon-[mdi--robot-outline]',
+    description: 'Humanoid robotics foundation model',
+    defaultPolicyPath: 'nvidia/groot',
+    defaultCameraNames: ['front', 'left', 'right'],
+    requiresLanguageInstruction: true,
+    enabled: false // Not yet implemented
+  },
+  custom: {
+    id: 'custom',
+    label: 'Custom Model',
+    icon: 'icon-[mdi--cog]',
+    description: 'Custom model configuration',
+    defaultPolicyPath: '',
+    defaultCameraNames: ['front'],
+    enabled: true
+  }
+};
+
 export interface AISessionConfig {
   sessionId: string;
+  modelType: ModelType;
   policyPath: string;
   cameraNames: string[];
   transportServerUrl: string;
   workspaceId?: string;
+  languageInstruction?: string;
 }
 
 export interface AISessionResponse {
@@ -84,7 +158,68 @@ export class RemoteComputeManager {
   }
 
   /**
-   * Create a new AI compute instance
+   * Get available model types
+   */
+  get availableModelTypes(): ModelTypeConfig[] {
+    return Object.values(MODEL_TYPES).filter(model => model.enabled);
+  }
+
+  /**
+   * Get model type configuration
+   */
+  getModelTypeConfig(modelType: ModelType): ModelTypeConfig | undefined {
+    return MODEL_TYPES[modelType];
+  }
+
+  /**
+   * Create a new AI compute instance with full configuration
+   */
+  async createComputeWithSession(
+    config: AISessionConfig,
+    computeId?: string,
+    computeName?: string,
+    position?: Position3D
+  ): Promise<{ success: boolean; error?: string; compute?: RemoteCompute }> {
+    const finalComputeId = computeId || generateName();
+    
+    // Check if compute already exists
+    if (this._computes.find(c => c.id === finalComputeId)) {
+      return { success: false, error: `Compute with ID ${finalComputeId} already exists` };
+    }
+
+    try {
+      // Create compute instance
+      const compute = new RemoteCompute(finalComputeId, computeName);
+      compute.modelType = config.modelType;
+
+      // Set position (from position manager if not provided)
+      compute.position = position || positionManager.getNextPosition();
+
+      // Add to reactive array
+      this._computes.push(compute);
+
+      // Create the session immediately
+      const sessionResult = await this.createSession(compute.id, config);
+      if (!sessionResult.success) {
+        // Remove compute if session creation failed
+        await this.removeCompute(compute.id);
+        return { success: false, error: sessionResult.error };
+      }
+
+      console.log(`Created compute ${finalComputeId} with ${config.modelType} model at position (${compute.position.x.toFixed(1)}, ${compute.position.y.toFixed(1)}, ${compute.position.z.toFixed(1)}). Total computes: ${this._computes.length}`);
+
+      return { success: true, compute };
+    } catch (error) {
+      console.error('Failed to create compute with session:', error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : String(error) 
+      };
+    }
+  }
+
+  /**
+   * Create a new AI compute instance (legacy method)
    */
   createCompute(id?: string, name?: string, position?: Position3D): RemoteCompute {
     const computeId = id || generateName();
@@ -150,6 +285,8 @@ export class RemoteComputeManager {
         camera_names: config.cameraNames,
         transport_server_url: config.transportServerUrl,
         workspace_id: config.workspaceId || undefined,
+        policy_type: config.modelType, // Use model type as policy type
+        language_instruction: config.languageInstruction || undefined,
       };
 
       const response = await createSessionSessionsPost({

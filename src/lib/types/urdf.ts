@@ -23,4 +23,9 @@ export type RobotUrdfConfig = {
 	restPosition?: {
 		[jointName: string]: number;
 	};
+	// Display metadata for UI
+	displayName?: string;
+	description?: string;
+	icon?: string;
+	isDefault?: boolean;
 };

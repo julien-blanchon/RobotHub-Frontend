@@ -7,6 +7,7 @@
 	import type { VideoInstance } from "$lib/elements/video/VideoManager.svelte";
 	import { generateName } from "$lib/utils/generateName";
 	import VideoGridItem from "@/components/3d/elements/video/VideoGridItem.svelte";
+	import { interactivity } from "@threlte/extras";
 
 	interface Props {
 		workspaceId: string;
@@ -27,6 +28,12 @@
 		selectedVideo = video;
 		isOutputModalOpen = true;
 	}
+
+	interactivity({
+		filter: (hits, state) => {
+			return hits.slice(0, 1);
+		}
+	});
 </script>
 
 {#each videoManager.videos as video (video.id)}

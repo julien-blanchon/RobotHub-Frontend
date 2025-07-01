@@ -26,7 +26,7 @@
 	interactivity();
 </script>
 
-{#if visible}
+<!-- {#if visible} -->
 	<T.Group
 		position.z={0.35}
 		rotation={[Math.PI / 2, 0, 0]}
@@ -43,7 +43,13 @@
 					justifyContent="center"
 					padding={20}
 				>
-					<ConnectionFlowBoxUIkit {robot} {onInputBoxClick} {onRobotBoxClick} {onOutputBoxClick} />
+					<ConnectionFlowBoxUIkit
+						{visible}
+						{robot}
+						{onInputBoxClick}
+						{onRobotBoxClick}
+						{onOutputBoxClick}
+					/>
 				</Container>
 			</Root>
 		</Billboard>
@@ -81,4 +87,4 @@
 		</HTML>
 	</Billboard> -->
 	</T.Group>
-{/if}
+<!-- {/if} -->

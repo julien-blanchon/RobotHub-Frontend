@@ -41,7 +41,7 @@
 		<!-- Outputs Count -->
 		<StatusContent
 			title={`${robot.outputDriverCount} Outputs Active`}
-			color="rgb(191, 219, 254)"
+			color={outputColor}
 			variant="primary"
 		/>
 
