@@ -1,4 +1,4 @@
-import type { InteractivityProps } from '@threlte/extras'
+import type { InteractivityProps } from "@threlte/extras";
 
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces

@@ -45,7 +45,7 @@
 	}
 
 	async function quickAddDefault() {
-		const defaultRobotType = robotTypes.find(type => robotUrdfConfigMap[type].isDefault);
+		const defaultRobotType = robotTypes.find((type) => robotUrdfConfigMap[type].isDefault);
 		if (defaultRobotType) {
 			await addRobot(defaultRobotType);
 		} else {
@@ -53,7 +53,6 @@
 			await addRobot(robotTypes[0]);
 		}
 	}
-
 </script>
 
 <!-- Main Add Button (Default Robot) -->
@@ -127,7 +126,9 @@
 						<span class="font-medium text-white transition-colors duration-200"
 							>{urdfConfig.displayName || robotType.replace(/-/g, " ").toUpperCase()}</span
 						>
-						<span class="text-xs text-emerald-100 transition-colors duration-200 dark:text-emerald-200">
+						<span
+							class="text-xs text-emerald-100 transition-colors duration-200 dark:text-emerald-200"
+						>
 							{urdfConfig.description || "Robot"}
 						</span>
 					</div>

@@ -23,7 +23,6 @@
 		event.stopPropagation();
 		isToggled = !isToggled;
 	}
-
 </script>
 
 <T.Group

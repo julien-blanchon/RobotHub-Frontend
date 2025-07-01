@@ -15,7 +15,12 @@
 	}
 
 	// Props with defaults
-	let { position = [0, 0, 0], rotation = [0, 0, 0], scale = [1, 1, 1], rotating = false }: Props = $props();
+	let {
+		position = [0, 0, 0],
+		rotation = [0, 0, 0],
+		scale = [1, 1, 1],
+		rotating = false
+	}: Props = $props();
 
 	// Create the TV frame geometry (outer rounded rectangle)
 	function createTVFrame(
@@ -87,7 +92,7 @@
 
 	let fan_rotation = $state(0);
 	let rotationPerSeconds = $state(1); // 1 rotation per second by default
-	
+
 	onMount(() => {
 		const interval = setInterval(() => {
 			// Calculate angle increment per frame for desired rotations per second
@@ -95,24 +100,16 @@
 				const angleIncrement = (Math.PI * 2 * rotationPerSeconds) / 60;
 				fan_rotation = fan_rotation + angleIncrement;
 			}
-		}, 1000/60); // Run at ~60fps
+		}, 1000 / 60); // Run at ~60fps
 
 		return () => {
 			clearInterval(interval);
 		};
 	});
-
-
 </script>
 
-<T.Group
-	{position}
-	{rotation}
-	{scale}
->
-	<T.Group
-		scale={[1, 1, 1]}
-	>
-		<Model fan_rotation={fan_rotation} />
+<T.Group {position} {rotation} {scale}>
+	<T.Group scale={[1, 1, 1]}>
+		<Model {fan_rotation} />
 	</T.Group>
 </T.Group>

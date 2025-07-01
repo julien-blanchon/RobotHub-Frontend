@@ -13,7 +13,7 @@ export const robotUrdfConfigMap: { [key: string]: RobotUrdfConfig } = {
 			Elbow: 3,
 			Wrist_Pitch: 4,
 			Wrist_Roll: 5,
-			Jaw: 6,
+			Jaw: 6
 			// camera_mount: 7
 		},
 		// Rest position - robot in neutral/calibration pose (all joints at 0 degrees)
@@ -23,7 +23,7 @@ export const robotUrdfConfigMap: { [key: string]: RobotUrdfConfig } = {
 			Elbow: 0,
 			Wrist_Pitch: 0,
 			Wrist_Roll: 0,
-			Jaw: 0,
+			Jaw: 0
 			// camera_mount: 0
 		},
 		compoundMovements: [

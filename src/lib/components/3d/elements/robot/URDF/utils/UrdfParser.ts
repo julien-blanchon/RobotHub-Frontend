@@ -35,8 +35,6 @@ export function getRootLinks(robot: IUrdfRobot): IUrdfLink[] {
 		}
 	}
 
-
-
 	return links;
 }
 

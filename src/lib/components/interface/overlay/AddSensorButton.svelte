@@ -21,34 +21,34 @@
 	}
 
 	const sensorConfigs: SensorConfig[] = [
-		{ 
-			id: 'camera', 
-			label: 'Camera', 
-			description: 'Video Camera Sensor',
-			icon: 'icon-[mdi--camera]', 
+		{
+			id: "camera",
+			label: "Camera",
+			description: "Video Camera Sensor",
+			icon: "icon-[mdi--camera]",
 			enabled: true,
 			isDefault: true
 		},
-		{ 
-			id: 'depth-camera', 
-			label: 'Depth Camera', 
-			description: 'Depth Camera Sensor',
-			icon: 'icon-[mdi--camera]', 
-			enabled: false 
+		{
+			id: "depth-camera",
+			label: "Depth Camera",
+			description: "Depth Camera Sensor",
+			icon: "icon-[mdi--camera]",
+			enabled: false
 		},
-		{ 
-			id: 'lidar', 
-			label: 'Lidar', 
-			description: 'Distance Sensor',
-			icon: 'icon-[mdi--radar]', 
-			enabled: false 
+		{
+			id: "lidar",
+			label: "Lidar",
+			description: "Distance Sensor",
+			icon: "icon-[mdi--radar]",
+			enabled: false
 		},
-		{ 
-			id: 'imu', 
-			label: 'IMU', 
-			description: 'Motion Sensor',
-			icon: 'icon-[mdi--radar]', 
-			enabled: false 
+		{
+			id: "imu",
+			label: "IMU",
+			description: "Motion Sensor",
+			icon: "icon-[mdi--radar]",
+			enabled: false
 		}
 	];
 
@@ -58,7 +58,7 @@
 			if (!sensorType) return;
 
 			const sensorId = `${sensorType}_${Date.now()}`;
-			
+
 			if (sensorType === "camera") {
 				// Create video camera
 				const video = videoManager.createVideo(sensorId);
@@ -67,7 +67,7 @@
 				});
 			} else {
 				// Placeholder for other sensor types
-				const config = sensorConfigs.find(c => c.id === sensorType);
+				const config = sensorConfigs.find((c) => c.id === sensorType);
 				toast.success("Sensor Added", {
 					description: `${config?.label || sensorType} sensor ${sensorId.slice(0, 12)}... created successfully.`
 				});
@@ -105,7 +105,7 @@
 
 <!-- Dropdown Menu Button -->
 <DropdownMenu.Root bind:open>
-	<DropdownMenu.Trigger >
+	<DropdownMenu.Trigger>
 		{#snippet child({ props })}
 			<Button
 				{...props}
@@ -155,8 +155,7 @@
 						]}
 					></span>
 					<div class="flex flex-1 flex-col">
-						<span class="font-medium text-white transition-colors duration-200"
-							>{sensor.label}</span
+						<span class="font-medium text-white transition-colors duration-200">{sensor.label}</span
 						>
 						<span class="text-xs text-blue-100 transition-colors duration-200 dark:text-blue-200">
 							{sensor.description}
@@ -174,4 +173,4 @@
 			{/each}
 		</DropdownMenu.Group>
 	</DropdownMenu.Content>
-</DropdownMenu.Root> 
+</DropdownMenu.Root>

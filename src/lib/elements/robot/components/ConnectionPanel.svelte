@@ -42,11 +42,11 @@
 	// Find USB driver for calibration (if any)
 	function getUSBDriver(): any {
 		// Check consumer first
-		if (robot.consumer && 'calibrationState' in robot.consumer) {
+		if (robot.consumer && "calibrationState" in robot.consumer) {
 			return robot.consumer;
 		}
 		// Then check producers
-		return robot.producers.find(p => 'calibrationState' in p) || null;
+		return robot.producers.find((p) => "calibrationState" in p) || null;
 	}
 
 	async function connectUSBConsumer() {
@@ -62,7 +62,7 @@
 		} catch (err) {
 			console.error("Failed to connect USB consumer:", err);
 			// Check if it's a calibration error
-			if (err instanceof Error && err.message.includes('calibration')) {
+			if (err instanceof Error && err.message.includes("calibration")) {
 				pendingUSBConnection = "consumer";
 				showUSBCalibration = true;
 				return;
@@ -104,7 +104,7 @@
 		} catch (err) {
 			console.error("Failed to connect USB producer:", err);
 			// Check if it's a calibration error
-			if (err instanceof Error && err.message.includes('calibration')) {
+			if (err instanceof Error && err.message.includes("calibration")) {
 				pendingUSBConnection = "producer";
 				showUSBCalibration = true;
 				return;
@@ -545,9 +545,7 @@
 						onCancel={onCalibrationCancel}
 					/>
 				{:else}
-					<div class="text-center text-slate-400">
-						No USB driver available for calibration
-					</div>
+					<div class="text-center text-slate-400">No USB driver available for calibration</div>
 				{/if}
 			</div>
 		</div>

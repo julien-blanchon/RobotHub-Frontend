@@ -18,17 +18,31 @@
 		delay?: number;
 	}
 
-	let { visible, robot, onInputBoxClick, onRobotBoxClick, onOutputBoxClick, duration = 100, delay = 0 }: Props = $props();
+	let {
+		visible,
+		robot,
+		onInputBoxClick,
+		onRobotBoxClick,
+		onOutputBoxClick,
+		duration = 100,
+		delay = 0
+	}: Props = $props();
 
 	const inputColor = "rgb(34, 197, 94)";
 	const outputColor = "rgb(59, 130, 246)";
 
-	const tweenedScale = Tween.of(() => {
-		return visible ? 1 : 0;
-	}, { duration: duration, easing: cubicOut, delay: delay });
-	const tweenedOpacity = Tween.of(() => {
-		return visible ? 1 : 0;
-	}, { duration: duration, easing: cubicOut, delay: delay });
+	const tweenedScale = Tween.of(
+		() => {
+			return visible ? 1 : 0;
+		},
+		{ duration: duration, easing: cubicOut, delay: delay }
+	);
+	const tweenedOpacity = Tween.of(
+		() => {
+			return visible ? 1 : 0;
+		},
+		{ duration: duration, easing: cubicOut, delay: delay }
+	);
 </script>
 
 <Container

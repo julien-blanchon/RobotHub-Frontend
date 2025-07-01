@@ -39,7 +39,6 @@
 				}
 	);
 
-
 	async function startCalibration() {
 		await calibrationManager.startCalibration();
 	}
@@ -109,7 +108,8 @@
 				<div class="grid grid-cols-2 gap-2">
 					{#each jointNames as jointName}
 						{@const currentValue = calibrationManager.calibrationState.getCurrentValue(jointName)}
-						{@const calibration = calibrationManager.calibrationState.getJointCalibration(jointName)}
+						{@const calibration =
+							calibrationManager.calibrationState.getJointCalibration(jointName)}
 
 						<div class="space-y-1 rounded bg-slate-700/50 p-2">
 							<div class="flex items-center justify-between">
@@ -120,8 +120,16 @@
 							</div>
 
 							<div class="flex justify-between text-xs text-slate-500">
-								<span>Min: {calibrationManager.calibrationState.formatServoValue(calibration?.minServoValue)}</span>
-								<span>Max: {calibrationManager.calibrationState.formatServoValue(calibration?.maxServoValue)}</span>
+								<span
+									>Min: {calibrationManager.calibrationState.formatServoValue(
+										calibration?.minServoValue
+									)}</span
+								>
+								<span
+									>Max: {calibrationManager.calibrationState.formatServoValue(
+										calibration?.maxServoValue
+									)}</span
+								>
 							</div>
 
 							{#if calibration?.minServoValue !== undefined && calibration?.maxServoValue !== undefined && currentValue !== undefined}
@@ -167,7 +175,8 @@
 			<div class="max-h-32 overflow-y-auto">
 				<div class="grid grid-cols-2 gap-1">
 					{#each jointNames as jointName}
-						{@const calibration = calibrationManager.calibrationState.getJointCalibration(jointName)}
+						{@const calibration =
+							calibrationManager.calibrationState.getJointCalibration(jointName)}
 						{@const range = calibrationManager.calibrationState.getJointRange(jointName)}
 
 						<div class="flex items-center justify-between rounded bg-slate-700/30 p-2 text-xs">

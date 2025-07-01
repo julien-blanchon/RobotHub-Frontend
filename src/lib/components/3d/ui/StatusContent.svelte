@@ -6,10 +6,10 @@
 		subtitle?: string;
 		description?: string;
 		color?: string;
-		variant?: 'primary' | 'secondary' | 'tertiary';
-		size?: 'sm' | 'md' | 'lg';
-		align?: 'left' | 'center' | 'right';
-		children?: import('svelte').Snippet;
+		variant?: "primary" | "secondary" | "tertiary";
+		size?: "sm" | "md" | "lg";
+		align?: "left" | "center" | "right";
+		children?: import("svelte").Snippet;
 	}
 
 	let {
@@ -17,9 +17,9 @@
 		subtitle,
 		description,
 		color = "rgb(221, 214, 254)",
-		variant = 'primary',
-		size = 'md',
-		align = 'center',
+		variant = "primary",
+		size = "md",
+		align = "center",
 		children
 	}: Props = $props();
 
@@ -40,19 +40,15 @@
 	const config = sizeConfigs[size];
 	const opacities = opacityLevels[variant];
 
-	const flexAlign = align === 'left' ? 'flex-start' : align === 'right' ? 'flex-end' : 'center';
+	const flexAlign = align === "left" ? "flex-start" : align === "right" ? "flex-end" : "center";
 </script>
 
-<Container
-	padding={config.padding}
-	marginBottom={4}
-	width="100%"
->
+<Container padding={config.padding} marginBottom={4} width="100%">
 	{#if children}
 		{@render children()}
 	{:else}
-		<Container 
-			flexDirection="column" 
+		<Container
+			flexDirection="column"
 			alignItems={flexAlign}
 			justifyContent="center"
 			gap={config.gap}
@@ -68,7 +64,7 @@
 					width="100%"
 				/>
 			{/if}
-			
+
 			{#if subtitle}
 				<Text
 					text={subtitle}
@@ -80,7 +76,7 @@
 					width="100%"
 				/>
 			{/if}
-			
+
 			{#if description}
 				<Text
 					text={description}
@@ -94,4 +90,4 @@
 			{/if}
 		</Container>
 	{/if}
-</Container> 
+</Container>

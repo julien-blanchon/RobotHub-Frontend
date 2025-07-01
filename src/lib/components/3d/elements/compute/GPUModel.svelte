@@ -8,193 +8,178 @@ Title: Nvidia GeForce RTX 3090
 -->
 
 <script lang="ts">
-  import type * as THREE from 'three'
+	import type * as THREE from "three";
 
-  import type { Snippet } from 'svelte'
-  import { T, type Props } from '@threlte/core'
-  import { useGltf } from '@threlte/extras'
+	import type { Snippet } from "svelte";
+	import { T, type Props } from "@threlte/core";
+	import { useGltf } from "@threlte/extras";
 
-  let {
-    fan_rotation = 0,
-    fallback,
-    error,
-    children,
-    ref = $bindable(),
-    ...props
-  }: Props<THREE.Group<THREE.Object3DEventMap>> & {
-    fan_rotation?: number
-    ref?: THREE.Group<THREE.Object3DEventMap> | undefined
-    children?: Snippet<[{ ref: THREE.Group<THREE.Object3DEventMap> | undefined }]>
-    fallback?: Snippet
-    error?: Snippet<[{ error: Error }]>
-  } = $props()
+	let {
+		fan_rotation = 0,
+		fallback,
+		error,
+		children,
+		ref = $bindable(),
+		...props
+	}: Props<THREE.Group<THREE.Object3DEventMap>> & {
+		fan_rotation?: number;
+		ref?: THREE.Group<THREE.Object3DEventMap> | undefined;
+		children?: Snippet<[{ ref: THREE.Group<THREE.Object3DEventMap> | undefined }]>;
+		fallback?: Snippet;
+		error?: Snippet<[{ error: Error }]>;
+	} = $props();
 
-  type GLTFResult = {
-    nodes: {
-      Metal_Frame_Metal_0: THREE.Mesh
-      Front_Cover_Black_0: THREE.Mesh
-      Fan_Circle_Black_Fan_0: THREE.Mesh
-      Fan_F_Black_Fan_0: THREE.Mesh
-      Fan_F_Slot1_0: THREE.Mesh
-      Front_Cover_U_Black_0: THREE.Mesh
-      Front_Cover_T_Black_0: THREE.Mesh
-      Fan_Circle_B_Black_Fan_0: THREE.Mesh
-      Grills_U_Metal_Black_0: THREE.Mesh
-      Grills_T_Metal_Black_0: THREE.Mesh
-      Plane010_Black001_0: THREE.Mesh
-      Socket_Slot_0: THREE.Mesh
-      Side_Metal_Part_Metal_S_0: THREE.Mesh
-      Grills_F003_Metal_Black_0: THREE.Mesh
-      Grills_F002_Metal_Black_0: THREE.Mesh
-      Fan_B_Black_Fan_0: THREE.Mesh
-      Fan_B_Slot1_0: THREE.Mesh
-    }
-    materials: {
-      Metal: THREE.MeshStandardMaterial
-      Black: THREE.MeshStandardMaterial
-      Black_Fan: THREE.MeshStandardMaterial
-      ['Slot.1']: THREE.MeshStandardMaterial
-      Metal_Black: THREE.MeshStandardMaterial
-      ['Black.001']: THREE.MeshStandardMaterial
-      Slot: THREE.MeshStandardMaterial
-      Metal_S: THREE.MeshStandardMaterial
-    }
-  }
+	type GLTFResult = {
+		nodes: {
+			Metal_Frame_Metal_0: THREE.Mesh;
+			Front_Cover_Black_0: THREE.Mesh;
+			Fan_Circle_Black_Fan_0: THREE.Mesh;
+			Fan_F_Black_Fan_0: THREE.Mesh;
+			Fan_F_Slot1_0: THREE.Mesh;
+			Front_Cover_U_Black_0: THREE.Mesh;
+			Front_Cover_T_Black_0: THREE.Mesh;
+			Fan_Circle_B_Black_Fan_0: THREE.Mesh;
+			Grills_U_Metal_Black_0: THREE.Mesh;
+			Grills_T_Metal_Black_0: THREE.Mesh;
+			Plane010_Black001_0: THREE.Mesh;
+			Socket_Slot_0: THREE.Mesh;
+			Side_Metal_Part_Metal_S_0: THREE.Mesh;
+			Grills_F003_Metal_Black_0: THREE.Mesh;
+			Grills_F002_Metal_Black_0: THREE.Mesh;
+			Fan_B_Black_Fan_0: THREE.Mesh;
+			Fan_B_Slot1_0: THREE.Mesh;
+		};
+		materials: {
+			Metal: THREE.MeshStandardMaterial;
+			Black: THREE.MeshStandardMaterial;
+			Black_Fan: THREE.MeshStandardMaterial;
+			["Slot.1"]: THREE.MeshStandardMaterial;
+			Metal_Black: THREE.MeshStandardMaterial;
+			["Black.001"]: THREE.MeshStandardMaterial;
+			Slot: THREE.MeshStandardMaterial;
+			Metal_S: THREE.MeshStandardMaterial;
+		};
+	};
 
-  const gltf = useGltf<GLTFResult>('/gpu/scene.gltf')
+	const gltf = useGltf<GLTFResult>("/gpu/scene.gltf");
 </script>
 
-<T.Group
-  bind:ref
-  dispose={false}
-  {...props as any}
->
-  {#await gltf}
-    {@render fallback?.()}
-  {:then gltf}
-    <T.Group scale={0.01}>
-      <T.Group
-        position={[127.5, 88.51, 10.29]}
-        rotation={[Math.PI / 2, 0.05, 0]}
-        scale={0.3}
-      >
-        <T.Mesh
-          geometry={gltf.nodes.Fan_F_Black_Fan_0.geometry}
-          material={gltf.materials.Black_Fan}
-          rotation={[0, fan_rotation, 0]}
-        />
-        <T.Mesh
-          geometry={gltf.nodes.Fan_F_Slot1_0.geometry}
-          material={gltf.materials['Slot.1']}
-        />
-      </T.Group>
-      <T.Group
-        position={[-123.9, 88.51, -37.82]}
-        rotation={[Math.PI / 2, -0.05, Math.PI]}
-        scale={0.3}
-      >
-        <T.Mesh
-          geometry={gltf.nodes.Fan_B_Black_Fan_0.geometry}
-          material={gltf.materials.Black_Fan}
-          rotation={[0, fan_rotation, 0]}
-        />
-        <T.Mesh
-          geometry={gltf.nodes.Fan_B_Slot1_0.geometry}
-          material={gltf.materials['Slot.1']}
-          
-        />
-      </T.Group>
-      <T.Mesh
-        geometry={gltf.nodes.Metal_Frame_Metal_0.geometry}
-        material={gltf.materials.Metal}
-        position={[0, 88.3, -8.47]}
-        rotation={[Math.PI / 2, 0, 0]}
-      />
-      <T.Mesh
-        geometry={gltf.nodes.Front_Cover_Black_0.geometry}
-        material={gltf.materials.Black}
-        position={[-122.3, 89.69, 12.11]}
-        rotation={[Math.PI / 2, 0, 0]}
-        scale={[1, 1, 0.84]}
-      />
-      <T.Mesh
-        geometry={gltf.nodes.Fan_Circle_Black_Fan_0.geometry}
-        material={gltf.materials.Black_Fan}
-        position={[127.5, 88.51, 10.29]}
-        rotation={[Math.PI / 2, 0, 0]}
-        scale={0.79}
-      />
-      <T.Mesh
-        geometry={gltf.nodes.Front_Cover_U_Black_0.geometry}
-        material={gltf.materials.Black}
-        position={[0.02, 26.08, 14.09]}
-        rotation={[Math.PI / 2, 0, 0]}
-      />
-      <T.Mesh
-        geometry={gltf.nodes.Front_Cover_T_Black_0.geometry}
-        material={gltf.materials.Black}
-        position={[-4.75, 163.4, 14.09]}
-        rotation={[-Math.PI / 2 , 0, -Math.PI]}
-      />
-      <T.Mesh
-        geometry={gltf.nodes.Fan_Circle_B_Black_Fan_0.geometry}
-        material={gltf.materials.Black_Fan}
-        position={[-124.15, 88.51, -40.18]}
-        rotation={[Math.PI / 2, 0, Math.PI]}
-        scale={0.79}
-      />
-      <T.Mesh
-        geometry={gltf.nodes.Grills_U_Metal_Black_0.geometry}
-        material={gltf.materials.Metal_Black}
-        position={[-0.12, 3.16, 3.09]}
-        rotation={[Math.PI / 2, -Math.PI / 4, 0]}
-        scale={[0.55, 11.75, 0.55]}
-      />
-      <T.Mesh
-        geometry={gltf.nodes.Grills_T_Metal_Black_0.geometry}
-        material={gltf.materials.Metal_Black}
-        position={[0.8, 174.49, 3.09]}
-        rotation={[-Math.PI / 2, Math.PI / 4, -Math.PI]}
-        scale={[0.55, 11.75, 0.55]}
-      />
-      <T.Mesh
-        geometry={gltf.nodes.Plane010_Black001_0.geometry}
-        material={gltf.materials['Black.001']}
-        position={[121.84, 88.42, -34.24]}
-        rotation={[-Math.PI / 2, 0, -Math.PI]}
-        scale={[1, 1, 0.84]}
-      />
-      <T.Mesh
-        geometry={gltf.nodes.Socket_Slot_0.geometry}
-        material={gltf.materials.Slot}
-        position={[-149.71, 187.47, -39.01]}
-        rotation={[Math.PI / 2, 0, 0]}
-        scale={[1, 1.93, 1]}
-      />
-      <T.Mesh
-        geometry={gltf.nodes.Side_Metal_Part_Metal_S_0.geometry}
-        material={gltf.materials.Metal_S}
-        position={[-225.87, 118.09, -12.54]}
-        rotation={[Math.PI / 2, 0, 0]}
-      />
-      <T.Mesh
-        geometry={gltf.nodes.Grills_F003_Metal_Black_0.geometry}
-        material={gltf.materials.Metal_Black}
-        position={[131.49, 88.84, -23.02]}
-        rotation={[Math.PI / 2, 0, 0]}
-        scale={[1, 1, 1.02]}
-      />
-      <T.Mesh
-        geometry={gltf.nodes.Grills_F002_Metal_Black_0.geometry}
-        material={gltf.materials.Metal_Black}
-        position={[-128.18, 88.84, -4.17]}
-        rotation={[Math.PI / 2, 0, Math.PI]}
-        scale={[1, 0.97, 1.02]}
-      />
-    </T.Group>
-  {:catch err}
-    {@render error?.({ error: err })}
-  {/await}
+<T.Group bind:ref dispose={false} {...props as any}>
+	{#await gltf}
+		{@render fallback?.()}
+	{:then gltf}
+		<T.Group scale={0.01}>
+			<T.Group position={[127.5, 88.51, 10.29]} rotation={[Math.PI / 2, 0.05, 0]} scale={0.3}>
+				<T.Mesh
+					geometry={gltf.nodes.Fan_F_Black_Fan_0.geometry}
+					material={gltf.materials.Black_Fan}
+					rotation={[0, fan_rotation, 0]}
+				/>
+				<T.Mesh geometry={gltf.nodes.Fan_F_Slot1_0.geometry} material={gltf.materials["Slot.1"]} />
+			</T.Group>
+			<T.Group
+				position={[-123.9, 88.51, -37.82]}
+				rotation={[Math.PI / 2, -0.05, Math.PI]}
+				scale={0.3}
+			>
+				<T.Mesh
+					geometry={gltf.nodes.Fan_B_Black_Fan_0.geometry}
+					material={gltf.materials.Black_Fan}
+					rotation={[0, fan_rotation, 0]}
+				/>
+				<T.Mesh geometry={gltf.nodes.Fan_B_Slot1_0.geometry} material={gltf.materials["Slot.1"]} />
+			</T.Group>
+			<T.Mesh
+				geometry={gltf.nodes.Metal_Frame_Metal_0.geometry}
+				material={gltf.materials.Metal}
+				position={[0, 88.3, -8.47]}
+				rotation={[Math.PI / 2, 0, 0]}
+			/>
+			<T.Mesh
+				geometry={gltf.nodes.Front_Cover_Black_0.geometry}
+				material={gltf.materials.Black}
+				position={[-122.3, 89.69, 12.11]}
+				rotation={[Math.PI / 2, 0, 0]}
+				scale={[1, 1, 0.84]}
+			/>
+			<T.Mesh
+				geometry={gltf.nodes.Fan_Circle_Black_Fan_0.geometry}
+				material={gltf.materials.Black_Fan}
+				position={[127.5, 88.51, 10.29]}
+				rotation={[Math.PI / 2, 0, 0]}
+				scale={0.79}
+			/>
+			<T.Mesh
+				geometry={gltf.nodes.Front_Cover_U_Black_0.geometry}
+				material={gltf.materials.Black}
+				position={[0.02, 26.08, 14.09]}
+				rotation={[Math.PI / 2, 0, 0]}
+			/>
+			<T.Mesh
+				geometry={gltf.nodes.Front_Cover_T_Black_0.geometry}
+				material={gltf.materials.Black}
+				position={[-4.75, 163.4, 14.09]}
+				rotation={[-Math.PI / 2, 0, -Math.PI]}
+			/>
+			<T.Mesh
+				geometry={gltf.nodes.Fan_Circle_B_Black_Fan_0.geometry}
+				material={gltf.materials.Black_Fan}
+				position={[-124.15, 88.51, -40.18]}
+				rotation={[Math.PI / 2, 0, Math.PI]}
+				scale={0.79}
+			/>
+			<T.Mesh
+				geometry={gltf.nodes.Grills_U_Metal_Black_0.geometry}
+				material={gltf.materials.Metal_Black}
+				position={[-0.12, 3.16, 3.09]}
+				rotation={[Math.PI / 2, -Math.PI / 4, 0]}
+				scale={[0.55, 11.75, 0.55]}
+			/>
+			<T.Mesh
+				geometry={gltf.nodes.Grills_T_Metal_Black_0.geometry}
+				material={gltf.materials.Metal_Black}
+				position={[0.8, 174.49, 3.09]}
+				rotation={[-Math.PI / 2, Math.PI / 4, -Math.PI]}
+				scale={[0.55, 11.75, 0.55]}
+			/>
+			<T.Mesh
+				geometry={gltf.nodes.Plane010_Black001_0.geometry}
+				material={gltf.materials["Black.001"]}
+				position={[121.84, 88.42, -34.24]}
+				rotation={[-Math.PI / 2, 0, -Math.PI]}
+				scale={[1, 1, 0.84]}
+			/>
+			<T.Mesh
+				geometry={gltf.nodes.Socket_Slot_0.geometry}
+				material={gltf.materials.Slot}
+				position={[-149.71, 187.47, -39.01]}
+				rotation={[Math.PI / 2, 0, 0]}
+				scale={[1, 1.93, 1]}
+			/>
+			<T.Mesh
+				geometry={gltf.nodes.Side_Metal_Part_Metal_S_0.geometry}
+				material={gltf.materials.Metal_S}
+				position={[-225.87, 118.09, -12.54]}
+				rotation={[Math.PI / 2, 0, 0]}
+			/>
+			<T.Mesh
+				geometry={gltf.nodes.Grills_F003_Metal_Black_0.geometry}
+				material={gltf.materials.Metal_Black}
+				position={[131.49, 88.84, -23.02]}
+				rotation={[Math.PI / 2, 0, 0]}
+				scale={[1, 1, 1.02]}
+			/>
+			<T.Mesh
+				geometry={gltf.nodes.Grills_F002_Metal_Black_0.geometry}
+				material={gltf.materials.Metal_Black}
+				position={[-128.18, 88.84, -4.17]}
+				rotation={[Math.PI / 2, 0, Math.PI]}
+				scale={[1, 0.97, 1.02]}
+			/>
+		</T.Group>
+	{:catch err}
+		{@render error?.({ error: err })}
+	{/await}
 
-  {@render children?.({ ref })}
+	{@render children?.({ ref })}
 </T.Group>

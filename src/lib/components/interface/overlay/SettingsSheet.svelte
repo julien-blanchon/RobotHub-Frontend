@@ -130,7 +130,8 @@
 									>Inference Server URL</Label
 								>
 								<p class="text-xs text-slate-600 dark:text-slate-400">
-									URL for the remote AI inference server to run policies using remote compute resources
+									URL for the remote AI inference server to run policies using remote compute
+									resources
 								</p>
 							</div>
 							<div class="flex gap-2">

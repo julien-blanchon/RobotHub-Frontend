@@ -1,11 +1,7 @@
 <script lang="ts">
 	import type { RemoteCompute } from "$lib/elements/compute//RemoteCompute.svelte";
 	import { ICON } from "$lib/utils/icon";
-	import {
-		BaseStatusBox,
-		StatusHeader,
-		StatusContent
-	} from "$lib/components/3d/ui";
+	import { BaseStatusBox, StatusHeader, StatusContent } from "$lib/components/3d/ui";
 
 	interface Props {
 		compute: RemoteCompute;

@@ -10,3 +10,12 @@ src-python/
 node_modules/
 build/
 .svelte-kit/
+
+# External
+external/
+
+# Build
+build/
+
+# Package
+packages/

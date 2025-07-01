@@ -356,7 +356,7 @@
 						<div class="flex items-center justify-between">
 							<div>
 								<Card.Title
-									class="flex items-center gap-2 text-base text-purple-700 dark:text-purple-200 pb-1"
+									class="flex items-center gap-2 pb-1 text-base text-purple-700 dark:text-purple-200"
 								>
 									<span class="icon-[mdi--cloud-download] size-4"></span>
 									Remote Control
@@ -484,7 +484,9 @@
 														>
 															{room.id}
 														</p>
-														<div class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400">
+														<div
+															class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400"
+														>
 															<span
 																>{room.participants?.producer
 																	? "📹 Has Output"
@@ -494,7 +496,7 @@
 															<!-- Monitoring links -->
 															<div class="flex gap-1">
 																<a
-																	href={`${settings.transportServerUrl.replace('/api', '')}/${workspaceId}/video/consumer?room=${room.id}`}
+																	href={`${settings.transportServerUrl.replace("/api", "")}/${workspaceId}/video/consumer?room=${room.id}`}
 																	target="_blank"
 																	rel="noopener noreferrer"
 																	class="inline-flex items-center gap-1 rounded bg-blue-500/10 px-1.5 py-0.5 text-xs text-blue-600 hover:bg-blue-500/20 dark:bg-blue-400/10 dark:text-blue-400 dark:hover:bg-blue-400/20"
@@ -504,7 +506,7 @@
 																	Consumer
 																</a>
 																<a
-																	href={`${settings.transportServerUrl.replace('/api', '')}/${workspaceId}/video/producer?room=${room.id}`}
+																	href={`${settings.transportServerUrl.replace("/api", "")}/${workspaceId}/video/producer?room=${room.id}`}
 																	target="_blank"
 																	rel="noopener noreferrer"
 																	class="inline-flex items-center gap-1 rounded bg-green-500/10 px-1.5 py-0.5 text-xs text-green-600 hover:bg-green-500/20 dark:bg-green-400/10 dark:text-green-400 dark:hover:bg-green-400/20"
@@ -552,7 +554,6 @@
 						{/if}
 					</Card.Content>
 				</Card.Root>
-
 			</div>
 		</div>
 	</Dialog.Content>

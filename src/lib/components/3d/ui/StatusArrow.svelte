@@ -6,7 +6,7 @@
 		color?: string;
 		opacity?: number;
 		size?: number;
-		direction?: 'right' | 'down' | 'left' | 'up';
+		direction?: "right" | "down" | "left" | "up";
 		minWidth?: number;
 		minHeight?: number;
 	}
@@ -15,7 +15,7 @@
 		color = "rgb(139, 69, 219)",
 		opacity = 1,
 		size = 12,
-		direction = 'right',
+		direction = "right",
 		minWidth = 20,
 		minHeight = 12
 	}: Props = $props();
@@ -29,7 +29,7 @@
 	{minWidth}
 	{minHeight}
 >
-	{#if direction === 'right'}
+	{#if direction === "right"}
 		<SVG
 			width={size}
 			height={size}
@@ -37,29 +37,11 @@
 			{opacity}
 			src={ICON[`icon-[formkit--arrowright]`].svg}
 		/>
-	{:else if direction === 'down'}
-		<SVG
-			width={size}
-			height={size}
-			{color}
-			{opacity}
-			src={ICON[`icon-[formkit--arrowdown]`].svg}
-		/>
-		{:else if direction === 'left'}
-		<SVG
-			width={size}
-			height={size}
-			{color}
-			{opacity}
-			src={ICON[`icon-[formkit--arrowleft]`].svg}
-		/>
-	{:else if direction === 'up'}
-		<SVG
-			width={size}
-			height={size}
-			{color}
-			{opacity}
-			src={ICON[`icon-[formkit--arrowup]`].svg}
-		/>
+	{:else if direction === "down"}
+		<SVG width={size} height={size} {color} {opacity} src={ICON[`icon-[formkit--arrowdown]`].svg} />
+	{:else if direction === "left"}
+		<SVG width={size} height={size} {color} {opacity} src={ICON[`icon-[formkit--arrowleft]`].svg} />
+	{:else if direction === "up"}
+		<SVG width={size} height={size} {color} {opacity} src={ICON[`icon-[formkit--arrowup]`].svg} />
 	{/if}
-</Container> 
+</Container>

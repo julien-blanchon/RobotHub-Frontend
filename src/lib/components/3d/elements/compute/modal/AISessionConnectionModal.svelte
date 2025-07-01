@@ -380,9 +380,9 @@
 									placeholder="front, wrist, overhead"
 									class="border-slate-300 bg-slate-50 text-slate-900 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
 								/>
-															<p class="text-xs text-slate-600 dark:text-slate-400">
-								Comma-separated camera names
-							</p>
+								<p class="text-xs text-slate-600 dark:text-slate-400">
+									Comma-separated camera names
+								</p>
 							</div>
 
 							{#if modelConfig.requiresLanguageInstruction}
@@ -403,7 +403,9 @@
 								</div>
 							{/if}
 
-							<div class="rounded-lg border border-green-300/30 bg-green-100/20 p-3 dark:border-green-500/30 dark:bg-green-900/20">
+							<div
+								class="rounded-lg border border-green-300/30 bg-green-100/20 p-3 dark:border-green-500/30 dark:bg-green-900/20"
+							>
 								<div class="flex items-center gap-2">
 									<span class="icon-[mdi--folder] size-4 text-green-600 dark:text-green-400"></span>
 									<span class="text-sm font-medium text-green-700 dark:text-green-300">
@@ -420,9 +422,9 @@
 							>
 								<div class="text-xs text-slate-600 dark:text-slate-400">
 									<span class="icon-[mdi--lightbulb] size-3"></span>
-									<strong>Tip:</strong> This will create a new {modelConfig.label} inference session with dedicated rooms for camera
-									inputs, joint inputs, and joint outputs in the inference server communication
-									system.
+									<strong>Tip:</strong> This will create a new {modelConfig.label} inference session
+									with dedicated rooms for camera inputs, joint inputs, and joint outputs in the inference
+									server communication system.
 								</div>
 							</div>
 
@@ -450,8 +452,8 @@
 				class="rounded border border-slate-300 bg-slate-100/30 p-2 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-800/30 dark:text-slate-500"
 			>
 				<span class="icon-[mdi--information] mr-1 size-3"></span>
-				Inference Sessions require a trained {modelConfig.label} and create dedicated communication rooms for video
-				inputs, robot joint states, and control outputs in the inference server system.
+				Inference Sessions require a trained {modelConfig.label} and create dedicated communication rooms
+				for video inputs, robot joint states, and control outputs in the inference server system.
 			</div>
 		</div>
 	</Dialog.Content>

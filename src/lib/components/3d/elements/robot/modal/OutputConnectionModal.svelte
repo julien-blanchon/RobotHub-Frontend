@@ -191,14 +191,14 @@
 		showUSBCalibration = false;
 		pendingUSBConnection = null;
 		isConnecting = false;
-		
+
 		// Clean up the uncalibrated USB producer
 		const uncalibratedDrivers = robot.getUncalibratedUSBDrivers();
 		if (uncalibratedDrivers.length > 0) {
 			// Remove the most recent producer (should be the one we just added)
 			const lastProducer = robot.producers[robot.producers.length - 1];
 			if (lastProducer) {
-				robot.removeProducer(lastProducer.id).catch(err => {
+				robot.removeProducer(lastProducer.id).catch((err) => {
 					console.error("Failed to clean up USB producer after calibration cancel:", err);
 				});
 			}
@@ -277,9 +277,7 @@
 									onCancel={onCalibrationCancel}
 								/>
 							{:else}
-								<div class="text-center text-slate-400">
-									No USB drivers require calibration
-								</div>
+								<div class="text-center text-slate-400">No USB drivers require calibration</div>
 							{/each}
 						</Card.Content>
 					</Card.Root>
@@ -340,13 +338,14 @@
 							<div class="flex items-center justify-between">
 								<div>
 									<Card.Title
-										class="flex items-center gap-2 text-base text-orange-700 dark:text-orange-200 pb-1"
+										class="flex items-center gap-2 pb-1 text-base text-orange-700 dark:text-orange-200"
 									>
 										<span class="icon-[mdi--cloud-sync] size-4"></span>
 										Remote Control
 									</Card.Title>
 									<Card.Description class="text-xs text-orange-600/70 dark:text-orange-300/70">
-										Broadcast robot movements to remote robots or AI systems from anywhere in the world
+										Broadcast robot movements to remote robots or AI systems from anywhere in the
+										world
 									</Card.Description>
 								</div>
 								<Button
@@ -441,13 +440,15 @@
 														>
 															{room.id}
 														</p>
-														<div class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400">
+														<div
+															class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400"
+														>
 															<span>{room.has_producer ? "🔴 Occupied" : "🟢 Available"}</span>
 															<span>👥 {room.participants?.total || 0} users</span>
 															<!-- Monitoring links -->
 															<div class="flex gap-1">
 																<a
-																	href={`${settings.transportServerUrl.replace('/api', '')}/${workspaceId}/robotics/consumer?room=${room.id}`}
+																	href={`${settings.transportServerUrl.replace("/api", "")}/${workspaceId}/robotics/consumer?room=${room.id}`}
 																	target="_blank"
 																	rel="noopener noreferrer"
 																	class="inline-flex items-center gap-1 rounded bg-blue-500/10 px-1.5 py-0.5 text-xs text-blue-600 hover:bg-blue-500/20 dark:bg-blue-400/10 dark:text-blue-400 dark:hover:bg-blue-400/20"
@@ -457,7 +458,7 @@
 																	Consumer
 																</a>
 																<a
-																	href={`${settings.transportServerUrl.replace('/api', '')}/${workspaceId}/robotics/producer?room=${room.id}`}
+																	href={`${settings.transportServerUrl.replace("/api", "")}/${workspaceId}/robotics/producer?room=${room.id}`}
 																	target="_blank"
 																	rel="noopener noreferrer"
 																	class="inline-flex items-center gap-1 rounded bg-green-500/10 px-1.5 py-0.5 text-xs text-green-600 hover:bg-green-500/20 dark:bg-green-400/10 dark:text-green-400 dark:hover:bg-green-400/20"

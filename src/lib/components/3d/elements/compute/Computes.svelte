@@ -85,13 +85,29 @@
 
 {#if selectedCompute}
 	<!-- Inference Session Configuration Modal (for existing computes without sessions) -->
-	<AISessionConnectionModal bind:open={isAISessionModalOpen} compute={selectedCompute} {workspaceId} />
+	<AISessionConnectionModal
+		bind:open={isAISessionModalOpen}
+		compute={selectedCompute}
+		{workspaceId}
+	/>
 	<!-- Video Input Connection Modal -->
-	<VideoInputConnectionModal bind:open={isVideoInputModalOpen} compute={selectedCompute} {workspaceId} />
+	<VideoInputConnectionModal
+		bind:open={isVideoInputModalOpen}
+		compute={selectedCompute}
+		{workspaceId}
+	/>
 	<!-- Robot Input Connection Modal -->
-	<RobotInputConnectionModal bind:open={isRobotInputModalOpen} compute={selectedCompute} {workspaceId} />
+	<RobotInputConnectionModal
+		bind:open={isRobotInputModalOpen}
+		compute={selectedCompute}
+		{workspaceId}
+	/>
 	<!-- Robot Output Connection Modal -->
-	<RobotOutputConnectionModal bind:open={isRobotOutputModalOpen} compute={selectedCompute} {workspaceId} /> 
+	<RobotOutputConnectionModal
+		bind:open={isRobotOutputModalOpen}
+		compute={selectedCompute}
+		{workspaceId}
+	/>
 {/if}
 
 <!-- AI Model Configuration Modal (for creating new models) -->

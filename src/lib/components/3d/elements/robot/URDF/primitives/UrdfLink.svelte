@@ -47,7 +47,7 @@
 		jointIndicatorColor = "#000000",
 		nameHeight = 0.1,
 		showLine = true,
-		opacity = 0.7,
+		opacity = 0.7
 	}: Props = $props();
 
 	let showPointCloud = false;

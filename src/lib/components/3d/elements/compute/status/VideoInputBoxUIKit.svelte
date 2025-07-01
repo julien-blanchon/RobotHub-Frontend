@@ -1,6 +1,12 @@
 <script lang="ts">
 	import type { RemoteCompute } from "$lib/elements/compute//RemoteCompute.svelte";
-	import { BaseStatusBox, StatusHeader, StatusContent, StatusIndicator, StatusButton } from "$lib/components/3d/ui";
+	import {
+		BaseStatusBox,
+		StatusHeader,
+		StatusContent,
+		StatusIndicator,
+		StatusButton
+	} from "$lib/components/3d/ui";
 	import { ICON } from "@/utils/icon";
 
 	interface Props {
@@ -13,7 +19,7 @@
 	const inputColor = "rgb(34, 197, 94)";
 </script>
 
-<BaseStatusBox 
+<BaseStatusBox
 	minWidth={100}
 	minHeight={65}
 	color={inputColor}
@@ -24,16 +30,16 @@
 >
 	{#if compute.hasSession && compute.inputConnections}
 		<!-- Active Video Input State -->
-		<StatusHeader 
-			icon={ICON["icon-[mdi--video]"].svg} 
-			text="VIDEO" 
+		<StatusHeader
+			icon={ICON["icon-[mdi--video]"].svg}
+			text="VIDEO"
 			color={inputColor}
 			opacity={0.9}
 			fontSize={11}
 		/>
 
 		<!-- Camera Streams -->
-		<StatusContent 
+		<StatusContent
 			title={`${Object.keys(compute.inputConnections.cameras).length} Cameras`}
 			color="rgb(21, 128, 61)"
 			variant="primary"
@@ -43,21 +49,17 @@
 		<StatusIndicator color={inputColor} />
 	{:else}
 		<!-- No Session State -->
-		<StatusHeader 
-			icon={ICON["icon-[mdi--video-off]"].svg} 
-			text="NO VIDEO" 
+		<StatusHeader
+			icon={ICON["icon-[mdi--video-off]"].svg}
+			text="NO VIDEO"
 			color={inputColor}
 			opacity={0.7}
 			fontSize={11}
 		/>
 
-		<StatusContent 
-			title="Setup Video" 
-			color="rgb(34, 197, 94)" 
-			variant="secondary"
-		/>
+		<StatusContent title="Setup Video" color="rgb(34, 197, 94)" variant="secondary" />
 
-		<StatusButton 
+		<StatusButton
 			icon={ICON["icon-[mdi--plus]"].svg}
 			text="Add"
 			color={inputColor}
@@ -65,4 +67,4 @@
 			textOpacity={0.7}
 		/>
 	{/if}
-</BaseStatusBox> 
+</BaseStatusBox>

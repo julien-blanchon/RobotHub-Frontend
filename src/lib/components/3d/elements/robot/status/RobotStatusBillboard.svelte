@@ -27,34 +27,34 @@
 </script>
 
 <!-- {#if visible} -->
-	<T.Group
-		position.z={0.35}
-		rotation={[Math.PI / 2, 0, 0]}
-		scale={[0.12, 0.12, 0.12]}
-		padding={10}
-		pointerEvents="listener"
-	>
-		<Billboard>
-			<Root name={`robot-status-billboard-${robot.id}`}>
-				<Container
-					width="100%"
-					height="100%"
-					alignItems="center"
-					justifyContent="center"
-					padding={20}
-				>
-					<ConnectionFlowBoxUIkit
-						{visible}
-						{robot}
-						{onInputBoxClick}
-						{onRobotBoxClick}
-						{onOutputBoxClick}
-					/>
-				</Container>
-			</Root>
-		</Billboard>
+<T.Group
+	position.z={0.35}
+	rotation={[Math.PI / 2, 0, 0]}
+	scale={[0.12, 0.12, 0.12]}
+	padding={10}
+	pointerEvents="listener"
+>
+	<Billboard>
+		<Root name={`robot-status-billboard-${robot.id}`}>
+			<Container
+				width="100%"
+				height="100%"
+				alignItems="center"
+				justifyContent="center"
+				padding={20}
+			>
+				<ConnectionFlowBoxUIkit
+					{visible}
+					{robot}
+					{onInputBoxClick}
+					{onRobotBoxClick}
+					{onOutputBoxClick}
+				/>
+			</Container>
+		</Root>
+	</Billboard>
 
-		<!-- <Billboard>
+	<!-- <Billboard>
 		<HTML
 			transform
 			autoRender={true}
@@ -86,5 +86,5 @@
 			</div>
 		</HTML>
 	</Billboard> -->
-	</T.Group>
+</T.Group>
 <!-- {/if} -->

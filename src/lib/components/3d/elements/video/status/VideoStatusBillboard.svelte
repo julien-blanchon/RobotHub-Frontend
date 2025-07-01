@@ -19,32 +19,32 @@
 </script>
 
 <!-- {#if visible} -->
-	<T.Group
-		onpointerdown={(e) => e.stopPropagation()}
-		onpointerup={(e) => e.stopPropagation()}
-		onpointermove={(e) => e.stopPropagation()}
-		onclick={(e) => e.stopPropagation()}
-		position.z={0.22}
-		padding={10}
-		rotation={[Math.PI / 2, 0, 0]}
-		scale={[0.12, 0.12, 0.12]}
-		pointerEvents="listener"
-	>
-		<Billboard>
-			<Root name={`video-status-billboard-${video.id}`}>
-				<Container
-					width="100%"
-					height="100%"
-					alignItems="center"
-					justifyContent="center"
-					padding={20}
-				>
-					<VideoConnectionFlowBoxUIKit {visible} {video} {onInputBoxClick} {onOutputBoxClick} />
-				</Container>
-			</Root>
-		</Billboard>
+<T.Group
+	onpointerdown={(e) => e.stopPropagation()}
+	onpointerup={(e) => e.stopPropagation()}
+	onpointermove={(e) => e.stopPropagation()}
+	onclick={(e) => e.stopPropagation()}
+	position.z={0.22}
+	padding={10}
+	rotation={[Math.PI / 2, 0, 0]}
+	scale={[0.12, 0.12, 0.12]}
+	pointerEvents="listener"
+>
+	<Billboard>
+		<Root name={`video-status-billboard-${video.id}`}>
+			<Container
+				width="100%"
+				height="100%"
+				alignItems="center"
+				justifyContent="center"
+				padding={20}
+			>
+				<VideoConnectionFlowBoxUIKit {visible} {video} {onInputBoxClick} {onOutputBoxClick} />
+			</Container>
+		</Root>
+	</Billboard>
 
-		<!-- <Billboard>
+	<!-- <Billboard>
 		<HTML
 			transform
 			autoRender={true}
@@ -72,5 +72,5 @@
 			</div>
 		</HTML>
 	</Billboard> -->
-	</T.Group>
+</T.Group>
 <!-- {/if} -->

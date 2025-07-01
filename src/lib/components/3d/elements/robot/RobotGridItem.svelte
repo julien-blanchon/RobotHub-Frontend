@@ -106,7 +106,6 @@
 	}
 
 	const { onPointerEnter, onPointerLeave, hovering } = useCursor();
-	
 
 	let isToggled = $state(false);
 
@@ -124,13 +123,17 @@
 	scale={[10, 10, 10]}
 	rotation={[-Math.PI / 2, 0, 0]}
 >
-	<T.Group onpointerenter={(event) => {
-		event.stopPropagation();
-		onPointerEnter();
-	}} onpointerleave={(event) => {
-		event.stopPropagation();
-		onPointerLeave();
-	}} onclick={handleClick}>
+	<T.Group
+		onpointerenter={(event) => {
+			event.stopPropagation();
+			onPointerEnter();
+		}}
+		onpointerleave={(event) => {
+			event.stopPropagation();
+			onPointerLeave();
+		}}
+		onclick={handleClick}
+	>
 		{#if urdfRobotState}
 			{#each getRootLinks(urdfRobotState) as link}
 				<UrdfLink

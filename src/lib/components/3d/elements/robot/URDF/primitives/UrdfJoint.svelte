@@ -81,8 +81,6 @@
 	// 	return norm * 200 - 100; // → [-100, 100]
 	// }
 
-	
-
 	// function denormalizeAngle(normValue: number, name: keyof typeof ANGLE_RANGES): number {
 	// 	if (!(name in ANGLE_RANGES)) {
 	// 		throw new Error(`Unknown angle name: ${name}`);
@@ -156,11 +154,7 @@
 
 			<T.Mesh rotation={[Math.PI / 2, 0, 0]} {...restProps}>
 				<T.CylinderGeometry args={[0.004, 0.004, 0.03]} />
-				<T.MeshBasicMaterial
-					color={jointColor}
-					{opacity}
-					transparent={opacity < 1.0}
-				/>
+				<T.MeshBasicMaterial color={jointColor} {opacity} transparent={opacity < 1.0} />
 			</T.Mesh>
 		{/if}
 	</T.Group>
@@ -174,7 +168,7 @@
 		renderOrder={999}
 		frustumCulled={false}
 	>
-	<!-- text={joint.name + " " + getJointRotationValue(joint).toFixed(0) + "°" + " (" + normalizeAngle2(getJointRotationValue(joint)).toFixed(0) + ")"} -->
+		<!-- text={joint.name + " " + getJointRotationValue(joint).toFixed(0) + "°" + " (" + normalizeAngle2(getJointRotationValue(joint)).toFixed(0) + ")"} -->
 		<Text
 			scale={nameHeight}
 			color={jointColor}

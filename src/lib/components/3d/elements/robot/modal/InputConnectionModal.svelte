@@ -499,13 +499,15 @@
 															>
 																{room.id}
 															</p>
-															<div class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400">
+															<div
+																class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400"
+															>
 																<span>{room.has_producer ? "📤 Has Output" : "📥 No Output"}</span>
 																<span>👥 {room.participants?.total || 0} users</span>
 																<!-- Monitoring links -->
 																<div class="flex gap-1">
 																	<a
-																		href={`${settings.transportServerUrl.replace('/api', '')}/${workspaceId}/robotics/consumer?room=${room.id}`}
+																		href={`${settings.transportServerUrl.replace("/api", "")}/${workspaceId}/robotics/consumer?room=${room.id}`}
 																		target="_blank"
 																		rel="noopener noreferrer"
 																		class="inline-flex items-center gap-1 rounded bg-blue-500/10 px-1.5 py-0.5 text-xs text-blue-600 hover:bg-blue-500/20 dark:bg-blue-400/10 dark:text-blue-400 dark:hover:bg-blue-400/20"
@@ -515,7 +517,7 @@
 																		Consumer
 																	</a>
 																	<a
-																		href={`${settings.transportServerUrl.replace('/api', '')}/${workspaceId}/robotics/producer?room=${room.id}`}
+																		href={`${settings.transportServerUrl.replace("/api", "")}/${workspaceId}/robotics/producer?room=${room.id}`}
 																		target="_blank"
 																		rel="noopener noreferrer"
 																		class="inline-flex items-center gap-1 rounded bg-green-500/10 px-1.5 py-0.5 text-xs text-green-600 hover:bg-green-500/20 dark:bg-green-400/10 dark:text-green-400 dark:hover:bg-green-400/20"
@@ -526,9 +528,8 @@
 																	</a>
 																</div>
 															</div>
-															
 														</div>
-														
+
 														<Button
 															variant="secondary"
 															size="sm"

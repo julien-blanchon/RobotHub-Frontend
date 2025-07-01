@@ -6,10 +6,10 @@ export async function createUrdfRobot(urdfConfig: RobotUrdfConfig): Promise<Urdf
 	const customParser = new UrdfParser(urdfConfig.urdfUrl, "/robots/so-100/");
 	const urdfData = await customParser.load();
 	const robot = $state(customParser.fromString(urdfData));
-	
+
 	const UrdfRobotState: UrdfRobotState = {
 		urdfRobot: robot,
-		urdfConfig: urdfConfig,
+		urdfConfig: urdfConfig
 	};
 
 	return UrdfRobotState;

@@ -5,7 +5,7 @@
 	import ComputeConnectionFlowBoxUIKit from "./ComputeConnectionFlowBoxUIKit.svelte";
 	import type { RemoteCompute } from "$lib/elements/compute//RemoteCompute.svelte";
 	import { Tween } from "svelte/motion";
-	import { cubicOut } from "svelte/easing";	
+	import { cubicOut } from "svelte/easing";
 
 	interface Props {
 		compute: RemoteCompute;
@@ -29,12 +29,18 @@
 
 	interactivity();
 
-	const tweenedScale = Tween.of(() => {
-		return visible ? 1 : 0;
-	}, { duration: duration, easing: cubicOut, delay: delay });
-	const tweenedOpacity = Tween.of(() => {
-		return visible ? 1 : 0;
-	}, { duration: duration, easing: cubicOut, delay: delay });
+	const tweenedScale = Tween.of(
+		() => {
+			return visible ? 1 : 0;
+		},
+		{ duration: duration, easing: cubicOut, delay: delay }
+	);
+	const tweenedOpacity = Tween.of(
+		() => {
+			return visible ? 1 : 0;
+		},
+		{ duration: duration, easing: cubicOut, delay: delay }
+	);
 </script>
 
 <T.Group

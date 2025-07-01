@@ -76,8 +76,6 @@
 	</Canvas>
 {:else}
 	<div class="flex h-screen items-center justify-center">
-		<div class="text-slate-900 dark:text-white">
-			Loading
-		</div>
+		<div class="text-slate-900 dark:text-white">Loading</div>
 	</div>
 {/if}

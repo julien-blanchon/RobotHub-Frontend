@@ -45,4 +45,4 @@ export function getDistance(pos1: Position3D, pos2: Position3D): number {
 	const dy = pos2.y - pos1.y;
 	const dz = pos2.z - pos1.z;
 	return Math.sqrt(dx * dx + dy * dy + dz * dz);
-} 
+}

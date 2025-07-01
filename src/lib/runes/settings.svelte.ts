@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/public';
+import { env } from "$env/dynamic/public";
 
 interface Settings {
 	inferenceServerUrl: string;
@@ -10,6 +10,8 @@ export const settings: Settings = $state({
 	// transportServerUrl: 'http://localhost:8000'
 	// inferenceServerUrl: 'https://blanchon-robothub-inferenceserver.hf.space/api',
 	// transportServerUrl: 'https://blanchon-robothub-transport-server.hf.space/api'
-	inferenceServerUrl: env.PUBLIC_INFERENCE_SERVER_URL ?? 'https://blanchon-robothub-inferenceserver.hf.space/api',
-	transportServerUrl: env.PUBLIC_TRANSPORT_SERVER_URL ?? 'https://blanchon-robothub-transportserver.hf.space/api'
+	inferenceServerUrl:
+		env.PUBLIC_INFERENCE_SERVER_URL ?? "https://blanchon-robothub-inferenceserver.hf.space/api",
+	transportServerUrl:
+		env.PUBLIC_TRANSPORT_SERVER_URL ?? "https://blanchon-robothub-transportserver.hf.space/api"
 });

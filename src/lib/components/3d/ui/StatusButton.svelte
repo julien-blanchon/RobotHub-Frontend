@@ -47,15 +47,9 @@
 	{onclick}
 >
 	{#if icon}
-		<SVG
-			width={iconSize}
-			height={iconSize}
-			{color}
-			opacity={textOpacity}
-			src={icon}
-		/>
+		<SVG width={iconSize} height={iconSize} {color} opacity={textOpacity} src={icon} />
 	{/if}
-	
+
 	<Text
 		{text}
 		fontSize={textSize}
@@ -64,4 +58,4 @@
 		opacity={textOpacity}
 		textAlign="center"
 	/>
-</Container> 
+</Container>

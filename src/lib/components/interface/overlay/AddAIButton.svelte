@@ -13,10 +13,10 @@
 	let { open = $bindable(), workspaceId }: Props = $props();
 
 	let isConfigModalOpen = $state(false);
-	let selectedModelType = $state<ModelType>('act');
+	let selectedModelType = $state<ModelType>("act");
 
 	// Get available model types
-	const availableModels = Object.values(MODEL_TYPES).filter(model => model.enabled);
+	const availableModels = Object.values(MODEL_TYPES).filter((model) => model.enabled);
 
 	function openConfigModal(modelType: ModelType) {
 		selectedModelType = modelType;
@@ -25,7 +25,7 @@
 	}
 
 	function quickAddACT() {
-		openConfigModal('act');
+		openConfigModal("act");
 	}
 
 	function formatModelType(modelType: string): string {
@@ -87,10 +87,12 @@
 		{/snippet}
 	</DropdownMenu.Trigger>
 
-	<DropdownMenu.Content class="w-64 bg-slate-100 border-slate-300 dark:bg-slate-900 dark:border-slate-600">
+	<DropdownMenu.Content
+		class="w-64 border-slate-300 bg-slate-100 dark:border-slate-600 dark:bg-slate-900"
+	>
 		{#each availableModels as model}
 			<DropdownMenu.Item
-				class="flex items-center gap-3 p-3 cursor-pointer hover:bg-purple-100 dark:hover:bg-purple-900/30"
+				class="flex cursor-pointer items-center gap-3 p-3 hover:bg-purple-100 dark:hover:bg-purple-900/30"
 				onclick={() => openConfigModal(model.id)}
 			>
 				<span class="{model.icon} size-5 text-purple-500 dark:text-purple-400"></span>
@@ -108,8 +110,8 @@
 </DropdownMenu.Root>
 
 <!-- Configuration Modal -->
-<AIModelConfigurationModal 
-	bind:open={isConfigModalOpen} 
+<AIModelConfigurationModal
+	bind:open={isConfigModalOpen}
 	{workspaceId}
 	initialModelType={selectedModelType}
 />

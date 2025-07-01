@@ -4,12 +4,12 @@
  * Manages multiple video instances, each with their own streaming state
  */
 
-import { video as videoClient } from '@robothub/transport-server-client';
-import type { video as videoTypes } from '@robothub/transport-server-client';
+import { video as videoClient } from "@robothub/transport-server-client";
+import type { video as videoTypes } from "@robothub/transport-server-client";
 import { generateName } from "$lib/utils/generateName";
-import type { Positionable, Position3D } from '$lib/types/positionable';
-import { positionManager } from '$lib/utils/positionManager';
-import { settings } from '$lib/runes/settings.svelte';
+import type { Positionable, Position3D } from "$lib/types/positionable";
+import { positionManager } from "$lib/utils/positionManager";
+import { settings } from "$lib/runes/settings.svelte";
 
 /**
  * Individual video instance state
@@ -17,32 +17,37 @@ import { settings } from '$lib/runes/settings.svelte';
 export class VideoInstance implements Positionable {
 	public id: string;
 	public name: string;
-	
+
 	// Input state (what this video is viewing)
 	input = $state({
-		type: null as 'local-camera' | 'remote-stream' | null,
+		type: null as "local-camera" | "remote-stream" | null,
 		stream: null as MediaStream | null,
 		client: null as videoTypes.VideoConsumer | null,
 		roomId: null as string | null,
 		// Connection lifecycle state
-		connectionState: 'disconnected' as 'disconnected' | 'connecting' | 'connected' | 'prepared' | 'paused',
+		connectionState: "disconnected" as
+			| "disconnected"
+			| "connecting"
+			| "connected"
+			| "prepared"
+			| "paused",
 		preparedRoomId: null as string | null,
 		// Connection policy - determines if connection should persist or can be paused
-		connectionPolicy: 'persistent' as 'persistent' | 'lazy',
+		connectionPolicy: "persistent" as "persistent" | "lazy"
 	});
 
 	// Output state (what this video is broadcasting)
 	output = $state({
 		active: false,
-		type: null as 'recording' | 'remote-broadcast' | null,
+		type: null as "recording" | "remote-broadcast" | null,
 		stream: null as MediaStream | null,
 		client: null as videoTypes.VideoProducer | null,
-		roomId: null as string | null,
+		roomId: null as string | null
 	});
 
 	// Position (reactive and bindable)
 	position = $state<Position3D>({ x: 0, y: 0, z: 0 });
-	
+
 	constructor(id: string, name?: string) {
 		this.id = id;
 		this.name = name || `Video ${id}`;
@@ -66,7 +71,7 @@ export class VideoInstance implements Positionable {
 
 	get canOutput(): boolean {
 		// Can only output if input is local camera (not remote stream)
-		return this.input.type === 'local-camera' && this.input.stream !== null;
+		return this.input.type === "local-camera" && this.input.stream !== null;
 	}
 
 	get currentStream(): MediaStream | null {
@@ -84,8 +89,9 @@ export class VideoInstance implements Positionable {
 		const connectionState = this.input.connectionState;
 		const preparedRoomId = this.input.preparedRoomId;
 		const connectionPolicy = this.input.connectionPolicy;
-		const canActivate = (connectionState === 'prepared' || connectionState === 'paused') && preparedRoomId !== null;
-		const canPause = connectionState === 'connected' && connectionPolicy === 'lazy';
+		const canActivate =
+			(connectionState === "prepared" || connectionState === "paused") && preparedRoomId !== null;
+		const canPause = connectionState === "connected" && connectionPolicy === "lazy";
 
 		return {
 			id: this.id,
@@ -99,7 +105,7 @@ export class VideoInstance implements Positionable {
 			preparedRoomId,
 			connectionPolicy,
 			canActivate,
-			canPause,
+			canPause
 		};
 	}
 }
@@ -112,12 +118,12 @@ export interface VideoStatus {
 	name: string;
 	hasInput: boolean;
 	hasOutput: boolean;
-	inputType: 'local-camera' | 'remote-stream' | null;
+	inputType: "local-camera" | "remote-stream" | null;
 	outputRoomId: string | null;
 	inputRoomId: string | null;
-	connectionState: 'disconnected' | 'connecting' | 'connected' | 'prepared' | 'paused';
+	connectionState: "disconnected" | "connecting" | "connected" | "prepared" | "paused";
 	preparedRoomId: string | null;
-	connectionPolicy: 'persistent' | 'lazy';
+	connectionPolicy: "persistent" | "lazy";
 	canActivate: boolean;
 	canPause: boolean;
 }
@@ -150,7 +156,7 @@ export class VideoManager {
 	 */
 	createVideo(id?: string, name?: string, position?: Position3D): VideoInstance {
 		const videoId = id || generateName();
-		
+
 		// Check if video already exists
 		if (this._videos.find((v) => v.id === videoId)) {
 			throw new Error(`Video with ID ${videoId} already exists`);
@@ -165,7 +171,9 @@ export class VideoManager {
 		// Add to reactive array
 		this._videos.push(video);
 
-		console.log(`Created video ${videoId} at position (${video.position.x.toFixed(1)}, ${video.position.y.toFixed(1)}, ${video.position.z.toFixed(1)}). Total videos: ${this._videos.length}`);
+		console.log(
+			`Created video ${videoId} at position (${video.position.x.toFixed(1)}, ${video.position.y.toFixed(1)}, ${video.position.z.toFixed(1)}). Total videos: ${this._videos.length}`
+		);
 
 		return video;
 	}
@@ -214,7 +222,7 @@ export class VideoManager {
 			this.rooms = rooms;
 			return rooms;
 		} catch (error) {
-			console.error('Failed to list rooms:', error);
+			console.error("Failed to list rooms:", error);
 			this.rooms = [];
 			return [];
 		} finally {
@@ -226,7 +234,10 @@ export class VideoManager {
 		await this.listRooms(workspaceId);
 	}
 
-	async createVideoRoom(workspaceId: string, roomId?: string): Promise<{ success: boolean; roomId?: string; error?: string }> {
+	async createVideoRoom(
+		workspaceId: string,
+		roomId?: string
+	): Promise<{ success: boolean; roomId?: string; error?: string }> {
 		try {
 			const client = new videoClient.VideoClientCore(settings.transportServerUrl);
 			const result = await client.createRoom(workspaceId, roomId);
@@ -234,8 +245,8 @@ export class VideoManager {
 			await this.refreshRooms(workspaceId);
 			return { success: true, roomId: result.roomId };
 		} catch (error) {
-			console.error('Failed to create video room:', error);
-			return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+			console.error("Failed to create video room:", error);
+			return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
 		}
 	}
 
@@ -246,22 +257,26 @@ export class VideoManager {
 	/**
 	 * Start video output to an existing room
 	 */
-	async startVideoOutputToRoom(workspaceId: string, videoId: string, roomId: string): Promise<{ success: boolean; error?: string }> {
+	async startVideoOutputToRoom(
+		workspaceId: string,
+		videoId: string,
+		roomId: string
+	): Promise<{ success: boolean; error?: string }> {
 		const video = this.getVideo(videoId);
 		if (!video) {
 			return { success: false, error: `Video ${videoId} not found` };
 		}
 
 		if (!video.canOutput) {
-			return { success: false, error: 'Cannot output - input must be local camera' };
+			return { success: false, error: "Cannot output - input must be local camera" };
 		}
 
 		try {
 			const producer = new videoClient.VideoProducer(settings.transportServerUrl);
-			const connected = await producer.connect(workspaceId, roomId, 'producer-id');
-			
+			const connected = await producer.connect(workspaceId, roomId, "producer-id");
+
 			if (!connected) {
-				throw new Error('Failed to connect to room');
+				throw new Error("Failed to connect to room");
 			}
 
 			// Start camera streaming - VideoProducer creates its own stream
@@ -272,7 +287,7 @@ export class VideoManager {
 
 			// Update output state
 			video.output.active = true;
-			video.output.type = 'remote-broadcast';
+			video.output.type = "remote-broadcast";
 			video.output.stream = video.input.stream;
 			video.output.client = producer;
 			video.output.roomId = roomId;
@@ -288,26 +303,34 @@ export class VideoManager {
 	/**
 	 * Create a new room and start video output as producer
 	 */
-	async startVideoOutputAsProducer(workspaceId: string, videoId: string, roomId?: string): Promise<{ success: boolean; roomId?: string; error?: string }> {
+	async startVideoOutputAsProducer(
+		workspaceId: string,
+		videoId: string,
+		roomId?: string
+	): Promise<{ success: boolean; roomId?: string; error?: string }> {
 		try {
 			// Create room first if roomId provided, otherwise generate one
 			const finalRoomId = roomId || this.generateRoomId(videoId);
 			const createResult = await this.createVideoRoom(workspaceId, finalRoomId);
-			
+
 			if (!createResult.success) {
 				return createResult;
 			}
 
 			// Start output to the new room
-			const outputResult = await this.startVideoOutputToRoom(workspaceId, videoId, createResult.roomId!);
-			
+			const outputResult = await this.startVideoOutputToRoom(
+				workspaceId,
+				videoId,
+				createResult.roomId!
+			);
+
 			if (!outputResult.success) {
 				return { success: false, error: outputResult.error };
 			}
 
 			return { success: true, roomId: createResult.roomId };
 		} catch (error) {
-			return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+			return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
 		}
 	}
 
@@ -316,33 +339,47 @@ export class VideoManager {
 	/**
 	 * Prepare a remote stream connection (stores roomId without connecting)
 	 */
-	prepareRemoteStream(videoId: string, roomId: string, policy: 'persistent' | 'lazy' = 'lazy'): { success: boolean; error?: string } {
+	prepareRemoteStream(
+		videoId: string,
+		roomId: string,
+		policy: "persistent" | "lazy" = "lazy"
+	): { success: boolean; error?: string } {
 		const video = this.getVideo(videoId);
 		if (!video) {
 			return { success: false, error: `Video ${videoId} not found` };
 		}
 
 		video.input.preparedRoomId = roomId;
-		video.input.connectionState = 'prepared';
+		video.input.connectionState = "prepared";
 		video.input.connectionPolicy = policy;
-		console.log(`Prepared remote stream for video ${videoId}, roomId: ${roomId}, policy: ${policy}`);
+		console.log(
+			`Prepared remote stream for video ${videoId}, roomId: ${roomId}, policy: ${policy}`
+		);
 		return { success: true };
 	}
 
 	/**
 	 * Activate a prepared or paused remote stream connection
 	 */
-	async activateRemoteStream(videoId: string, workspaceId: string): Promise<{ success: boolean; error?: string }> {
+	async activateRemoteStream(
+		videoId: string,
+		workspaceId: string
+	): Promise<{ success: boolean; error?: string }> {
 		const video = this.getVideo(videoId);
 		if (!video) {
 			return { success: false, error: `Video ${videoId} not found` };
 		}
 
 		if (!video.input.preparedRoomId) {
-			return { success: false, error: 'No prepared room ID to activate' };
+			return { success: false, error: "No prepared room ID to activate" };
 		}
 
-		return await this.connectRemoteStream(workspaceId, videoId, video.input.preparedRoomId, video.input.connectionPolicy);
+		return await this.connectRemoteStream(
+			workspaceId,
+			videoId,
+			video.input.preparedRoomId,
+			video.input.connectionPolicy
+		);
 	}
 
 	/**
@@ -350,7 +387,7 @@ export class VideoManager {
 	 */
 	async pauseRemoteStream(videoId: string): Promise<void> {
 		const video = this.getVideo(videoId);
-		if (!video || video.input.type !== 'remote-stream') return;
+		if (!video || video.input.type !== "remote-stream") return;
 
 		// Store the current roomId for later activation
 		if (video.input.roomId && !video.input.preparedRoomId) {
@@ -361,12 +398,12 @@ export class VideoManager {
 		if (video.input.client) {
 			video.input.client.disconnect();
 		}
-		
+
 		video.input.type = null;
 		video.input.stream = null;
 		video.input.client = null;
 		video.input.roomId = null;
-		video.input.connectionState = 'paused';
+		video.input.connectionState = "paused";
 
 		console.log(`Paused remote stream for video ${videoId}, can activate later`);
 	}
@@ -388,25 +425,30 @@ export class VideoManager {
 			});
 
 			// Update input state atomically to prevent reactive loops
-			video.input.type = 'local-camera';
+			video.input.type = "local-camera";
 			video.input.stream = stream;
 			video.input.client = null;
 			video.input.roomId = null;
-			video.input.connectionState = 'connected';
+			video.input.connectionState = "connected";
 			video.input.preparedRoomId = null;
-			video.input.connectionPolicy = 'persistent';
+			video.input.connectionPolicy = "persistent";
 
 			console.log(`Local camera connected to video ${videoId}`);
 			return { success: true };
 		} catch (error) {
 			console.error(`Failed to connect local camera to video ${videoId}:`, error);
 			// Ensure clean state on error
-			video.input.connectionState = 'disconnected';
+			video.input.connectionState = "disconnected";
 			return { success: false, error: error instanceof Error ? error.message : String(error) };
 		}
 	}
 
-	async connectRemoteStream(workspaceId: string, videoId: string, roomId: string, policy: 'persistent' | 'lazy' = 'persistent'): Promise<{ success: boolean; error?: string }> {
+	async connectRemoteStream(
+		workspaceId: string,
+		videoId: string,
+		roomId: string,
+		policy: "persistent" | "lazy" = "persistent"
+	): Promise<{ success: boolean; error?: string }> {
 		const video = this.getVideo(videoId);
 		if (!video) {
 			return { success: false, error: `Video ${videoId} not found` };
@@ -417,29 +459,29 @@ export class VideoManager {
 			await this.disconnectVideoInput(videoId);
 
 			// Update connection state
-			video.input.connectionState = 'connecting';
+			video.input.connectionState = "connecting";
 
 			const consumer = new videoClient.VideoConsumer(settings.transportServerUrl);
-			const connected = await consumer.connect(workspaceId, roomId, 'consumer-id');
-			
+			const connected = await consumer.connect(workspaceId, roomId, "consumer-id");
+
 			if (!connected) {
-				throw new Error('Failed to connect to remote stream');
+				throw new Error("Failed to connect to remote stream");
 			}
 
 			// Start receiving video
 			await consumer.startReceiving();
 
 			// Set up stream receiving
-			consumer.on('streamReceived', (stream: MediaStream) => {
+			consumer.on("streamReceived", (stream: MediaStream) => {
 				video.input.stream = stream;
 			});
 
 			// Update input state
-			video.input.type = 'remote-stream';
+			video.input.type = "remote-stream";
 			video.input.client = consumer;
 			video.input.roomId = roomId;
 			video.input.preparedRoomId = null; // Clear prepared since we're now connected
-			video.input.connectionState = 'connected';
+			video.input.connectionState = "connected";
 			video.input.connectionPolicy = policy;
 
 			console.log(`Remote stream connected to video ${videoId} with policy ${policy}`);
@@ -461,9 +503,9 @@ export class VideoManager {
 
 		try {
 			// Stop local camera tracks if any
-			if (video.input.stream && video.input.type === 'local-camera') {
+			if (video.input.stream && video.input.type === "local-camera") {
 				console.log(`Stopping ${video.input.stream.getTracks().length} camera tracks`);
-				video.input.stream.getTracks().forEach(track => {
+				video.input.stream.getTracks().forEach((track) => {
 					console.log(`Stopping track: ${track.kind} (${track.label})`);
 					track.stop();
 				});
@@ -480,9 +522,9 @@ export class VideoManager {
 			video.input.stream = null;
 			video.input.client = null;
 			video.input.roomId = null;
-			video.input.connectionState = 'disconnected';
+			video.input.connectionState = "disconnected";
 			video.input.preparedRoomId = null;
-			video.input.connectionPolicy = 'persistent';
+			video.input.connectionPolicy = "persistent";
 
 			console.log(`Input successfully disconnected from video ${videoId}`);
 		} catch (error) {
@@ -492,34 +534,37 @@ export class VideoManager {
 			video.input.stream = null;
 			video.input.client = null;
 			video.input.roomId = null;
-			video.input.connectionState = 'disconnected';
+			video.input.connectionState = "disconnected";
 			video.input.preparedRoomId = null;
-			video.input.connectionPolicy = 'persistent';
+			video.input.connectionPolicy = "persistent";
 			throw error;
 		}
 	}
 
 	// ============= OUTPUT MANAGEMENT =============
 
-	async startVideoOutput(workspaceId: string, videoId: string): Promise<{ success: boolean; error?: string; roomId?: string }> {
+	async startVideoOutput(
+		workspaceId: string,
+		videoId: string
+	): Promise<{ success: boolean; error?: string; roomId?: string }> {
 		const video = this.getVideo(videoId);
 		if (!video) {
 			return { success: false, error: `Video ${videoId} not found` };
 		}
 
 		if (!video.canOutput) {
-			return { success: false, error: 'Cannot output - input must be local camera' };
+			return { success: false, error: "Cannot output - input must be local camera" };
 		}
 
 		try {
 			const producer = new videoClient.VideoProducer(settings.transportServerUrl);
-			
+
 			// Create room
 			const result = await producer.createRoom(workspaceId);
-			const connected = await producer.connect(result.workspaceId, result.roomId, 'producer-id');
-			
+			const connected = await producer.connect(result.workspaceId, result.roomId, "producer-id");
+
 			if (!connected) {
-				throw new Error('Failed to connect producer');
+				throw new Error("Failed to connect producer");
 			}
 
 			// Start camera with existing stream
@@ -532,7 +577,7 @@ export class VideoManager {
 
 			// Update output state
 			video.output.active = true;
-			video.output.type = 'remote-broadcast';
+			video.output.type = "remote-broadcast";
 			video.output.stream = video.input.stream;
 			video.output.client = producer;
 			video.output.roomId = result.roomId;
@@ -580,4 +625,4 @@ export class VideoManager {
 }
 
 // Global video manager instance
-export const videoManager = new VideoManager(); 
+export const videoManager = new VideoManager();
